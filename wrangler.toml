@@ -68,7 +68,8 @@ pages_build_output_dir = "./build/client"
 
 ######## PREVIEW environment config ########
 
-# [env.preview.vars]
+[env.preview.vars]
+ALIGNMENT_FEED_BASE_URL = "https://alignmentfeed.beshir.org"
 # API_KEY = "xyz789"
 
 # [[env.preview.kv_namespaces]]
@@ -77,8 +78,8 @@ pages_build_output_dir = "./build/client"
 
 ######## PRODUCTION environment config ########
 
-# [env.production.vars]
-# API_KEY = "abc123"
+[env.production.vars]
+ALIGNMENT_FEED_BASE_URL = "https://alignmentfeed.beshir.org"
 
 # [[env.production.kv_namespaces]]
 # binding = "MY_KV_NAMESPACE"
