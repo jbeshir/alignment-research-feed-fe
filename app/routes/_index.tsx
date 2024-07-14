@@ -1,5 +1,9 @@
 import type {LoaderFunction, MetaFunction} from "@remix-run/cloudflare";
-import {json, useLoaderData} from "@remix-run/react";
+import {useLoaderData} from "@remix-run/react";
+import { AgGridReact } from 'ag-grid-react';
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-alpine.css';
+import {ColDef} from "ag-grid-community";
 
 export const meta: MetaFunction = () => {
   return [
@@ -33,11 +37,11 @@ export const loader: LoaderFunction = async ({ context }): Promise<LoaderData> =
     return { ok: false, articles: []};
   }
 
-  const data = await response.json();
+  const body = await response.json();
+  const data = body.data;
   if (!Array.isArray(data)) {
     return { ok: false, articles: []};
   }
-
 
   try {
     const articles = data.map((item: unknown): Article => {
@@ -58,14 +62,20 @@ export const loader: LoaderFunction = async ({ context }): Promise<LoaderData> =
 export default function Index() {
   const { articles} = useLoaderData<LoaderData>();
 
+  const columnDefs = [
+    { field: 'hash_id' },
+    { field: 'title' },
+    { field: 'published_at', valueFormatter: (params: any) => params.value.toLocaleString() },
+  ]
+
   return (
-      <div className="font-sans p-4">
-        <h1 className="text-3xl">Welcome to Remix on Cloudflare</h1>
-        <ul>
-          {articles.map(article => (
-              <li key={article.hash_id}>{article.title}</li>
-          ))}
-        </ul>
+      <div className="ag-theme-alpine" style={{height: 400, width: '100%'}}>
+        <AgGridReact
+            rowData={articles}
+            columnDefs={columnDefs}
+            domLayout='autoHeight'
+        />
+        Tit
       </div>
   );
 }
