@@ -1,7 +1,7 @@
 #:schema node_modules/wrangler/config-schema.json
 name = "alignment-research-feed-fe"
-compatibility_date = "2024-06-14"
-pages_build_output_dir = "./dist"
+compatibility_date = "2024-07-12"
+pages_build_output_dir = "./build/client"
 
 # Automatically place your workloads in an optimal location to minimize latency.
 # If you are running back-end logic in a Pages Function, running it closer to your back-end infrastructure
