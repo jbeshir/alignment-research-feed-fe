@@ -38,11 +38,10 @@ export default function Index() {
   const { apiBaseURL } = useLoaderData<LoaderData>();
 
   const columnDefs = [
-    { field: 'title' },
-    { field: 'link' },
-    { field: 'authors' },
-    { field: 'source' },
-    { field: 'published_at', valueFormatter: (params: any) => params.value?.toLocaleString() || "" },
+    { field: 'title', flex: 3 },
+    { field: 'authors', flex: 2 },
+    { field: 'source', flex: 1 },
+    { field: 'published_at', valueFormatter: (params: any) => params.value?.toLocaleString() || "", flex: 1 },
   ]
 
   const dataSource: IDatasource = {
