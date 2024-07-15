@@ -1,9 +1,10 @@
 import type {LoaderFunction, MetaFunction} from "@remix-run/cloudflare";
 import {useLoaderData} from "@remix-run/react";
-import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-alpine.css';
-import {ColDef} from "ag-grid-community";
+import 'ag-grid-community/styles/ag-theme-quartz.css';
+import {GetRowIdParams, IDatasource} from "ag-grid-community";
+import {AgGridReact} from "ag-grid-react";
+import {useCallback} from "react";
 
 export const meta: MetaFunction = () => {
   return [
@@ -16,8 +17,7 @@ export const meta: MetaFunction = () => {
 };
 
 type LoaderData = {
-  ok: boolean;
-  articles: Article[];
+  apiBaseURL: string;
 }
 
 type Article = {
@@ -31,51 +31,62 @@ type Article = {
 }
 
 export const loader: LoaderFunction = async ({ context }): Promise<LoaderData> => {
-  const response = await fetch(context.cloudflare.env.ALIGNMENT_FEED_BASE_URL + "/v1/articles");
-
-  if (!response.ok) {
-    return { ok: false, articles: []};
-  }
-
-  const body = await response.json();
-  const data = body.data;
-  if (!Array.isArray(data)) {
-    return { ok: false, articles: []};
-  }
-
-  try {
-    const articles = data.map((item: unknown): Article => {
-      if (typeof item !== 'object' || item === null) {
-        throw new Error("item is not object")
-      }
-
-      item.published_at = new Date(item.published_at);
-      return item as Article;
-    });
-
-    return { ok: true, articles: articles };
-  } catch {
-    return { ok: false, articles: []};
-  }
+  return { apiBaseURL: context.cloudflare.env.ALIGNMENT_FEED_BASE_URL};
 };
 
 export default function Index() {
-  const { articles} = useLoaderData<LoaderData>();
+  const { apiBaseURL } = useLoaderData<LoaderData>();
 
   const columnDefs = [
-    { field: 'hash_id' },
     { field: 'title' },
-    { field: 'published_at', valueFormatter: (params: any) => params.value.toLocaleString() },
+    { field: 'link' },
+    { field: 'authors' },
+    { field: 'source' },
+    { field: 'published_at', valueFormatter: (params: any) => params.value?.toLocaleString() || "" },
   ]
 
+  const dataSource: IDatasource = {
+    getRows: async (params) => {
+      const page = Math.floor(params.startRow / 100) + 1;
+      const pageSize = 100;  // We're using a fixed page size of 100 for this example
+
+      const apiParams = new URLSearchParams();
+      apiParams.set('page', page.toString());
+      apiParams.set('page_size', pageSize.toString());
+      const apiURL = `${apiBaseURL}/v1/articles?${apiParams.toString()}`
+      const response = await fetch(apiURL);
+      const { data, metadata } = await response.json();
+
+      const articles = data.map((item: unknown): Article => {
+        if (typeof item !== 'object' || item === null) {
+          throw new Error("item is not object")
+        }
+
+        item.published_at = new Date(item.published_at);
+        return item as Article;
+      });
+
+      params.successCallback(articles, metadata.total_rows);
+    }
+  };
+
+  const getRowId = useCallback((params: GetRowIdParams) => {
+    return params.data.hash_id;
+  }, []);
+
   return (
-      <div className="ag-theme-alpine" style={{height: 400, width: '100%'}}>
+      <div className="ag-theme-quartz-auto-dark" style={{height: '100vh', width: '100%'}}>
         <AgGridReact
-            rowData={articles}
             columnDefs={columnDefs}
-            domLayout='autoHeight'
+            rowModelType='infinite'
+            cacheBlockSize={100}
+            datasource={dataSource}
+            getRowId={getRowId}
+            pagination={true}
+            paginationAutoPageSize={true}
+            maxConcurrentDatasourceRequests={1}
+            maxBlocksInCache={10}
         />
-        Tit
       </div>
   );
 }
