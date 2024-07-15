@@ -34,14 +34,40 @@ export const loader: LoaderFunction = async ({ context }): Promise<LoaderData> =
   return { apiBaseURL: context.cloudflare.env.ALIGNMENT_FEED_BASE_URL};
 };
 
+function MakeLinkCellRenderer(baseCellRenderer: any) {
+  return (props: any) => {
+    if (props.data === undefined) {
+      return "";
+    }
+
+    return (
+        <a href={props.data.link} target='_blank' style={{height: '100%', width: '100%', display:'inline-block'}}>
+          {baseCellRenderer(props)}
+        </a>
+    );
+  }
+}
+
 export default function Index() {
   const { apiBaseURL } = useLoaderData<LoaderData>();
 
   const columnDefs = [
-    { field: 'title', flex: 3 },
-    { field: 'authors', flex: 2 },
-    { field: 'source', flex: 1 },
-    { field: 'published_at', valueFormatter: (params: any) => params.value?.toLocaleString() || "", flex: 1 },
+    { flex: 3, field: 'title', cellRenderer: MakeLinkCellRenderer((props: any) => {
+        return props.value || "";
+      })
+    },
+    { flex: 2, field: 'authors', cellRenderer: MakeLinkCellRenderer((props: any) => {
+        return props.value || "";
+      })
+    },
+    { flex: 1, field: 'source', cellRenderer: MakeLinkCellRenderer((props: any) => {
+        return props.value || "";
+      })
+    },
+    { flex: 1, field: 'published_at', cellRenderer: MakeLinkCellRenderer((props: any) => {
+        return props.value?.toLocaleString() || "";
+      })
+    },
   ]
 
   const dataSource: IDatasource = {
