@@ -1,10 +1,11 @@
 import {useCallback} from 'react';
-import {GetRowIdParams, IDatasource} from "ag-grid-community";
-import {AgGridReact} from "ag-grid-react";
+import {AgGridReact} from "@ag-grid-community/react";
 import {z} from "zod";
 
-import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-quartz.css';
+import '@ag-grid-community/styles/ag-grid.css';
+import '@ag-grid-community/styles/ag-theme-quartz.css';
+import {ModuleRegistry, GetRowIdParams, IDatasource} from "@ag-grid-community/core";
+import { InfiniteRowModelModule } from "@ag-grid-community/infinite-row-model";
 
 type AlignmentFeedTableProps = {
     apiBaseURL: string
@@ -37,6 +38,11 @@ function MakeLinkCellRenderer(baseCellRenderer: any) {
 }
 
 function AlignmentFeedTable({apiBaseURL} : AlignmentFeedTableProps) {
+    ModuleRegistry.registerModules([
+        InfiniteRowModelModule,
+    ]);
+
+
     const columnDefs = [
         { flex: 3, field: 'title', cellRenderer: MakeLinkCellRenderer((props: any) => {
                 return props.value || "";
