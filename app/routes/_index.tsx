@@ -5,6 +5,7 @@ import 'ag-grid-community/styles/ag-theme-quartz.css';
 import {GetRowIdParams, IDatasource} from "ag-grid-community";
 import {AgGridReact} from "ag-grid-react";
 import {useCallback} from "react";
+import {z} from "zod";
 
 export const meta: MetaFunction = () => {
   return [
@@ -20,15 +21,18 @@ type LoaderData = {
   apiBaseURL: string;
 }
 
-type Article = {
-  hash_id: string;
-  title: string;
-  link: string;
-  text_start: string;
-  authors: string;
-  source: string;
-  published_at: Date;
-}
+
+const Article = z.object({
+  hash_id: z.string(),
+  title: z.string(),
+  link: z.string(),
+  text_start: z.string(),
+  authors: z.string(),
+  source: z.string(),
+  published_at: z.string().datetime().pipe(z.coerce.date()),
+});
+
+type Article = z.infer<typeof Article>;
 
 export const loader: LoaderFunction = async ({ context }): Promise<LoaderData> => {
   return { apiBaseURL: context.cloudflare.env.ALIGNMENT_FEED_BASE_URL};
@@ -87,8 +91,7 @@ export default function Index() {
           throw new Error("item is not object")
         }
 
-        item.published_at = new Date(item.published_at);
-        return item as Article;
+        return Article.parse(item);
       });
 
       params.successCallback(articles, metadata.total_rows);
