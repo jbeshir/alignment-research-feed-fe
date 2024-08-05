@@ -4,7 +4,7 @@ import {z} from "zod";
 
 import '@ag-grid-community/styles/ag-grid.css';
 import '@ag-grid-community/styles/ag-theme-quartz.css';
-import {ModuleRegistry, GetRowIdParams, IDatasource} from "@ag-grid-community/core";
+import {ModuleRegistry, GetRowIdParams, IDatasource, SortModelItem} from "@ag-grid-community/core";
 import { InfiniteRowModelModule } from "@ag-grid-community/infinite-row-model";
 
 type AlignmentFeedTableProps = {
@@ -44,19 +44,23 @@ function AlignmentFeedTable({apiBaseURL} : AlignmentFeedTableProps) {
 
 
     const columnDefs = [
-        { flex: 3, field: 'title', cellRenderer: MakeLinkCellRenderer((props: any) => {
+        { flex: 3, colId: 'title', field: 'title', sortable: false,
+            cellRenderer: MakeLinkCellRenderer((props: any) => {
                 return props.value || "";
             })
         },
-        { flex: 2, field: 'authors', cellRenderer: MakeLinkCellRenderer((props: any) => {
+        { flex: 2, colId: 'authors', field: 'authors', sortable: false,
+            cellRenderer: MakeLinkCellRenderer((props: any) => {
                 return props.value || "";
             })
         },
-        { flex: 1, field: 'source', cellRenderer: MakeLinkCellRenderer((props: any) => {
+        { flex: 1, colId: 'source', field: 'source',
+            cellRenderer: MakeLinkCellRenderer((props: any) => {
                 return props.value || "";
             })
         },
-        { flex: 1, field: 'published_at', headerName: 'Published At', cellRenderer: MakeLinkCellRenderer((props: any) => {
+        { flex: 1, colId: 'published_at', field: 'published_at', headerName: 'Published At',
+            cellRenderer: MakeLinkCellRenderer((props: any) => {
                 return props.value?.toLocaleString() || "";
             })
         },
@@ -70,6 +74,14 @@ function AlignmentFeedTable({apiBaseURL} : AlignmentFeedTableProps) {
             const apiParams = new URLSearchParams();
             apiParams.set('page', page.toString());
             apiParams.set('page_size', pageSize.toString());
+
+            const sort = params.sortModel.map((item: SortModelItem): string => {
+                return item.colId + (item.sort === 'desc' ? '_desc' : '');
+            }).join(',')
+            if (sort !== "") {
+                apiParams.set('sort', sort.toString());
+            }
+
             const apiURL = `${apiBaseURL}/v1/articles?${apiParams.toString()}`
             const response = await fetch(apiURL);
             const { data, metadata } = await response.json();
