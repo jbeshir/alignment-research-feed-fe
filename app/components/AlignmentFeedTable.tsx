@@ -1,4 +1,4 @@
-import {useCallback} from 'react';
+import {useCallback, useRef, useState} from 'react';
 import {AgGridReact} from "@ag-grid-community/react";
 import {z} from "zod";
 
@@ -24,7 +24,7 @@ const Article = z.object({
 type Article = z.infer<typeof Article>;
 
 function MakeLinkCellRenderer(baseCellRenderer: any) {
-    return (props: any) => {
+    return useCallback((props: any) => {
         if (props.data === undefined) {
             return "";
         }
@@ -34,7 +34,7 @@ function MakeLinkCellRenderer(baseCellRenderer: any) {
                 {baseCellRenderer(props)}
             </a>
         );
-    }
+    }, [baseCellRenderer]);
 }
 
 function AlignmentFeedTable({apiBaseURL} : AlignmentFeedTableProps) {
@@ -45,29 +45,31 @@ function AlignmentFeedTable({apiBaseURL} : AlignmentFeedTableProps) {
 
     const columnDefs = [
         { flex: 3, colId: 'title', field: 'title', sortable: false,
-            cellRenderer: MakeLinkCellRenderer((props: any) => {
+            cellRenderer: MakeLinkCellRenderer(useCallback((props: any) => {
                 return props.value || "";
-            })
+            }, []))
         },
         { flex: 2, colId: 'authors', field: 'authors', sortable: false,
-            cellRenderer: MakeLinkCellRenderer((props: any) => {
+            cellRenderer: MakeLinkCellRenderer(useCallback((props: any) => {
                 return props.value || "";
-            })
+            }, []))
         },
         { flex: 1, colId: 'source', field: 'source',
-            cellRenderer: MakeLinkCellRenderer((props: any) => {
+            cellRenderer: MakeLinkCellRenderer(useCallback((props: any) => {
                 return props.value || "";
-            })
+            }, []))
         },
         { flex: 1, colId: 'published_at', field: 'published_at', headerName: 'Published At',
-            cellRenderer: MakeLinkCellRenderer((props: any) => {
+            cellRenderer: MakeLinkCellRenderer(useCallback((props: any) => {
                 return props.value?.toLocaleString() || "";
-            })
+            }, []))
         },
-    ]
+    ];
+
+    const idSet = useRef(new Set<string>());
 
     const dataSource: IDatasource = {
-        getRows: async (params) => {
+        getRows: useCallback(async (params) => {
             const page = Math.floor(params.startRow / 100) + 1;
             const pageSize = 100;  // We're using a fixed page size of 100 for this example
 
@@ -94,8 +96,19 @@ function AlignmentFeedTable({apiBaseURL} : AlignmentFeedTableProps) {
                 return Article.parse(item);
             });
 
-            params.successCallback(articles, metadata.total_rows);
-        }
+            // Set only once known
+            const lastRow = articles.length < pageSize
+                ? (page-1) * pageSize + articles.length
+                : null;
+
+            // Filter duplicates; may be caused by changing data at the server
+            const newArticles = articles.filter((article: Article): boolean => !idSet.current.has(article.hash_id));
+            newArticles.forEach((article: Article) => {
+                idSet.current.add(article.hash_id);
+            });
+
+            params.successCallback(newArticles, lastRow);
+        }, [apiBaseURL, idSet])
     };
 
     const getRowId = useCallback((params: GetRowIdParams) => {
