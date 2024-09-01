@@ -66,8 +66,6 @@ function AlignmentFeedTable({apiBaseURL} : AlignmentFeedTableProps) {
         },
     ];
 
-    const idSet = useRef(new Set<string>());
-
     const dataSource: IDatasource = {
         getRows: useCallback(async (params) => {
             const page = Math.floor(params.startRow / 100) + 1;
@@ -101,14 +99,8 @@ function AlignmentFeedTable({apiBaseURL} : AlignmentFeedTableProps) {
                 ? (page-1) * pageSize + articles.length
                 : null;
 
-            // Filter duplicates; may be caused by changing data at the server
-            const newArticles = articles.filter((article: Article): boolean => !idSet.current.has(article.hash_id));
-            newArticles.forEach((article: Article) => {
-                idSet.current.add(article.hash_id);
-            });
-
-            params.successCallback(newArticles, lastRow);
-        }, [apiBaseURL, idSet])
+            params.successCallback(articles, lastRow);
+        }, [apiBaseURL])
     };
 
     const getRowId = useCallback((params: GetRowIdParams) => {
