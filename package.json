@@ -21,7 +21,7 @@
     "@ag-grid-community/styles": "^32.0.2",
     "@remix-run/cloudflare": "^2.9.2",
     "@remix-run/cloudflare-pages": "^2.9.2",
-    "@remix-run/react": "^2.9.2",
+    "@remix-run/react": "^2.11.2",
     "isbot": "^4.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
