@@ -22,6 +22,7 @@
     "@remix-run/cloudflare": "^2.9.2",
     "@remix-run/cloudflare-pages": "^2.9.2",
     "@remix-run/react": "^2.11.2",
+    "ag-grid-community": "^32.1.0",
     "isbot": "^4.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -46,7 +47,7 @@
     "typescript": "^5.1.6",
     "vite": "^5.1.0",
     "vite-tsconfig-paths": "^4.2.1",
-    "wrangler": "3.57.1"
+    "wrangler": "^3.57.1"
   },
   "engines": {
     "node": ">=20.0.0"

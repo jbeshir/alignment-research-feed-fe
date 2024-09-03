@@ -1,4 +1,4 @@
-import {useCallback, useRef, useState} from 'react';
+import {useCallback, useRef, useState, useMemo} from 'react';
 import {AgGridReact} from "@ag-grid-community/react";
 import {z} from "zod";
 
@@ -87,6 +87,13 @@ function AlignmentFeedTable({apiBaseURL} : AlignmentFeedTableProps) {
         },
     ];
 
+    const defaultColDefs = useMemo(() => {
+        return {
+            filter: 'agTextColumnFilter',
+            floatingFilter: true,
+        };
+    }, []);
+
     const dataSource: IDatasource = {
         getRows: useCallback(async (params) => {
             const page = Math.floor(params.startRow / 100) + 1;
@@ -157,6 +164,7 @@ function AlignmentFeedTable({apiBaseURL} : AlignmentFeedTableProps) {
         <div className="ag-theme-quartz-auto-dark" style={{height: '100%'}}>
             <AgGridReact
                 columnDefs={columnDefs}
+                defaultColDef={defaultColDefs}
                 rowModelType='infinite'
                 cacheBlockSize={100}
                 datasource={dataSource}
