@@ -1,6 +1,6 @@
 import type {LoaderFunction, MetaFunction} from "@remix-run/cloudflare";
 import {useLoaderData} from "@remix-run/react";
-import HomeScreen from '~/components/Home';
+import Navigation from '~/components/Navigation';
 
 export const meta: MetaFunction = () => {
   return [
@@ -24,6 +24,6 @@ export default function Index() {
   const { apiBaseURL } = useLoaderData<LoaderData>();
 
   return (
-    <HomeScreen apiUrl={apiBaseURL}></HomeScreen>
+    <Navigation apiUrl={apiBaseURL} />
   );
 }

@@ -1,109 +1,104 @@
-import { useEffect, useState } from "react";
+import { useState, useRef } from "react";
+import Home from "~/components/Home";
 
-export default function Nav(){
-    const [sidebar, setSidebar] = useState(document.createElement('nav'));
-    const [navClosed, setNavClosed] = useState(document.createElement('svg'));
-    const [navOpen, setNavOpen] = useState(document.createElement('svg'));
+export default function Nav(apiUrl : any){
+    const [toggleExpand, setToggleExpand] = useState(true);
+    const [darkMode, setDarkMode] = useState(true);
+    const [darkModeToggle, setDarkModeToggle] = useState("dark");
+    const [sidebarClass, setSidebarClass] = useState("pt-3 w-28 bg-slate-100 dark:bg-slate-800 h-screen fixed rounded-none border-none transition-all duration-200 ease-in-out overflow-hidden text-center px-0 text-gray-500");
+    const [sidebarStyle, setSidebarStyle] = useState({width: "4rem"});
+    const textLeft = "text-left px-6 text-slate-100 dark:text-slate-800";
+    const textCenter = "text-center px-0 text-gray-500" 
 
-    useEffect(() => {
-        setSidebar(document?.getElementById("sidebar")!);
-        setNavClosed(document.getElementById("navClosed")!);
-        setNavOpen(document.getElementById("navOpen")!);
-    }, []);
+    const [mainContentStyle, setMainContentStyle] = useState({marginLeft: "4rem"});
 
+    const labelClassInitial = "font-medium transition-all duration-200 opacity-0";
+    const labelClassChanged = "font-medium transition-all duration-200 opacity-100";
+    const [labelClass, setLabelClass] = useState(labelClassInitial);
+    
+    const sidebarBtn = "relative px-3 py-3 flex items-center space-x-4 justify-start text-gray-500 rounded-lg group";
+    const sidebarBtnGradient = " bg-gradient-to-r from-cyan-400 to-cyan-500 text-white w-56 h-10 ml-0";
+    const [sidebarHomeBtn, setSidebarHomeBtn] = useState(sidebarBtn);
+    const [sidebarProfileBtn, setSidebarProfileBtn] = useState(sidebarBtn);
+    const [sidebarLoginBtn, setSidebarLoginBtn] = useState(sidebarBtn);
 
-    function openSidebar(e : any) {
-        e.preventDefault();
-        if(sidebar != null || navClosed != null || navOpen != null){
-            sidebar.classList.toggle("show");
-            navClosed.classList.toggle("hidden");
-            navOpen.classList.toggle("hidden");
+    const expandSidebar = () => {
+        setToggleExpand(!toggleExpand);
+
+        if(toggleExpand === false){
+            setSidebarStyle({width: '4rem'});
+            setMainContentStyle({marginLeft:'4rem'});
+            setSidebarClass(sidebarClass.replace(textLeft, textCenter));
+            setLabelClass(labelClassInitial);
+        } 
+        else
+        {
+            setSidebarStyle({width: '16rem'});
+            setMainContentStyle({marginLeft: '16rem'});
+            setSidebarClass(sidebarClass.replace(textCenter, textLeft));
+            setLabelClass(labelClassChanged);
         }
     }
 
-        return (
-            <>  
-            <nav id="navbar" className="fixed top-0 z-40 flex w-full flex-row justify-end bg-gray-700 px-4 sm:justify-between">        
-                <ul className="breadcrumb hidden flex-row items-center py-4 text-lg text-white sm:flex">
-                    <li className="inline">
-                        <a href="#">Main</a>
-                    </li>
-                    <li className="inline">
-                        <span>Homepage</span>
-                    </li>
-                </ul>
-                <button id="btnSidebarToggler" type="button" className="py-4 text-2xl text-white hover:text-gray-200" onClick={openSidebar}>
-                    <svg id="navClosed" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="h-8 w-8">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-                    </svg>
-                    <svg id="navOpen" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="hidden h-8 w-8">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>   
-            </nav>
-            <div id="containerSidebar" className="z-40">
-                <div className="navbar-menu relative z-40">
-                    <nav id="sidebar" className="fixed left-0 bottom-0 flex w-3/4 -translate-x-full flex-col overflow-y-auto bg-gray-700 pt-6 pb-8 sm:max-w-xs lg:w-80">
-                        <div className="px-4 pb-6">
-                            <h3 className="mb-2 text-xs font-medium uppercase text-gray-500">
-                                Main
-                            </h3>
-                            <ul className="mb-8 text-sm font-medium">
-                                <li>
-                                    <a className="active flex items-center rounded py-3 pl-3 pr-4 text-gray-50 hover:bg-gray-600" href="#homepage">
-                                        <span className="select-none">Homepage</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a className="flex items-center rounded py-3 pl-3 pr-4 text-gray-50 hover:bg-gray-600" href="#link1">
-                                        <span className="select-none">link1</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div className="px-4 pb-6">
-                            <h3 className="mb-2 text-xs font-medium uppercase text-gray-500">
-                                Legal
-                            </h3>
-                            <ul className="mb-8 text-sm font-medium">
-                                <li>
-                                    <a className="flex items-center rounded py-3 pl-3 pr-4 text-gray-50 hover:bg-gray-600" href="#tc">
-                                        <span className="select-none">Terms and Condition</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a className="flex items-center rounded py-3 pl-3 pr-4 text-gray-50 hover:bg-gray-600" href="#privacy">
-                                        <span className="select-none">Privacy policy</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a className="flex items-center rounded py-3 pl-3 pr-4 text-gray-50 hover:bg-gray-600" href="#imprint">
-                                        <span className="select-none">Imprint</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div className="px-4 pb-6">
-                            <h3 className="mb-2 text-xs font-medium uppercase text-gray-500">
-                                Others
-                            </h3>
-                            <ul className="mb-8 text-sm font-medium">
-                                <li>
-                                    <a className="flex items-center rounded py-3 pl-3 pr-4 text-gray-50 hover:bg-gray-600" href="#ex1">
-                                        <span className="select-none">...</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a className="flex items-center rounded py-3 pl-3 pr-4 text-gray-50 hover:bg-gray-600" href="#ex2">
-                                        <span className="select-none">...</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </nav>
-                </div>
-                <div className="mx-auto lg:ml-80"></div>
-            </div>
-            </>
-        )
+    function highlightSidebarItem(text: string)
+    {
+        text === "home" ? setSidebarHomeBtn(sidebarHomeBtn.replace("text-gray-500", "") + sidebarBtnGradient) : setSidebarHomeBtn(sidebarBtn);
+        text === "profile" ? setSidebarProfileBtn(sidebarProfileBtn.replace("text-gray-500", "") + sidebarBtnGradient) : setSidebarProfileBtn(sidebarBtn);
+        text === "login" ? setSidebarLoginBtn(sidebarProfileBtn.replace("text-gray-500", "") + sidebarBtnGradient) : setSidebarLoginBtn(sidebarBtn);
     }
+
+    const toggleDarkMode = () => {
+        console.log("Dark mode now: "+darkMode);
+        setDarkMode(darkMode => !darkMode);
+        console.log("Dark mode after switch: "+darkMode);
+        setDarkModeToggle(darkMode ? "dark" : "");
+    }
+
+    return (
+        <>  
+        <div className={darkModeToggle}>
+            <nav className="bg-slate-100 dark:bg-slate-800 border-b border-gray-300 dark:border-gray-600">
+                <div className="flex justify-between items-center px-6">
+                    <button id="menu-button" onClick={expandSidebar}>
+                        <i className="fas fa-bars text-cyan-500 text-lg"></i>
+                    </button>
+                    <div className="mx-auto">
+                        <h1 className='text-5xl text-center font-medium text-black dark:text-white p-5'>Alignment Feed</h1>
+                    </div>
+                    <div className="space-x-4">
+                        <button onClick={toggleDarkMode}>
+                           {darkMode ? 
+                            <i className="fa-solid fa-moon text-cyan-500 fa-lg"></i>
+                            :
+                            <i className="fa-regular fa-sun text-cyan-500 fa-lg"></i>
+                           }
+                        </button>
+                    </div>
+                </div>
+            </nav>
+
+            <div id="sidebar" className={sidebarClass} style={sidebarStyle}>
+                <div className="p-2 space-y-4">
+                    <button className={sidebarHomeBtn} onClick={() => highlightSidebarItem("home")}>
+                        <i className="fas fa-home text-lg"></i>
+                        <span className={labelClass}>Home</span>
+                    </button>
+
+                    <button className={sidebarProfileBtn} onClick={() => highlightSidebarItem("profile")}>
+                        <i className="fa-solid fa-user"></i>
+                        <span className={labelClass}>Profile</span>
+                    </button>
+
+                    <button className={sidebarLoginBtn} onClick={() => highlightSidebarItem("login")}>
+                        <i className="fas fa-users"></i>
+                        <span className={labelClass}>Login</span>
+                    </button>
+                </div>
+            </div>
+
+            <div className="bg-slate-100 dark:bg-slate-800 h-full w-full lg:w-auto transition-all duration-200 ease-in-out" style={mainContentStyle}>
+                <Home apiUrl={apiUrl} mode={darkMode}/>
+            </div>
+        </div>
+    </>)
+}       
