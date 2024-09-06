@@ -18,7 +18,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css"/>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
       </head>
-      <body>
+      <body className="bg-slate-100 dark:bg-slate-800">
         {children}
         <ScrollRestoration />
         <Scripts />

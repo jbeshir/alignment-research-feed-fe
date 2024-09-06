@@ -17,9 +17,9 @@ const Navigation = memo(function Nav(apiUrl : any){
     const labelClassChanged = "font-medium transition-all duration-200 opacity-100";
     const [labelClass, setLabelClass] = useState(labelClassInitial);
     
-    const sidebarBtn = "relative px-3 py-3 flex items-center space-x-4 justify-start text-gray-500 rounded-lg group";
-    const sidebarBtnGradient = " bg-gradient-to-r from-cyan-400 to-cyan-500 text-white w-56  ml-0";
-    const [sidebarHomeBtn, setSidebarHomeBtn] = useState("relative px-3 py-3 flex items-center space-x-4 justify-start rounded-lg group bg-gradient-to-r from-cyan-400 to-cyan-500 text-white w-56 h-10 ml-0");
+    const sidebarBtn = "relative px-3 py-3 flex items-center space-x-4 justify-start text-gray-500 rounded-lg group hover:bg-slate-400 w-56";
+    const sidebarBtnGradient = " bg-gradient-to-r from-cyan-400 to-cyan-500 text-white w-56 ml-0";
+    const [sidebarHomeBtn, setSidebarHomeBtn] = useState("relative px-3 py-3 flex items-center space-x-4 justify-start rounded-lg group hover:bg-slate-400 w-56 ml-0 bg-gradient-to-r from-cyan-400 to-cyan-500 text-white w-56 h-10 ml-0");
     const [sidebarProfileBtn, setSidebarProfileBtn] = useState(sidebarBtn);
 
     const [pageChanged, setPageChanged] = useState(true);
@@ -71,17 +71,17 @@ const Navigation = memo(function Nav(apiUrl : any){
 
     return (
         <>  
-        <div className={darkMode ? "dark" : ""}>
-            <nav className="bg-slate-100 dark:bg-slate-800 border-b border-gray-300 dark:border-gray-600">
-                <div className="flex justify-between items-center px-6">
-                    <button id="menu-button" onClick={expandSidebar}>
+        <div className={darkMode ? "dark dark:bg-slate-800" : "bg-slate-100"}>
+            <nav className="sticky top-0 z-50 w-full px-5 py-2 flex justify-between items-center bg-slate-100 dark:bg-slate-800 border-b border-gray-300 dark:border-gray-600">
+                <div className="px-2 flex flex-wrap">
+                    <button id="menu-button" onClick={expandSidebar} >
                         <i className="fas fa-bars text-cyan-500 text-lg"></i>
                     </button>
-                    <div className="float-start start-0 my-auto">
+                    <div className="my-auto px-6 inline-flex items-center">
                         <h1 className='text-5xl font-medium text-black dark:text-white p-5 pt-3' style={{left: "0%"}}> { pageChanged ? "Alignment Feed" : "Profile" } </h1>
                     </div>
-                    <div className="space-x-4">
-                        <button onClick={toggleDarkMode}>
+                    <div className="my-auto flex flex-col">
+                        <button onClick={toggleDarkMode} style={{marginLeft: "auto"}}>
                             {
                                 darkMode ? <i className="fa-solid fa-moon text-cyan-500 fa-xl"></i> : <i className="fa-regular fa-sun text-cyan-500 fa-xl"></i>
                             }
@@ -110,7 +110,7 @@ const Navigation = memo(function Nav(apiUrl : any){
             </div>
 
             <div className="bg-slate-100 dark:bg-slate-800 h-full w-full lg:w-auto transition-all duration-200 ease-in-out" style={mainContentStyle}>
-                <main>
+                <main className="relative">
                     {   
                         pageChanged ? <Home apiUrl={apiUrl} /> : <Profile />
                     }
