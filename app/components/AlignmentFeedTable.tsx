@@ -37,11 +37,10 @@ function MakeLinkCellRenderer(baseCellRenderer: any) {
     }, [baseCellRenderer]);
 }
 
-function AlignmentFeedTable({apiBaseURL} : AlignmentFeedTableProps, mode: boolean) {
+function AlignmentFeedTable({apiBaseURL} : AlignmentFeedTableProps) {
     ModuleRegistry.registerModules([
         InfiniteRowModelModule,
     ]);
-
 
     const columnDefs = [
         { flex: 3, colId: 'title', field: 'title', sortable: false,
@@ -161,7 +160,7 @@ function AlignmentFeedTable({apiBaseURL} : AlignmentFeedTableProps, mode: boolea
     }, []);
 
     return (
-        <div className={mode ? "ag-theme-quartz" : "ag-them-quartz-auto-dark"} style={{height: '100%', width: '100%'}}>
+        <div className="ag-theme-quartz" style={{height: '100%', width: '100%'}}>
             <AgGridReact
                 columnDefs={columnDefs}
                 defaultColDef={defaultColDefs}
