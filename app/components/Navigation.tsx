@@ -73,15 +73,17 @@ const Navigation = memo(function Nav(apiUrl : any){
         <>  
         <div className={darkMode ? "dark dark:bg-slate-800" : "bg-slate-100"}>
             <nav className="sticky top-0 z-50 w-full px-5 py-2 flex justify-between items-center bg-slate-100 dark:bg-slate-800 border-b border-gray-300 dark:border-gray-600">
-                <div className="px-2 flex flex-wrap">
-                    <button id="menu-button" onClick={expandSidebar} >
-                        <i className="fas fa-bars text-cyan-500 text-lg"></i>
-                    </button>
-                    <div className="my-auto px-6 inline-flex items-center">
+                <div className="px-2 nav-align">
+                    <div>
+                        <button id="menu-button" onClick={expandSidebar} >
+                            <i className="fas fa-bars text-cyan-500 text-lg"></i>
+                        </button>
+                    </div>
+                    <div className="px-6">
                         <h1 className='text-5xl font-medium text-black dark:text-white p-5 pt-3' style={{left: "0%"}}> { pageChanged ? "Alignment Feed" : "Profile" } </h1>
                     </div>
-                    <div className="my-auto flex flex-col">
-                        <button onClick={toggleDarkMode} style={{marginLeft: "auto"}}>
+                    <div className="nav-right">
+                        <button onClick={toggleDarkMode}>
                             {
                                 darkMode ? <i className="fa-solid fa-moon text-cyan-500 fa-xl"></i> : <i className="fa-regular fa-sun text-cyan-500 fa-xl"></i>
                             }

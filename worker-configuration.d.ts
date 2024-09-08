@@ -2,5 +2,5 @@
 // by running `wrangler types`
 
 interface Env {
-	ALIGNMENT_FEED_BASE_URL: string
+	ALIGNMENT_FEED_BASE_URL: string;
 }
