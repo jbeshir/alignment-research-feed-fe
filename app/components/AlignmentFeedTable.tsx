@@ -7,9 +7,9 @@ import '@ag-grid-community/styles/ag-theme-quartz.css';
 import {ModuleRegistry, GetRowIdParams, IDatasource, SortModelItem} from "@ag-grid-community/core";
 import { InfiniteRowModelModule } from "@ag-grid-community/infinite-row-model";
 
-type AlignmentFeedTableProps = {
-    apiBaseURL: string
-}
+// interface AlignmentFeedTableProps {
+//     apiBaseURL: string;
+// }
 
 const Article = z.object({
     hash_id: z.string(),
@@ -37,7 +37,7 @@ function MakeLinkCellRenderer(baseCellRenderer: any) {
     }, [baseCellRenderer]);
 }
 
-function AlignmentFeedTable({apiBaseURL} : AlignmentFeedTableProps) {
+function AlignmentFeedTable({ apiBaseURL }: { apiBaseURL: string }){
     ModuleRegistry.registerModules([
         InfiniteRowModelModule,
     ]);

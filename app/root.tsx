@@ -6,6 +6,7 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 import "./tailwind.css";
+import { Auth0Provider } from '@auth0/auth0-react';
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -28,5 +29,17 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+  const domain = import.meta.env.VITE_DOMAIN;
+  const clientID = import.meta.env.VITE_CLIENT_ID;
+  const redirect_uri = import.meta.env.VITE_REDIRECT_URI;
+  
+  return (
+    <Auth0Provider
+      domain={domain}
+      clientId={clientID}
+      authorizationParams={{redirect_uri: redirect_uri}}>
+      <Outlet />
+    </Auth0Provider>
+  );
+  //return <Outlet />;
 }

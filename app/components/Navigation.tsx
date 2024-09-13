@@ -1,8 +1,9 @@
 import { memo, useState, useMemo } from "react";
 import Home from "~/components/Home";
 import Profile from "~/components/Profile";
+import { useAuth0 } from "@auth0/auth0-react";
 
-const Navigation = memo(function Nav(apiUrl : any){
+const Navigation = memo(function Nav({ apiBaseURL }: { apiBaseURL: string }){
     const [toggleExpand, setToggleExpand] = useState(true);
     const [darkMode, setDarkMode] = useState(true);
 
@@ -61,10 +62,8 @@ const Navigation = memo(function Nav(apiUrl : any){
         }
     }
 
-    const login = () => {
-
-    }
-
+    const { loginWithRedirect, user, isAuthenticated, isLoading } = useAuth0();
+    
     const toggleDarkMode = () => {
         setDarkMode(darkMode => !darkMode);
     }
@@ -89,6 +88,15 @@ const Navigation = memo(function Nav(apiUrl : any){
                             }
                         </button>
                     </div>
+                    <div className="nav-right">
+                        <button  onClick={() => loginWithRedirect()}>
+                            {
+                                isAuthenticated ?  <i className="far fa-right-to-bracket text-cyan-50 fa-xl"></i> : <i className="fas fa-right-to-bracket text-cyan-500 fa-xl"></i>
+                            }
+                            
+                            <span className={labelClass}>Login</span>
+                        </button>
+                    </div>
                 </div>
             </nav>
 
@@ -104,17 +112,14 @@ const Navigation = memo(function Nav(apiUrl : any){
                         <span className={labelClass}>Profile</span>
                     </button>
 
-                    <button className={sidebarBtn} onClick={login}>
-                        <i className="fas fa-users"></i>
-                        <span className={labelClass}>Login</span>
-                    </button>
+                    
                 </div>
             </div>
 
             <div className="bg-slate-100 dark:bg-slate-800 h-full w-full lg:w-auto transition-all duration-200 ease-in-out" style={mainContentStyle}>
                 <main className="relative">
                     {   
-                        pageChanged ? <Home apiUrl={apiUrl} /> : <Profile />
+                        pageChanged ? <Home apiBaseURL={apiBaseURL} /> : <Profile />
                     }
                 </main>
             </div>

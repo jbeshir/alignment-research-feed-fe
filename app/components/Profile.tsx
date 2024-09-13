@@ -1,3 +1,5 @@
+import { useAuth0 } from "@auth0/auth0-react";
+
 export default function Profile(){
     const saveProfile = (e : any) => {
         e.PreventDefault();
@@ -9,6 +11,8 @@ export default function Profile(){
         e.PreventDefault();
         alert("Preferences have been saved!");
     }
+
+   const { user, isAuthenticated } = useAuth0();
     
     return(
         <>
@@ -62,6 +66,11 @@ export default function Profile(){
                         </div>
                         <div className="flex float-end"><button className="dark:text-slate-100 text-slate-800" onClick={savePreferences}>Save Preferences</button></div>
                     </div>
+                </div>
+                <div>
+                    <button disabled={(!isAuthenticated)} className="relative px-3 py-3 flex items-center space-x-4 justify-start rounded-lg group hover:bg-slate-400 w-56 ml-0 bg-gradient-to-r from-cyan-400 to-cyan-500 text-white w-56 h-10 ml-0">
+                        Sign out
+                    </button>
                 </div>
             </div>
         </div>
