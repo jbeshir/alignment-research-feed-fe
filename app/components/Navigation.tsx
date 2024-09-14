@@ -91,7 +91,7 @@ const Navigation = memo(function Nav({ apiBaseURL }: { apiBaseURL: string }){
                     <div className="nav-right">
                         <button  onClick={() => loginWithRedirect()}>
                             {
-                                isAuthenticated ?  <i className="far fa-right-to-bracket text-cyan-50 fa-xl"></i> : <i className="fas fa-right-to-bracket text-cyan-500 fa-xl"></i>
+                                isAuthenticated ?  <i className="fas fa-right-to-bracket text-gray-600 fa-xl"></i> : <i className="fas fa-right-to-bracket text-cyan-500 fa-xl"></i>
                             }
                             
                             <span className={labelClass}>Login</span>
