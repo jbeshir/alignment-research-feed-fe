@@ -1,4 +1,7 @@
 import type { Config } from "tailwindcss";
+import formsPlugin from "@tailwindcss/forms";
+
+const colors = require('tailwindcss/colors');
 
 export default {
   content: ["./app/**/*.{js,jsx,ts,tsx}"],
@@ -10,8 +13,13 @@ export default {
       xl: '1440px',
     },
     extend: {
+      colors: {
+        orange: colors.orange,
+      },
     },
   },
-  plugins: [],
+  plugins: [
+    formsPlugin,
+  ],
   darkMode: 'selector',
 } satisfies Config;

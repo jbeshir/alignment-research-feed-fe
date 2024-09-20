@@ -37,7 +37,7 @@ function MakeLinkCellRenderer(baseCellRenderer: any) {
     }, [baseCellRenderer]);
 }
 
-function AlignmentFeedTable({ apiBaseURL }: { apiBaseURL: string }){
+function AlignmentFeedTable({ apiBaseURL, darkMode }: { apiBaseURL: string, darkMode:string }){
     ModuleRegistry.registerModules([
         InfiniteRowModelModule,
     ]);
@@ -160,7 +160,7 @@ function AlignmentFeedTable({ apiBaseURL }: { apiBaseURL: string }){
     }, []);
 
     return (
-        <div className="ag-theme-quartz" style={{height: '100%', width: '100%'}}>
+        <div className={`ag-theme-quartz${darkMode}`} style={{height: '100%', width: '100%'}}>
             <AgGridReact
                 columnDefs={columnDefs}
                 defaultColDef={defaultColDefs}

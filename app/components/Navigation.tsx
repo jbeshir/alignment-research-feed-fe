@@ -1,71 +1,49 @@
-import { memo, useState, useMemo } from "react";
+import { memo, useState, Fragment, useMemo } from "react";
 import Home from "~/components/Home";
 import Profile from "~/components/Profile";
 import { useAuth0 } from "@auth0/auth0-react";
+import { Menu, Transition } from '@headlessui/react'
+
+
 
 const Navigation = memo(function Nav({ apiBaseURL }: { apiBaseURL: string }){
-    const [toggleExpand, setToggleExpand] = useState(true);
     const [darkMode, setDarkMode] = useState(true);
-
-    const [sidebarClass, setSidebarClass] = useState("pt-3 w-28 bg-slate-100 dark:bg-slate-800 h-screen fixed rounded-none border-none transition-all duration-200 ease-in-out overflow-hidden text-center px-0 text-gray-500");
-    const [sidebarStyle, setSidebarStyle] = useState({width: "4rem"});
-    const textVisible = "text-left px-6 text-slate-100 dark:text-slate-800";
-    const textNotVisible = "text-center px-0 text-gray-500" 
-
-    const [mainContentStyle, setMainContentStyle] = useState({marginLeft: "4rem"});
-
-    const labelClassInitial = "font-medium transition-all duration-200 opacity-0";
-    const labelClassChanged = "font-medium transition-all duration-200 opacity-100";
-    const [labelClass, setLabelClass] = useState(labelClassInitial);
-    
-    const sidebarBtn = "relative px-3 py-3 flex items-center space-x-4 justify-start text-gray-500 rounded-lg group hover:bg-slate-400 w-56";
-    const sidebarBtnGradient = " bg-gradient-to-r from-cyan-400 to-cyan-500 text-white w-56 ml-0";
-    const [sidebarHomeBtn, setSidebarHomeBtn] = useState("relative px-3 py-3 flex items-center space-x-4 justify-start rounded-lg group hover:bg-slate-400 w-56 ml-0 bg-gradient-to-r from-cyan-400 to-cyan-500 text-white w-56 h-10 ml-0");
-    const [sidebarProfileBtn, setSidebarProfileBtn] = useState(sidebarBtn);
-
     const [pageChanged, setPageChanged] = useState(true);
 
-    const expandSidebar = () => {
-        setToggleExpand(!toggleExpand);
-
-        if(toggleExpand === false){
-            setSidebarStyle({width: '4rem'});
-            setMainContentStyle({marginLeft:'4rem'});
-            setSidebarClass(sidebarClass.replace(textVisible, textNotVisible));
-            setLabelClass(labelClassInitial);
-        } 
-        else
-        {
-            setSidebarStyle({width: '16rem'});
-            setMainContentStyle({marginLeft: '16rem'});
-            setSidebarClass(sidebarClass.replace(textNotVisible, textVisible));
-            setLabelClass(labelClassChanged);
+    const changePage = (item: number) => {
+        switch(item){
+            case 1:
+                setPageChanged(true);
+                break;
+            case 2:
+                setPageChanged(false);
+                break;
+            case 3:
+                setDarkMode(darkMode => !darkMode);
+                break;  
+            case 4:
+                isAuthenticated ? logout() : loginWithRedirect();
+                break;       
         }
     }
 
-    const highlightSidebarItem = async (text: string) => 
-    {
-        if(text === "home"){
-            setSidebarHomeBtn(sidebarHomeBtn.replace("text-gray-500", "") + sidebarBtnGradient);
-            setPageChanged(true);
-        }
-        else {
-            setSidebarHomeBtn(sidebarBtn);
-        }
+    const { loginWithRedirect, logout, user, isAuthenticated, isLoading } = useAuth0();
 
-        if(text === "profile"){
-            setSidebarProfileBtn(sidebarProfileBtn.replace("text-gray-500", "") + sidebarBtnGradient)
-            setPageChanged(false);
-        }
-        else{
-            setSidebarProfileBtn(sidebarBtn);
-        }
+    const userProfile = {
+        name: user?.name ?? "John Doe",
+        email: user?.email ?? 'lisamarie@example.com',
+        imageUrl: isAuthenticated ? user?.picture : 'https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=80',
     }
 
-    const { loginWithRedirect, user, isAuthenticated, isLoading } = useAuth0();
-    
-    const toggleDarkMode = () => {
-        setDarkMode(darkMode => !darkMode);
+    const userNavigation = [
+        { name: 'Home', page: 1 },
+        { name: 'Profile', page: 2 },
+        { name: darkMode ? 'Light Mode' : 'Dark Mode', page: 3},
+        { name: isAuthenticated ? 'Sign in' : 'Sign out', page: 4},
+    ]
+      
+    function classNames(...classes: any[]) {
+        return classes.filter(Boolean).join(' ')
     }
 
     return (
@@ -73,53 +51,46 @@ const Navigation = memo(function Nav({ apiBaseURL }: { apiBaseURL: string }){
         <div className={darkMode ? "dark dark:bg-slate-800" : "bg-slate-100"}>
             <nav className="sticky top-0 z-50 w-full px-5 py-2 flex justify-between items-center bg-slate-100 dark:bg-slate-800 border-b border-gray-300 dark:border-gray-600">
                 <div className="px-2 nav-align">
-                    <div>
-                        <button id="menu-button" onClick={expandSidebar} >
-                            <i className="fas fa-bars text-cyan-500 text-lg"></i>
-                        </button>
+                    <div className="px-1">
+                        <h1 className='text-5xl font-medium text-black dark:text-white p-3 pt-3' style={{left: "0%"}}> { pageChanged ? "Alignment Feed" : "Profile" } </h1>
                     </div>
-                    <div className="px-6">
-                        <h1 className='text-5xl font-medium text-black dark:text-white p-5 pt-3' style={{left: "0%"}}> { pageChanged ? "Alignment Feed" : "Profile" } </h1>
-                    </div>
-                    <div className="nav-right">
-                        <button onClick={toggleDarkMode}>
-                            {
-                                darkMode ? <i className="fa-solid fa-moon text-cyan-500 fa-xl"></i> : <i className="fa-regular fa-sun text-cyan-500 fa-xl"></i>
-                            }
-                        </button>
-                    </div>
-                    <div className="nav-right">
-                        <button  onClick={() => loginWithRedirect()}>
-                            {
-                                isAuthenticated ?  <i className="fas fa-right-to-bracket text-gray-600 fa-xl"></i> : <i className="fas fa-right-to-bracket text-cyan-500 fa-xl"></i>
-                            }
-                            
-                            <span className={labelClass}>Login</span>
-                        </button>
+                    <div className="nav-right lg:ml-4 lg:items-center">
+                        <Menu as="div" className="px-2 relative ml-4 flex-shrink-0">
+                            <div>
+                                <Menu.Button className="bg-white rounded-full flex focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900">
+                                    <span className="sr-only">Open user menu</span>
+                                    <img className="h-8 w-8 rounded-full" src={userProfile.imageUrl} alt="" />
+                                </Menu.Button>
+                            </div>
+                            <Transition
+                                as={Fragment}
+                                enter="transition ease-out duration-100"
+                                enterFrom="transform opacity-0 scale-95"
+                                enterTo="transform opacity-100 scale-100"
+                                leave="transition ease-in duration-75"
+                                leaveFrom="transform opacity-100 scale-100"
+                                leaveTo="transform opacity-0 scale-95">
+                                <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 py-1 focus:outline-none">
+                                    {userNavigation.map((item) => (
+                                        <Menu.Item key={item.name}>
+                                            {({ active }) => (
+                                                <button onClick={() => changePage(item.page)} className={classNames(active ? 'hover:bg-slate-100 w-48' : '', 'block py-2 px-4 w-48 text-sm text-gray-700')}>
+                                                    {item.name}
+                                                </button>
+                                            )}
+                                        </Menu.Item>
+                                    ))}
+                                </Menu.Items>
+                            </Transition>
+                        </Menu>    
                     </div>
                 </div>
             </nav>
 
-            <div id="sidebar" className={sidebarClass} style={sidebarStyle}>
-                <div className="p-2">
-                    <button className={sidebarHomeBtn} onClick={() => highlightSidebarItem("home")}>
-                        <i className="fas fa-home text-lg"></i>
-                        <span className={labelClass}>Home</span>
-                    </button>
-
-                    <button className={sidebarProfileBtn} onClick={() => highlightSidebarItem("profile")}>
-                        <i className="fa-solid fa-user"></i>
-                        <span className={labelClass}>Profile</span>
-                    </button>
-
-                    
-                </div>
-            </div>
-
-            <div className="bg-slate-100 dark:bg-slate-800 h-full w-full lg:w-auto transition-all duration-200 ease-in-out" style={mainContentStyle}>
+            <div className="bg-slate-100 dark:bg-slate-800 h-full w-full lg:w-auto transition-all duration-200 ease-in-out">
                 <main className="relative">
                     {   
-                        pageChanged ? <Home apiBaseURL={apiBaseURL} /> : <Profile />
+                        pageChanged ? <Home apiBaseURL={apiBaseURL} darkMode={darkMode ? "-dark" : ""}/> : <Profile />
                     }
                 </main>
             </div>
