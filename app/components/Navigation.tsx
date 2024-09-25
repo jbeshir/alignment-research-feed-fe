@@ -4,8 +4,6 @@ import Profile from "~/components/Profile";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Menu, Transition } from '@headlessui/react'
 
-
-
 const Navigation = memo(function Nav({ apiBaseURL }: { apiBaseURL: string }){
     const [darkMode, setDarkMode] = useState(true);
     const [pageChanged, setPageChanged] = useState(true);
@@ -31,7 +29,7 @@ const Navigation = memo(function Nav({ apiBaseURL }: { apiBaseURL: string }){
 
     const userProfile = {
         name: user?.name ?? "John Doe",
-        email: user?.email ?? 'lisamarie@example.com',
+        email: user?.email ?? 'johndoe@example.com',
         imageUrl: isAuthenticated ? user?.picture : 'https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=80',
     }
 

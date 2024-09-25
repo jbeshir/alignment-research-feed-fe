@@ -30,20 +30,63 @@ function MakeLinkCellRenderer(baseCellRenderer: any) {
         }
 
         return (
-            <a href={props.data.link} target='_blank' rel='noreferrer' style={{height: '100%', width: '100%', display:'inline-block'}}>
-                {baseCellRenderer(props)}
-            </a>
+            <>
+                <a href={props.data.link} target='_blank' rel='noreferrer' style={{height: '110%', width: '100%', display:'inline-block'}}>
+                    {baseCellRenderer(props)}
+                </a>
+            </>
         );
+    
     }, [baseCellRenderer]);
 }
+
+// const voteButton = () => {
+    
+// }
 
 function AlignmentFeedTable({ apiBaseURL, darkMode }: { apiBaseURL: string, darkMode:string }){
     ModuleRegistry.registerModules([
         InfiniteRowModelModule,
     ]);
 
+    const [vote, setVote] = useState(0);
+    const saveUpvotes = (e: React.MouseEvent<HTMLElement>) => {
+        e.preventDefault();
+        setVote(vote+1);
+    }
+
+    const saveDownvotes = (e: React.MouseEvent<HTMLElement>) => {
+        e.preventDefault();
+        setVote(vote-1);
+    }
+
     const columnDefs = [
-        { flex: 3, colId: 'title', field: 'title', sortable: false,
+        { cellStyle:{'fontWeight':'bold'}, flex: 1, colId: 'votes', field: 'votes', sortable: false,
+            filter: 'agTextColumnFilter',
+            filterParams: {
+                filterOptions: ['contains'],
+                maxNumConditions: 1
+            },
+            cellRenderer: MakeLinkCellRenderer(useCallback((props: any) => {
+                return (
+                    <div className="flex items-center space-x-4">
+                        <button className="p-2 border rounded-full hover:bg-gray-100 h-8 w-8" onClick={saveUpvotes}>
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path  d="M5 15l7-7 7 7" />
+                            </svg>
+                        </button>
+                        <span className="text-xl font-bold">{vote}</span>
+                        <button className="p-2 border rounded-full hover:bg-gray-100 h-8 w-8" onClick={saveDownvotes}>
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path  d="M19 9l-7 7-7-7" />
+                                {/* stroke-linecap="round" stroke-linejoin="round" stroke-width="2" */}
+                            </svg>
+                        </button>
+                    </div>
+                );
+            }, []))
+        },
+        { cellStyle:{'fontWeight':'bold'}, flex: 3, colId: 'title', field: 'title', sortable: false,
             filter: 'agTextColumnFilter',
             filterParams: {
                 filterOptions: ['contains'],

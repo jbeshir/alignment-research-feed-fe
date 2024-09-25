@@ -32,9 +32,9 @@ export default function Profile(){
               <section aria-labelledby="profile-details-heading">
                 <form>
                   <div className="shadow sm:rounded-md sm:overflow-hidden">
-                    <div className="bg-white dark:bg-black py-6 px-4 sm:p-6">
+                    <div className="bg-white dark:bg-slate-800 text-black dark:text-white py-6 px-4 sm:p-6">
                       <div>
-                        <h2 id="payment-details-heading" className="text-lg leading-6 font-medium text-gray-900">
+                        <h2 id="payment-details-heading" className="text-lg leading-6 font-medium dark:text-gray-100 text-gray-800">
                           Profile
                         </h2>
                         <p className="mt-1 text-sm text-gray-500">
@@ -44,7 +44,7 @@ export default function Profile(){
 
                       <div className="mt-6 grid grid-cols-4 gap-6">
                         <div className="col-span-4 sm:col-span-2">
-                          <label htmlFor="first-name" className="block text-sm font-medium text-gray-700">
+                          <label htmlFor="first-name" className="block text-sm font-medium dark:text-gray-200 text-gray-800">
                             First name
                           </label>
                           <input
@@ -54,11 +54,11 @@ export default function Profile(){
                             id="first-name"
                             value={firstName}
                             autoComplete="cc-given-name"
-                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"/>
+                            className="mt-1 block w-full border border-gray-300 dark:text-gray-200 text-gray-800 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"/>
                         </div>
 
                         <div className="col-span-4 sm:col-span-2">
-                          <label htmlFor="last-name" className="block text-sm font-medium text-gray-700">
+                          <label htmlFor="last-name" className="block text-sm font-medium dark:text-gray-200 text-gray-800">
                             Last name
                           </label>
                           <input
@@ -68,12 +68,12 @@ export default function Profile(){
                             id="last-name"
                             value={lastName}
                             autoComplete="cc-family-name"
-                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
+                            className="mt-1 block w-full border border-gray-300 dark:text-gray-200 text-gray-800 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
                           />
                         </div>
 
                         <div className="col-span-4 sm:col-span-2">
-                          <label htmlFor="email-address" className="block text-sm font-medium text-gray-700">
+                          <label htmlFor="email-address" className="block text-sm font-medium dark:text-gray-200 text-gray-800">
                             Email address
                           </label>
                           <input
@@ -83,12 +83,12 @@ export default function Profile(){
                             id="email-address"
                             value={email}
                             autoComplete="email"
-                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
+                            className="mt-1 block w-full border border-gray-300 dark:text-gray-200 text-gray-800 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
                           />
                         </div>
 
                         <div className="col-span-4 sm:col-span-1">
-                          <label htmlFor="birth-date" className="block text-sm font-medium text-gray-700">
+                          <label htmlFor="birth-date" className="block text-sm font-medium dark:text-gray-200 text-gray-800">
                             Birth date
                           </label>
                           <input
@@ -98,13 +98,13 @@ export default function Profile(){
                             id="birth-date"
                             value={birthDate}
                             autoComplete="cc-birth"
-                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
+                            className="mt-1 block w-full border border-gray-300 dark:text-gray-200 text-gray-800 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
                             placeholder="MM / YY"
                           />
                         </div>
 
                         <div className="col-span-4 sm:col-span-1">
-                            <label htmlFor="role" className="flex items-center text-sm font-medium text-gray-700">
+                            <label htmlFor="role" className="flex items-center text-sm font-medium dark:text-gray-200 text-gray-800">
                                 <span>Role</span>
                             </label>
                             <select
@@ -112,7 +112,7 @@ export default function Profile(){
                             name="role"
                             id="role"
                             value={role}
-                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm">
+                            className="mt-1 block w-full border border-gray-300 dark:text-gray-200 text-gray-800 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm">
                                 <option defaultValue="research lead">research lead</option>
                                 <option value="research contributor">research contributor</option>
                                 <option value="developer">developer</option>
@@ -121,7 +121,7 @@ export default function Profile(){
                         </div>
 
                         <div className="col-span-4 sm:col-span-2">
-                          <label htmlFor="country" className="block text-sm font-medium text-gray-700">
+                          <label htmlFor="country" className="block text-sm font-medium dark:text-gray-200 text-gray-800">
                             Country
                           </label>
                           <select
@@ -130,7 +130,7 @@ export default function Profile(){
                             name="country"
                             value={country}
                             autoComplete="country-name"
-                            className="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
+                            className="mt-1 block w-full bg-white border border-gray-300 dark:text-gray-200 text-gray-800 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
                           >
                             <option value="United States of America">United States</option>
                             <option value="Canada">Canada</option>
@@ -139,44 +139,44 @@ export default function Profile(){
                         </div>
 
                         <div className="col-span-4 sm:col-span-2">
-                          <label htmlFor="postal-code" className="block text-sm font-medium text-gray-700">
+                          <label htmlFor="postal-code" className="block text-sm font-medium dark:text-gray-200 text-gray-800">
                             ZIP / Postal code
                           </label>
                           <input
-                            onChange={(e) => setZip(e.target.value)}
-                            type="text"
+                            onChange={(e) => setZip(e.target.valueAsNumber)}
+                            type="number"
                             name="postal-code"
                             id="postal-code"
                             autoComplete="postal-code"
-                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
+                            className="mt-1 block w-full border border-gray-300 dark:text-gray-200 text-gray-800 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
                           />
                         </div>
                       </div>
                     </div>
-                    <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                      <button onClick={saveProfile} type="button" className="bg-gray-800 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900">
+                    <div className="px-4 py-3 bg-gray-50 dark:bg-gray-600 text-right sm:px-6">
+                      <button onClick={saveProfile} type="button" className="bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white dark:text-black  hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900">
                         Save
                       </button>
                     </div>
                   </div>
                 </form>
               </section>
-              <section aria-labelledby="settings-heading" className="pt-4">
+              <section aria-labelledby="settings-heading">
                 <form>
                   <div className="shadow sm:rounded-md sm:overflow-hidden">
-                    <div className="bg-white py-6 px-4 sm:p-6">
+                    <div className="bg-white dark:bg-slate-800 text-black dark:text-white py-6 px-4 sm:p-6">
                       <div>
-                        <h2 id="payment-details-heading" className="text-lg leading-6 font-medium text-gray-900">
-                            Settings
+                        <h2 id="settings-heading" className="text-lg leading-6 font-medium dark:text-gray-100 text-gray-800">
+                          Settings/Preferences
                         </h2>
                         <p className="mt-1 text-sm text-gray-500">
-                          Update the settings and personal preferences. 
+                          Update the settings for your account. Updates may reflect for upto a few minutes so please be patient. 
                         </p>
                       </div>
 
                       <div className="mt-6 grid grid-cols-4 gap-6">
                         <div className="col-span-4 sm:col-span-2">
-                          <label htmlFor="first-name" className="block text-sm font-medium text-gray-700">
+                          <label htmlFor="first-name" className="block text-sm font-medium dark:text-gray-200 text-gray-800">
                             First name
                           </label>
                           <input
@@ -186,11 +186,11 @@ export default function Profile(){
                             id="first-name"
                             value={firstName}
                             autoComplete="cc-given-name"
-                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"/>
+                            className="mt-1 block w-full border border-gray-300 dark:text-gray-200 text-gray-800 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"/>
                         </div>
 
                         <div className="col-span-4 sm:col-span-2">
-                          <label htmlFor="last-name" className="block text-sm font-medium text-gray-700">
+                          <label htmlFor="last-name" className="block text-sm font-medium dark:text-gray-200 text-gray-800">
                             Last name
                           </label>
                           <input
@@ -200,12 +200,12 @@ export default function Profile(){
                             id="last-name"
                             value={lastName}
                             autoComplete="cc-family-name"
-                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
+                            className="mt-1 block w-full border border-gray-300 dark:text-gray-200 text-gray-800 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
                           />
                         </div>
 
                         <div className="col-span-4 sm:col-span-2">
-                          <label htmlFor="email-address" className="block text-sm font-medium text-gray-700">
+                          <label htmlFor="email-address" className="block text-sm font-medium dark:text-gray-200 text-gray-800">
                             Email address
                           </label>
                           <input
@@ -215,12 +215,12 @@ export default function Profile(){
                             id="email-address"
                             value={email}
                             autoComplete="email"
-                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
+                            className="mt-1 block w-full border border-gray-300 dark:text-gray-200 text-gray-800 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
                           />
                         </div>
 
                         <div className="col-span-4 sm:col-span-1">
-                          <label htmlFor="birth-date" className="block text-sm font-medium text-gray-700">
+                          <label htmlFor="birth-date" className="block text-sm font-medium dark:text-gray-200 text-gray-800">
                             Birth date
                           </label>
                           <input
@@ -230,13 +230,13 @@ export default function Profile(){
                             id="birth-date"
                             value={birthDate}
                             autoComplete="cc-birth"
-                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
+                            className="mt-1 block w-full border border-gray-300 dark:text-gray-200 text-gray-800 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
                             placeholder="MM / YY"
                           />
                         </div>
 
                         <div className="col-span-4 sm:col-span-1">
-                            <label htmlFor="role" className="flex items-center text-sm font-medium text-gray-700">
+                            <label htmlFor="role" className="flex items-center text-sm font-medium dark:text-gray-200 text-gray-800">
                                 <span>Role</span>
                             </label>
                             <select
@@ -244,7 +244,7 @@ export default function Profile(){
                             name="role"
                             id="role"
                             value={role}
-                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm">
+                            className="mt-1 block w-full border border-gray-300 dark:text-gray-200 text-gray-800 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm">
                                 <option defaultValue="research lead">research lead</option>
                                 <option value="research contributor">research contributor</option>
                                 <option value="developer">developer</option>
@@ -253,7 +253,7 @@ export default function Profile(){
                         </div>
 
                         <div className="col-span-4 sm:col-span-2">
-                          <label htmlFor="country" className="block text-sm font-medium text-gray-700">
+                          <label htmlFor="country" className="block text-sm font-medium dark:text-gray-200 text-gray-800">
                             Country
                           </label>
                           <select
@@ -262,7 +262,7 @@ export default function Profile(){
                             name="country"
                             value={country}
                             autoComplete="country-name"
-                            className="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
+                            className="mt-1 block w-full bg-white border border-gray-300 dark:text-gray-200 text-gray-800 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
                           >
                             <option value="United States of America">United States</option>
                             <option value="Canada">Canada</option>
@@ -271,43 +271,46 @@ export default function Profile(){
                         </div>
 
                         <div className="col-span-4 sm:col-span-2">
-                          <label htmlFor="postal-code" className="block text-sm font-medium text-gray-700">
+                          <label htmlFor="postal-code" className="block text-sm font-medium dark:text-gray-200 text-gray-800">
                             ZIP / Postal code
                           </label>
                           <input
-                            onChange={(e) => setZip(e.target.value)}
-                            type="text"
+                            onChange={(e) => setZip(e)}
+                            type="number"
                             name="postal-code"
                             id="postal-code"
                             autoComplete="postal-code"
-                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
+                            className="mt-1 block w-full border border-gray-300 dark:text-gray-200 text-gray-800 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
                           />
                         </div>
                       </div>
                     </div>
-                    <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                      <button onClick={saveProfile} type="button" className="bg-gray-800 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900">
+                    <div className="px-4 py-3 bg-gray-50 dark:bg-gray-600 text-right sm:px-6">
+                      <button onClick={saveProfile} type="button" className="bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white dark:text-black  hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900">
                         Save
                       </button>
                     </div>
                   </div>
                 </form>
               </section>
-              <section aria-labelledby="articles-details-heading" className="pt-4">
+              <section aria-labelledby="actions-heading">
                 <form>
                   <div className="shadow sm:rounded-md sm:overflow-hidden">
-                    <div className="bg-white py-6 px-4 sm:p-6">
+                    <div className="bg-white dark:bg-slate-800 text-black dark:text-white py-6 px-4 sm:p-6">
                       <div>
-                        <h2 id="payment-details-heading" className="text-lg leading-6 font-medium text-gray-900">
-                            Latest actions
+                        <h2 id="actions-heading" className="text-lg leading-6 font-medium dark:text-gray-100 text-gray-800">
+                          Profile
                         </h2>
                         <p className="mt-1 text-sm text-gray-500">
-                            Your latest interactions on articles
+                          Update your profile information. 
                         </p>
                       </div>
 
                       <div className="mt-6 grid grid-cols-4 gap-6">
-                        {/* Articles upvoted/downvoted by user shown here */}
+                        <div className="col-span-4 sm:col-span-2">
+                        </div>
+
+
                       </div>
                     </div>
                   </div>
