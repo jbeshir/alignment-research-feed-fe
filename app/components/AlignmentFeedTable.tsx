@@ -1,4 +1,4 @@
-import {useCallback, useRef, useState} from 'react';
+import {useCallback, useRef, useState, useMemo} from 'react';
 import {AgGridReact} from "@ag-grid-community/react";
 import {z} from "zod";
 
@@ -7,9 +7,7 @@ import '@ag-grid-community/styles/ag-theme-quartz.css';
 import {ModuleRegistry, GetRowIdParams, IDatasource, SortModelItem} from "@ag-grid-community/core";
 import { InfiniteRowModelModule } from "@ag-grid-community/infinite-row-model";
 
-type AlignmentFeedTableProps = {
-    apiBaseURL: string
-}
+//TODO: fix and add functionality for voting buttons
 
 const Article = z.object({
     hash_id: z.string(),
@@ -30,21 +28,63 @@ function MakeLinkCellRenderer(baseCellRenderer: any) {
         }
 
         return (
-            <a href={props.data.link} target='_blank' rel='noreferrer' style={{height: '100%', width: '100%', display:'inline-block'}}>
-                {baseCellRenderer(props)}
-            </a>
+            <>
+                <a href={props.data.link} target='_blank' rel='noreferrer' style={{height: '110%', width: '100%', display:'inline-block'}}>
+                    {baseCellRenderer(props)}
+                </a>
+            </>
         );
+    
     }, [baseCellRenderer]);
 }
 
-function AlignmentFeedTable({apiBaseURL} : AlignmentFeedTableProps) {
+function AlignmentFeedTable({ apiBaseURL, darkMode }: { apiBaseURL: string, darkMode:string }){
     ModuleRegistry.registerModules([
         InfiniteRowModelModule,
     ]);
 
+    /*
+    const [vote, setVote] = useState(0);
+    const saveUpvotes = (e: React.MouseEvent<HTMLElement>) => {
+        e.preventDefault();
+        setVote(vote+1);
+    }
+
+    const saveDownvotes = (e: React.MouseEvent<HTMLElement>) => {
+        e.preventDefault();
+        setVote(vote-1);
+    }
+    */
 
     const columnDefs = [
-        { flex: 3, colId: 'title', field: 'title', sortable: false,
+        /*
+        //Adding downvote and upvote buttons to the AG grid table
+        { cellStyle:{'fontWeight':'bold'}, flex: 1, colId: 'votes', field: 'votes', sortable: false,
+            filter: 'agTextColumnFilter',
+            filterParams: {
+                filterOptions: ['contains'],
+                maxNumConditions: 1
+            },
+            cellRenderer: MakeLinkCellRenderer(useCallback((props: any) => {
+                return (
+                    <div className="flex items-center space-x-4">
+                        <button className="p-2 border rounded-full hover:bg-gray-100 h-8 w-8" onClick={saveUpvotes}>
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path  d="M5 15l7-7 7 7" />
+                            </svg>
+                        </button>
+                        <span className="text-xl font-bold">{vote}</span>
+                        <button className="p-2 border rounded-full hover:bg-gray-100 h-8 w-8" onClick={saveDownvotes}>
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path  d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                    </div>
+                );
+            }, []))
+        },
+        */
+        { cellStyle:{'fontWeight':'bold'}, flex: 3, colId: 'title', field: 'title', sortable: false,
             filter: 'agTextColumnFilter',
             filterParams: {
                 filterOptions: ['contains'],
@@ -86,6 +126,13 @@ function AlignmentFeedTable({apiBaseURL} : AlignmentFeedTableProps) {
             }, []))
         },
     ];
+
+    const defaultColDefs = useMemo(() => {
+        return {
+            filter: 'agTextColumnFilter',
+            floatingFilter: true,
+        };
+    }, []);
 
     const dataSource: IDatasource = {
         getRows: useCallback(async (params) => {
@@ -154,9 +201,10 @@ function AlignmentFeedTable({apiBaseURL} : AlignmentFeedTableProps) {
     }, []);
 
     return (
-        <div className="ag-theme-quartz-auto-dark" style={{height: '100%'}}>
+        <div className={`ag-theme-quartz${darkMode}`} style={{height: '100%', width: '100%'}}>
             <AgGridReact
                 columnDefs={columnDefs}
+                defaultColDef={defaultColDefs}
                 rowModelType='infinite'
                 cacheBlockSize={100}
                 datasource={dataSource}

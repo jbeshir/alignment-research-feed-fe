@@ -1,6 +1,8 @@
-import type {LoaderFunction, MetaFunction} from "@remix-run/cloudflare";
+import {json, LoaderFunctionArgs, type LoaderFunction, type MetaFunction} from "@remix-run/cloudflare";
 import {useLoaderData} from "@remix-run/react";
-import AlignmentFeedTable from "~/components/AlignmentFeedTable";
+import Navigation from '~/components/Navigation';
+import SuggestSignin from '~/components/modals/SuggestSignin';
+import { useAuth0 } from "@auth0/auth0-react"
 
 export const meta: MetaFunction = () => {
   return [
@@ -16,28 +18,21 @@ type LoaderData = {
   apiBaseURL: string;
 }
 
-export const loader: LoaderFunction = async ({ context }): Promise<LoaderData> => {
+export const loader: LoaderFunction = async ({ context } : LoaderFunctionArgs): Promise<LoaderData> => {
+  //const url: string = import.meta.env.VITE_ALIGNMENT_FEED_BASE_URL;
+  //return { apiBaseURL: url };
   return { apiBaseURL: context.cloudflare.env.ALIGNMENT_FEED_BASE_URL};
 };
 
 export default function Index() {
   const { apiBaseURL } = useLoaderData<LoaderData>();
+  //const apiBaseURL: string = import.meta.env.VITE_ALIGNMENT_FEED_BASE_URL;
+  const {isAuthenticated } = useAuth0(); 
 
   return (
-      <div className='h-screen w-full flex flex-col space-y-4 pb-5'>
-        <h1 className='text-5xl text-center font-medium text-black dark:text-white p-5'>Alignment Feed</h1>
-        <div className='text-xl font-medium text-black dark:text-white px-5'>
-          A feed of all content in the <a href='https://github.com/StampyAI/alignment-research-dataset' className='text-emerald-500 hover:underline'>Alignment Research Dataset</a>,
-          updated every day.
-        </div>
-        <div className='grow px-5'>
-          <AlignmentFeedTable
-              apiBaseURL={apiBaseURL}
-          />
-        </div>
-        <div className='text-xl font-medium text-black dark:text-white px-5'>
-          An RSS feed of new items coming into this dataset is available <a href='https://alignmentfeed.beshir.org/rss' className='text-emerald-500 hover:underline'>here</a>.
-        </div>
-      </div>
+    <>
+      { isAuthenticated ? <></> : <SuggestSignin /> }
+      <Navigation apiBaseURL={apiBaseURL} />
+    </>
   );
 }
