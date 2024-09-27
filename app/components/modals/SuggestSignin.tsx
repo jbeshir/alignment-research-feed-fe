@@ -4,7 +4,6 @@ import { useAuth0 } from "@auth0/auth0-react"
 
 export default function SuggestSignin() {
   const [open, setOpen] = useState(true);
-
   const { loginWithRedirect, isAuthenticated } = useAuth0(); 
 
   const Login = () => {
@@ -31,9 +30,8 @@ export default function SuggestSignin() {
                     Login
                   </DialogTitle>
                   <div className="mt-2">
-                    <p className="text-sm text-gray-500">
-                      You are not signed in. <br/>
-                      Login to access special features such as a user specific feed, upvoting/downvoting and sharing.
+                    <p className="text-sm text-gray-500 text-wrap">
+                      You are not signed in. Login to access special features such as a user specific feed, upvoting/downvoting and sharing.
                     </p>
                   </div>
                 </div>

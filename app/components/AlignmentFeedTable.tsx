@@ -7,9 +7,7 @@ import '@ag-grid-community/styles/ag-theme-quartz.css';
 import {ModuleRegistry, GetRowIdParams, IDatasource, SortModelItem} from "@ag-grid-community/core";
 import { InfiniteRowModelModule } from "@ag-grid-community/infinite-row-model";
 
-// interface AlignmentFeedTableProps {
-//     apiBaseURL: string;
-// }
+//TODO: fix and add functionality for voting buttons
 
 const Article = z.object({
     hash_id: z.string(),
@@ -40,15 +38,12 @@ function MakeLinkCellRenderer(baseCellRenderer: any) {
     }, [baseCellRenderer]);
 }
 
-// const voteButton = () => {
-    
-// }
-
 function AlignmentFeedTable({ apiBaseURL, darkMode }: { apiBaseURL: string, darkMode:string }){
     ModuleRegistry.registerModules([
         InfiniteRowModelModule,
     ]);
 
+    /*
     const [vote, setVote] = useState(0);
     const saveUpvotes = (e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault();
@@ -59,8 +54,11 @@ function AlignmentFeedTable({ apiBaseURL, darkMode }: { apiBaseURL: string, dark
         e.preventDefault();
         setVote(vote-1);
     }
+    */
 
     const columnDefs = [
+        /*
+        //Adding downvote and upvote buttons to the AG grid table
         { cellStyle:{'fontWeight':'bold'}, flex: 1, colId: 'votes', field: 'votes', sortable: false,
             filter: 'agTextColumnFilter',
             filterParams: {
@@ -79,13 +77,13 @@ function AlignmentFeedTable({ apiBaseURL, darkMode }: { apiBaseURL: string, dark
                         <button className="p-2 border rounded-full hover:bg-gray-100 h-8 w-8" onClick={saveDownvotes}>
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path  d="M19 9l-7 7-7-7" />
-                                {/* stroke-linecap="round" stroke-linejoin="round" stroke-width="2" */}
                             </svg>
                         </button>
                     </div>
                 );
             }, []))
         },
+        */
         { cellStyle:{'fontWeight':'bold'}, flex: 3, colId: 'title', field: 'title', sortable: false,
             filter: 'agTextColumnFilter',
             filterParams: {

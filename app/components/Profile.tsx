@@ -1,16 +1,15 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { useState } from 'react'
  
+    
+//TODO: Fix settings on profile so that it is not light on a dark theme
+//      Save preferences and settings
+//      Show updates for latest article the user has voted on
+
 export default function Profile(){
     const saveProfile = (e:  React.MouseEvent<HTMLElement>) => {
         e.preventDefault();
         alert("Profile has been saved!");
-        //save functionality
-    }
-
-    const savePreferences = (e:  React.MouseEvent<HTMLElement>) => {
-        e.preventDefault();
-        alert("Preferences have been saved!");
     }
 
     const { user, isAuthenticated, logout } = useAuth0(); 
@@ -22,8 +21,6 @@ export default function Profile(){
     const [role, setRole] = useState("research lead");
     const [country, setCountry] = useState(user?.address ?? "United States of America");
     const [zip, setZip] = useState(1);
-    
-    //Fix settings on profile so that it is not light on a dark theme
 
     return(
         <>
@@ -299,18 +296,11 @@ export default function Profile(){
                     <div className="bg-white dark:bg-slate-800 text-black dark:text-white py-6 px-4 sm:p-6">
                       <div>
                         <h2 id="actions-heading" className="text-lg leading-6 font-medium dark:text-gray-100 text-gray-800">
-                          Profile
+                          Latest actions
                         </h2>
                         <p className="mt-1 text-sm text-gray-500">
-                          Update your profile information. 
+                          The latest list of articles voted on by the user
                         </p>
-                      </div>
-
-                      <div className="mt-6 grid grid-cols-4 gap-6">
-                        <div className="col-span-4 sm:col-span-2">
-                        </div>
-
-
                       </div>
                     </div>
                   </div>
