@@ -24,22 +24,22 @@ export const Article = z.object({
 export type Article = z.infer<typeof Article>;
 
 export const ArticleColumnDefs: ColDef[] = [
-    { flex: 3, colId: 'title', field: 'title', sortable: false,
+    { flex: 3, colId: 'title', field: 'title', sortable: true,
         cellRenderer: MakeLinkCellRenderer((props: ICellRendererParams<Article>) => {
             return props.value || "";
         })
     },
-    { flex: 2, colId: 'authors', field: 'authors', sortable: false,
+    { flex: 2, colId: 'authors', field: 'authors', sortable: true,
         cellRenderer: MakeLinkCellRenderer((props: ICellRendererParams<Article>) => {
             return props.value || "";
         })
     },
-    { flex: 1, colId: 'source', field: 'source',
+    { flex: 1, colId: 'source', field: 'source', sortable: true,
         cellRenderer: MakeLinkCellRenderer((props: ICellRendererParams<Article>) => {
             return props.value || "";
         })
     },
-    { flex: 1, colId: 'published_at', field: 'published_at', headerName: 'Published At',
+    { flex: 1, colId: 'published_at', field: 'published_at', headerName: 'Published At', sortable: true,
         cellRenderer: MakeLinkCellRenderer((props: ICellRendererParams<Article>) => {
             return props.value?.toLocaleString() || "";
         })
