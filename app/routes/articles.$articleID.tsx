@@ -1,6 +1,7 @@
 import type {LoaderFunction, MetaFunction} from "@remix-run/cloudflare";
 import {useLoaderData} from "@remix-run/react";
 import ArticleTable, {Article} from "~/components/ArticleTable";
+import ArticleInfo from "~/components/ArticleInfo";
 
 export const meta: MetaFunction = () => {
     return [
@@ -13,6 +14,7 @@ export const meta: MetaFunction = () => {
 };
 
 type LoaderData = {
+    article: Article;
     similarArticles: Article[];
 }
 
@@ -20,24 +22,19 @@ export const loader: LoaderFunction = async ({ context, params }): Promise<Loade
     const apiBaseURL = context.cloudflare.env.ALIGNMENT_FEED_BASE_URL;
     const articleID: string = params.articleID;
 
-    const apiURL = `${apiBaseURL}/v1/articles/${encodeURIComponent(articleID)}/similar`;
-    const response = await fetch(apiURL);
-    const { data, metadata } = await response.json();
+    const article = fetchArticle(apiBaseURL, articleID);
+    const similarArticles = fetchSimilarArticles(apiBaseURL, articleID);
 
-    const similarArticles = data.map((item: unknown): Article => {
-        if (typeof item !== 'object' || item === null) {
-            throw new Error("item is not object")
-        }
-
-        return Article.parse(item);
-    });
-
-    return { similarArticles: similarArticles};
+    return {
+        article: await article,
+        similarArticles: await similarArticles,
+    }
 };
 
 export default function ArticleDetails() {
     const loaderData = useLoaderData<LoaderData>();
-    const similar = loaderData.similarArticles.map((item: unknown): Article => {
+    const article = Article.parse(loaderData.article);
+    const similarArticles = loaderData.similarArticles.map((item: unknown): Article => {
         if (typeof item !== 'object' || item === null) {
             throw new Error("item is not object")
         }
@@ -48,14 +45,41 @@ export default function ArticleDetails() {
     return (
         <div className='h-screen w-full flex flex-col space-y-4 pb-5'>
             <h1 className='text-5xl text-center font-medium text-black dark:text-white p-5'>Alignment Feed</h1>
+            <h2 className='text-3xl text-center font-medium text-black dark:text-white p-5'>{article.title}</h2>
+            <div className='px-5'>
+                <ArticleInfo
+                    article={article}
+                />
+            </div>
             <div className='text-xl font-medium text-black dark:text-white px-5'>
-                Articles similar to the selected article in the dataset.
+                Articles similar to this one in the dataset.
             </div>
             <div className='grow px-5'>
                 <ArticleTable
-                    articles={similar}
+                    articles={similarArticles}
                 />
             </div>
         </div>
     );
+}
+
+async function fetchArticle(apiBaseURL: string, articleID: string): Promise<Article> {
+    const apiURL = `${apiBaseURL}/v1/articles/${encodeURIComponent(articleID)}`;
+    const response = await fetch(apiURL);
+    const data = await response.json();
+    return Article.parse(data);
+}
+
+async function fetchSimilarArticles(apiBaseURL: string, articleID: string): Promise<Article[]> {
+    const apiURL = `${apiBaseURL}/v1/articles/${encodeURIComponent(articleID)}/similar`;
+    const response = await fetch(apiURL);
+    const { data, metadata } = await response.json();
+
+    return data.map((item: unknown): Article => {
+        if (typeof item !== 'object' || item === null) {
+            throw new Error("item is not object")
+        }
+
+        return Article.parse(item);
+    });
 }

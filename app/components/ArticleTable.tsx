@@ -82,11 +82,12 @@ function ArticleTable({articles} : ArticleTableProps) {
     ]);
 
     return (
-        <div className="ag-theme-quartz-auto-dark" style={{height: '100%'}}>
+        <div className="ag-theme-quartz-auto-dark">
             <AgGridReact
                 columnDefs={ArticleColumnDefs}
                 rowData={articles}
                 getRowId={GetArticleRowId}
+                domLayout="autoHeight"
             />
         </div>
     );
