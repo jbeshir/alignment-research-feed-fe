@@ -1,94 +1,60 @@
-import {useCallback, useRef, useState} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {AgGridReact} from "@ag-grid-community/react";
-import {z} from "zod";
+import {Article, ArticleColumnDefs, GetArticleRowId} from "./ArticleTable"
 
 import '@ag-grid-community/styles/ag-grid.css';
 import '@ag-grid-community/styles/ag-theme-quartz.css';
-import {ModuleRegistry, GetRowIdParams, IDatasource, SortModelItem} from "@ag-grid-community/core";
+import {ModuleRegistry, IDatasource, SortModelItem} from "@ag-grid-community/core";
 import { InfiniteRowModelModule } from "@ag-grid-community/infinite-row-model";
 
 type AlignmentFeedTableProps = {
     apiBaseURL: string
 }
 
-const Article = z.object({
-    hash_id: z.string(),
-    title: z.string(),
-    link: z.string(),
-    text_start: z.string(),
-    authors: z.string(),
-    source: z.string(),
-    published_at: z.string().datetime().pipe(z.coerce.date()),
+// Avoids unnecessary blinking of the table as it reloads its datasources when it doesn't need to rerender.
+const MemoizedAgGridReact = React.memo(AgGridReact);
+
+// Add filtering and sorting rules appropriate supported by our infinite datasource to our column definitions.
+const FeedColumnDefs = ArticleColumnDefs.map((def) => {
+
+    // Set filtering rules
+    const newDef = { ...def };
+    switch (newDef.colId) {
+        case 'title':
+        case 'authors':
+        case 'source':
+            newDef.filter = 'agTextColumnFilter';
+            newDef.filterParams = {
+                filterOptions: ['contains'],
+                maxNumConditions: 1
+            };
+            break;
+        case 'published_at':
+            newDef.filter = 'agDateColumnFilter';
+            newDef.filterParams = {
+                defaultOption: 'greaterThanOrEqual',
+                filterOptions: ['inRange', 'lessThanOrEqual', 'greaterThanOrEqual'],
+                maxNumConditions: 1
+            };
+    }
+
+    // Set sorting rules; these two produce weird and unwanted results if you try to sort by them right now.
+    switch (newDef.colId) {
+        case 'title':
+        case 'authors':
+            newDef.sortable = false;
+    }
+
+    return newDef;
 });
-
-type Article = z.infer<typeof Article>;
-
-function MakeLinkCellRenderer(baseCellRenderer: any) {
-    return useCallback((props: any) => {
-        if (props.data === undefined) {
-            return "";
-        }
-
-        return (
-            <a href={props.data.link} target='_blank' rel='noreferrer' style={{height: '100%', width: '100%', display:'inline-block'}}>
-                {baseCellRenderer(props)}
-            </a>
-        );
-    }, [baseCellRenderer]);
-}
 
 function AlignmentFeedTable({apiBaseURL} : AlignmentFeedTableProps) {
     ModuleRegistry.registerModules([
         InfiniteRowModelModule,
     ]);
 
-
-    const columnDefs = [
-        { flex: 3, colId: 'title', field: 'title', sortable: false,
-            filter: 'agTextColumnFilter',
-            filterParams: {
-                filterOptions: ['contains'],
-                maxNumConditions: 1
-            },
-            cellRenderer: MakeLinkCellRenderer(useCallback((props: any) => {
-                return props.value || "";
-            }, []))
-        },
-        { flex: 2, colId: 'authors', field: 'authors', sortable: false,
-            filter: 'agTextColumnFilter',
-            filterParams: {
-                filterOptions: ['contains'],
-                maxNumConditions: 1
-            },
-            cellRenderer: MakeLinkCellRenderer(useCallback((props: any) => {
-                return props.value || "";
-            }, []))
-        },
-        { flex: 1, colId: 'source', field: 'source',
-            filter: 'agTextColumnFilter',
-            filterParams: {
-                filterOptions: ['equals'],
-                maxNumConditions: 1
-            },
-            cellRenderer: MakeLinkCellRenderer(useCallback((props: any) => {
-                return props.value || "";
-            }, []))
-        },
-        { flex: 1, colId: 'published_at', field: 'published_at', headerName: 'Published At',
-            filter: 'agDateColumnFilter',
-            filterParams: {
-                defaultOption: 'greaterThanOrEqual',
-                filterOptions: ['inRange', 'lessThanOrEqual', 'greaterThanOrEqual'],
-                maxNumConditions: 1
-            },
-            cellRenderer: MakeLinkCellRenderer(useCallback((props: any) => {
-                return props.value?.toLocaleString() || "";
-            }, []))
-        },
-    ];
-
-    const dataSource: IDatasource = {
-        getRows: useCallback(async (params) => {
+    const dataSource: IDatasource = useMemo(() => {return {
+        getRows: async (params) => {
             const page = Math.floor(params.startRow / 100) + 1;
             const pageSize = 100;  // We're using a fixed page size of 100 for this example
 
@@ -146,21 +112,17 @@ function AlignmentFeedTable({apiBaseURL} : AlignmentFeedTableProps) {
                 : null;
 
             params.successCallback(articles, lastRow);
-        }, [apiBaseURL])
-    };
-
-    const getRowId = useCallback((params: GetRowIdParams) => {
-        return params.data.hash_id;
-    }, []);
+        }
+    }}, [apiBaseURL]);
 
     return (
         <div className="ag-theme-quartz-auto-dark" style={{height: '100%'}}>
-            <AgGridReact
-                columnDefs={columnDefs}
+            <MemoizedAgGridReact
+                columnDefs={FeedColumnDefs}
                 rowModelType='infinite'
                 cacheBlockSize={100}
                 datasource={dataSource}
-                getRowId={getRowId}
+                getRowId={GetArticleRowId}
                 pagination={true}
                 paginationAutoPageSize={true}
                 maxConcurrentDatasourceRequests={1}
