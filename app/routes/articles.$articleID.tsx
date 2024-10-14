@@ -73,6 +73,11 @@ async function fetchArticle(apiBaseURL: string, articleID: string): Promise<Arti
 async function fetchSimilarArticles(apiBaseURL: string, articleID: string): Promise<Article[]> {
     const apiURL = `${apiBaseURL}/v1/articles/${encodeURIComponent(articleID)}/similar`;
     const response = await fetch(apiURL);
+    if (response.status !== 200) {
+        const responseText = await response.text();
+        console.log("fetching similar articles: unexpected status code [" + response.status + "]: " + responseText);
+        return [];
+    }
     const { data, metadata } = await response.json();
 
     return data.map((item: unknown): Article => {
