@@ -6,6 +6,7 @@ import '@ag-grid-community/styles/ag-theme-quartz.css';
 import {ModuleRegistry, GetRowIdParams, ColDef, ICellRendererParams} from "@ag-grid-community/core";
 import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
 import {Link} from "@remix-run/react";
+import Button from "~/components/Button";
 
 type ArticleTableProps = {
     articles: Article[]
@@ -45,11 +46,10 @@ export const ArticleColumnDefs: ColDef[] = [
         })
     },
     { colId: 'details_link', field: '', headerName: '', resizable: false, width: 100, lockPosition: 'right',
-        cellClass: 'hover:bg-slate-500',
         cellRenderer: (props: ICellRendererParams<Article>) => {
             if (props.data) {
                 const detailsURL = `/articles/${props.data.hash_id}`;
-                return <Link to={detailsURL} className='inline-block h-full w-full'>(Details)</Link>;
+                return <Link className="bg-blue-500 hover:bg-blue-700 dark:bg-blue-800 hover:dark:bg-blue-500 text-white px-2 py-2 rounded" to={detailsURL}>Details</Link>;
             }
             return "";
         }
