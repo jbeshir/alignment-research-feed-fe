@@ -2,6 +2,7 @@ import type {LoaderFunction, MetaFunction} from "@remix-run/cloudflare";
 import {useLoaderData} from "@remix-run/react";
 import ArticleTable, {Article} from "~/components/ArticleTable";
 import ArticleInfo from "~/components/ArticleInfo";
+import TopBar from "~/components/TopBar";
 
 export const meta: MetaFunction = () => {
     return [
@@ -44,7 +45,7 @@ export default function ArticleDetails() {
 
     return (
         <div className='h-screen w-full flex flex-col space-y-4 pb-5'>
-            <h1 className='text-5xl text-center font-medium text-black dark:text-white p-5'>Alignment Feed</h1>
+            <TopBar />
             <h2 className='text-3xl text-center font-medium text-black dark:text-white p-5'>{article.title}</h2>
             <div className='px-5'>
                 <ArticleInfo

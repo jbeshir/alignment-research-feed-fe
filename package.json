@@ -20,6 +20,7 @@
     "@ag-grid-community/infinite-row-model": "^32.0.2",
     "@ag-grid-community/react": "^32.0.2",
     "@ag-grid-community/styles": "^32.0.2",
+    "@auth0/auth0-react": "^2.2.4",
     "@remix-run/cloudflare": "^2.9.2",
     "@remix-run/cloudflare-pages": "^2.9.2",
     "@remix-run/react": "^2.9.2",

@@ -71,7 +71,7 @@ pages_build_output_dir = "./build/client"
 [env.preview.vars]
 ALIGNMENT_FEED_BASE_URL = "https://api.alignmentfeed.org"
 AUTH0_DOMAIN = "alignment-feed.us.auth0.com"
-AUTH0_CLIENT_ID = "hkNMZcMcmJ8Fn9t6G4HZktDAqIvWDyvD"
+AUTH0_CLIENT_ID = "aGMS20BZTfNKdXPXAkojqZzPxWqUqbhK"
 AUTH0_DEFAULT_REDIRECT_URI = "https://www.alignmentfeed.org"
 
 # [[env.preview.kv_namespaces]]
@@ -83,7 +83,7 @@ AUTH0_DEFAULT_REDIRECT_URI = "https://www.alignmentfeed.org"
 [env.production.vars]
 ALIGNMENT_FEED_BASE_URL = "https://api.alignmentfeed.org"
 AUTH0_DOMAIN = "alignment-feed.us.auth0.com"
-AUTH0_CLIENT_ID = "hkNMZcMcmJ8Fn9t6G4HZktDAqIvWDyvD"
+AUTH0_CLIENT_ID = "aGMS20BZTfNKdXPXAkojqZzPxWqUqbhK"
 AUTH0_DEFAULT_REDIRECT_URI = "https://www.alignmentfeed.org"
 
 # [[env.production.kv_namespaces]]
