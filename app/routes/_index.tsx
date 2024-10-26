@@ -1,6 +1,7 @@
 import type {LoaderFunction, MetaFunction} from "@remix-run/cloudflare";
 import {useLoaderData} from "@remix-run/react";
 import AlignmentFeedTable from "~/components/AlignmentFeedTable";
+import TopBar from "~/components/TopBar";
 
 export const meta: MetaFunction = () => {
   return [
@@ -25,7 +26,7 @@ export default function Index() {
 
   return (
       <div className='h-screen w-full flex flex-col space-y-4 pb-5'>
-        <h1 className='text-5xl text-center font-medium text-black dark:text-white p-5'>Alignment Feed</h1>
+        <TopBar />
         <div className='text-xl font-medium text-black dark:text-white px-5'>
           A feed of all content in the <a href='https://github.com/StampyAI/alignment-research-dataset' className='text-emerald-500 hover:underline'>Alignment Research Dataset</a>,
           updated every day.
