@@ -50,6 +50,7 @@ export default function App() {
       authorizationParams={{
           redirect_uri: auth0DefaultRedirectUri
       }}
+      cacheLocation="localstorage"
   >
       <Outlet />
   </Auth0Provider>;
