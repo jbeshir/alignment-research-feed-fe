@@ -6,6 +6,8 @@ import '@ag-grid-community/styles/ag-grid.css';
 import '@ag-grid-community/styles/ag-theme-quartz.css';
 import {ModuleRegistry, IDatasource, SortModelItem} from "@ag-grid-community/core";
 import { InfiniteRowModelModule } from "@ag-grid-community/infinite-row-model";
+import {AuthenticatedFetch} from "~/utils/request";
+import {useAuth0} from "@auth0/auth0-react";
 
 type AlignmentFeedTableProps = {
     apiBaseURL: string
@@ -53,6 +55,8 @@ function AlignmentFeedTable({apiBaseURL} : AlignmentFeedTableProps) {
         InfiniteRowModelModule,
     ]);
 
+    const auth0Context = useAuth0();
+
     const dataSource: IDatasource = useMemo(() => {return {
         getRows: async (params) => {
             const page = Math.floor(params.startRow / 100) + 1;
@@ -95,7 +99,12 @@ function AlignmentFeedTable({apiBaseURL} : AlignmentFeedTableProps) {
             }
 
             const apiURL = `${apiBaseURL}/v1/articles?${apiParams.toString()}`
-            const response = await fetch(apiURL);
+            const req = new Request(apiURL);
+            const response = await AuthenticatedFetch(req, auth0Context);
+            if (!response) {
+                params.failCallback();
+                return;
+            }
             const { data, metadata } = await response.json();
 
             const articles = data.map((item: unknown): Article => {
@@ -113,7 +122,7 @@ function AlignmentFeedTable({apiBaseURL} : AlignmentFeedTableProps) {
 
             params.successCallback(articles, lastRow);
         }
-    }}, [apiBaseURL]);
+    }}, [apiBaseURL, auth0Context]);
 
     return (
         <div className="ag-theme-quartz-auto-dark" style={{height: '100%'}}>
