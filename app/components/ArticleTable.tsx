@@ -49,7 +49,7 @@ export const ArticleColumnDefs: ColDef[] = [
         cellRenderer: (props: ICellRendererParams<Article>) => {
             if (props.data) {
                 const detailsURL = `/articles/${props.data.hash_id}`;
-                return <Link className="bg-blue-500 hover:bg-blue-700 dark:bg-blue-800 hover:dark:bg-blue-500 text-white px-2 py-2 rounded" to={detailsURL}>Details</Link>;
+                return <Link className="bg-blue-500 hover:bg-blue-700 dark:bg-blue-800 hover:dark:bg-blue-500 text-white px-2 py-2 rounded" to={detailsURL}>Similar</Link>;
             }
             return "";
         }
