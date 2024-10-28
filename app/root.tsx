@@ -56,7 +56,7 @@ export default function App() {
           redirect_uri: auth0DefaultRedirectUri
       }}
       cacheLocation="localstorage"
-      useRefreshTokens=true
+      useRefreshTokens={true}
   >
       <Outlet />
   </Auth0Provider>;
