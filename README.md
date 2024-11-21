@@ -5,6 +5,17 @@
 
 ## Development
 
+### Getting Started
+Install your dependences:
+```sh
+npm install
+```
+
+Populate your environment variables:
+```sh
+cp .dev.vars.example .dev.vars
+```
+
 Run the dev server:
 
 ```sh
