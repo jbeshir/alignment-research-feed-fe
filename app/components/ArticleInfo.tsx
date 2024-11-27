@@ -16,7 +16,7 @@ function ArticleInfo({article}: ArticleInfoProps) {
         </div>
         <div className="h-fill py-2 px-4 flex flex-row bg-slate-200 dark:bg-slate-700">
             <span className="inline-block w-40 font-bold">URL</span>
-            <span className="inline-block grow"><a href={article.link}>{article.link}</a></span>
+            <span className="inline-block grow"><a target="_blank" href={article.link}>{article.link}</a></span>
         </div>
         <div className="h-fill py-2 px-4 flex flex-row bg-slate-200 dark:bg-slate-700">
             <span className="inline-block w-40 font-bold">Source</span>
