@@ -24,7 +24,7 @@ function ArticleInfo({article}: ArticleInfoProps) {
         </div>
         <div className="h-fill py-2 px-4 flex flex-row bg-slate-200 dark:bg-slate-700">
             <span className="inline-block w-40 font-bold">Published At</span>
-            <span className="inline-block grow">{article.published_at.toISOString()}</span>
+            <span className="inline-block grow">{article.published_at.toLocaleString()}</span>
         </div>
     </div>
 }
