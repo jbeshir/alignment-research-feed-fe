@@ -95,6 +95,7 @@ export default function ArticleDetails() {
                         articles={data.similarArticles}
                     />
                 </div>
+                <div className="font-medium text-black dark:text-white pl-5 pb-5">Made with love by <a href="https://beshir.org" className="text-emerald-500 hover:underline">Beshir</a>.</div>
             </div>
         );
     }
