@@ -28,6 +28,10 @@ type ArticleDetailsData = {
 }
 
 export const loader: LoaderFunction = async ({ context, params }): Promise<LoaderData> => {
+    if (!params.articleID) {
+        throw new Response("Article ID is required", { status: 400 });
+    }
+
     return {
         articleID: params.articleID,
         apiBaseURL: context.cloudflare.env.ALIGNMENT_FEED_BASE_URL,
