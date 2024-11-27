@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useMemo} from 'react';
 import {AgGridReact} from "@ag-grid-community/react";
 import {Article, ArticleColumnDefs, GetArticleRowId} from "./ArticleTable"
 
