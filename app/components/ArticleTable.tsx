@@ -6,7 +6,6 @@ import '@ag-grid-community/styles/ag-theme-quartz.css';
 import {ModuleRegistry, GetRowIdParams, ColDef, ICellRendererParams} from "@ag-grid-community/core";
 import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
 import {Link} from "@remix-run/react";
-import Button from "~/components/Button";
 
 type ArticleTableProps = {
     articles: Article[]

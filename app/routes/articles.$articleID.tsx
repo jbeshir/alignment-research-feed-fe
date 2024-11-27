@@ -5,6 +5,7 @@ import ArticleInfo from "~/components/ArticleInfo";
 import TopBar from "~/components/TopBar";
 import {Auth0ContextInterface, useAuth0} from "@auth0/auth0-react";
 import {AuthenticatedFetch} from "~/utils/request";
+import { ArticlesResponse } from "~/types/api";
 import {useEffect, useState} from "react";
 
 export const meta: MetaFunction = () => {
@@ -28,6 +29,10 @@ type ArticleDetailsData = {
 }
 
 export const loader: LoaderFunction = async ({ context, params }): Promise<LoaderData> => {
+    if (!params.articleID) {
+        throw new Response("Article ID is required", { status: 400 });
+    }
+
     return {
         articleID: params.articleID,
         apiBaseURL: context.cloudflare.env.ALIGNMENT_FEED_BASE_URL,
@@ -38,66 +43,83 @@ export default function ArticleDetails() {
     const loaderData = useLoaderData<LoaderData>();
     const auth0Context = useAuth0();
 
+    const [isLoading, setIsLoading] = useState(true);
     const [data, setData] = useState<ArticleDetailsData | null>(null);
 
-    useEffect(() => {
-        const newDataPromise = async function () {
+    const fetchData = async () => {
+        setIsLoading(true);
+        try {
             const similarArticlesPromise = fetchSimilarArticles(
                 loaderData.apiBaseURL,
                 auth0Context,
-                loaderData.articleID);
+                loaderData.articleID
+            );
 
             const articlePromise = fetchArticle(
                 loaderData.apiBaseURL,
                 auth0Context,
-                loaderData.articleID);
+                loaderData.articleID
+            );
 
-            return {
-                article: await articlePromise,
-                similarArticles: await similarArticlesPromise,
-            };
-        }();
+            const [article, similarArticles] = await Promise.all([articlePromise, similarArticlesPromise]);
 
-        newDataPromise.then((newData) => {
-            if (newData.article && newData.similarArticles) {
+            if (article && similarArticles) {
                 setData({
-                    article: newData.article,
-                    similarArticles: newData.similarArticles,
+                    article,
+                    similarArticles,
                 });
             }
-        });
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchData();
     }, [loaderData, auth0Context]);
 
-    if (!data) {
+    if (isLoading) {
         return (
             <div className='h-screen w-full flex flex-col space-y-4 pb-5'>
                 <TopBar/>
                 <h2 className='text-1xl text-center font-medium text-black dark:text-white p-5'>Loading...</h2>
             </div>
         );
-    } else {
+    }
+
+    if (!data) {
         return (
             <div className='h-screen w-full flex flex-col space-y-4 pb-5'>
                 <TopBar/>
-                <h2 className='text-3xl text-center font-medium text-black dark:text-white p-5'>
-                    {data.article.title}
-                </h2>
-                <div className='px-5'>
-                    <ArticleInfo
-                        article={data.article}
-                    />
-                </div>
-                <div className='text-xl font-medium text-black dark:text-white px-5'>
-                    Articles similar to this one in the dataset.
-                </div>
-                <div className='grow px-5'>
-                    <ArticleTable
-                        articles={data.similarArticles}
-                    />
-                </div>
+                <h2 className='text-1xl text-center font-medium text-black dark:text-white p-5'>No data available</h2>
             </div>
         );
     }
+
+    return (
+        <div className='h-screen w-full flex flex-col space-y-4 pb-5'>
+            <TopBar/>
+            <h2 className='text-3xl text-center font-medium text-black dark:text-white p-5'>
+                {data.article.title}
+            </h2>
+            <div className='px-5'>
+                <ArticleInfo
+                    article={data.article}
+                />
+            </div>
+            <div className='text-xl font-medium text-black dark:text-white px-5'>
+                Articles similar to this one in the dataset.
+            </div>
+            <div className='grow px-5'>
+                <ArticleTable
+                    articles={data.similarArticles}
+                />
+            </div>
+            <div className="font-medium text-black dark:text-white pl-5 pb-5">Made with love by <a target="_blank" href="https://beshir.org" className="text-emerald-500 hover:underline">JBeshir</a>.</div>
+        </div>
+    );
 }
 
 async function fetchArticle(
@@ -133,7 +155,8 @@ async function fetchSimilarArticles(
         console.log("fetching similar articles: unexpected status code [" + response.status + "]: " + responseText);
         return [];
     }
-    const { data, metadata } = await response.json();
+
+    const { data }: ArticlesResponse = await response.json();
 
     return data.map((item: unknown): Article => {
         if (typeof item !== 'object' || item === null) {
