@@ -5,6 +5,7 @@ import ArticleInfo from "~/components/ArticleInfo";
 import TopBar from "~/components/TopBar";
 import {Auth0ContextInterface, useAuth0} from "@auth0/auth0-react";
 import {AuthenticatedFetch} from "~/utils/request";
+import { ArticlesResponse } from "~/types/api";
 import {useEffect, useState} from "react";
 
 export const meta: MetaFunction = () => {
@@ -155,14 +156,9 @@ async function fetchSimilarArticles(
         return [];
     }
 
-    type SimilarArticlesResponse = {
-        data: Article[];
-        metadata: Record<string, unknown>;
-    };
+    const { data }: ArticlesResponse = await response.json();
 
-    const { data }: SimilarArticlesResponse = await response.json();
-
-    return  data.map((item: unknown): Article => {
+    return data.map((item: unknown): Article => {
         if (typeof item !== 'object' || item === null) {
             throw new Error("item is not object")
         }

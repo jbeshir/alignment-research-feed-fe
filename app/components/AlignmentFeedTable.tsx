@@ -7,6 +7,7 @@ import '@ag-grid-community/styles/ag-theme-quartz.css';
 import {ModuleRegistry, IDatasource, SortModelItem} from "@ag-grid-community/core";
 import { InfiniteRowModelModule } from "@ag-grid-community/infinite-row-model";
 import {AuthenticatedFetch} from "~/utils/request";
+import { ArticlesResponse } from "~/types/api";
 import {useAuth0} from "@auth0/auth0-react";
 
 type AlignmentFeedTableProps = {
@@ -106,8 +107,7 @@ function AlignmentFeedTable({apiBaseURL} : AlignmentFeedTableProps) {
                 params.failCallback();
                 return;
             }
-            const { data, metadata } = await response.json();
-
+            const { data }: ArticlesResponse = await response.json();
             const articles = data.map((item: unknown): Article => {
                 if (typeof item !== 'object' || item === null) {
                     throw new Error("item is not object")
