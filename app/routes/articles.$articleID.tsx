@@ -150,9 +150,15 @@ async function fetchSimilarArticles(
         console.log("fetching similar articles: unexpected status code [" + response.status + "]: " + responseText);
         return [];
     }
-    const { data, metadata } = await response.json();
 
-    return data.map((item: unknown): Article => {
+    type SimilarArticlesResponse = {
+        data: Article[];
+        metadata: Record<string, unknown>;
+    };
+
+    const { data }: SimilarArticlesResponse = await response.json();
+
+    return  data.map((item: unknown): Article => {
         if (typeof item !== 'object' || item === null) {
             throw new Error("item is not object")
         }
