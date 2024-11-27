@@ -1,32 +1,41 @@
-import {Article} from "~/components/ArticleTable";
+import { Article } from "~/components/ArticleTable";
 
 type ArticleInfoProps = {
     article: Article
 }
 
-function ArticleInfo({article}: ArticleInfoProps) {
-    return <div className="text-black dark:text-white space-y-2">
-        <div className="h-fill py-2 px-4 flex flex-row bg-slate-200 dark:bg-slate-700">
-            <span className="inline-block w-40 font-bold">Title</span>
-            <span className="inline-block grow">{article.title}</span>
-        </div>
-        <div className="h-fill py-2 px-4 flex flex-row bg-slate-200 dark:bg-slate-700">
-            <span className="inline-block w-40 font-bold">Authors</span>
-            <span className="inline-block grow">{article.authors}</span>
-        </div>
-        <div className="h-fill py-2 px-4 flex flex-row bg-slate-200 dark:bg-slate-700">
-            <span className="inline-block w-40 font-bold">URL</span>
-            <span className="inline-block grow"><a target="_blank" href={article.link}>{article.link}</a></span>
-        </div>
-        <div className="h-fill py-2 px-4 flex flex-row bg-slate-200 dark:bg-slate-700">
-            <span className="inline-block w-40 font-bold">Source</span>
-            <span className="inline-block grow">{article.source}</span>
-        </div>
-        <div className="h-fill py-2 px-4 flex flex-row bg-slate-200 dark:bg-slate-700">
-            <span className="inline-block w-40 font-bold">Published At</span>
-            <span className="inline-block grow">{article.published_at.toLocaleString()}</span>
-        </div>
+type InfoRowProps = {
+    label: string;
+    value: React.ReactNode;
+}
+
+const InfoRow = ({ label, value }: InfoRowProps) => (
+    <div className="h-fill py-2 px-4 flex flex-row bg-slate-200 dark:bg-slate-700">
+        <span className="inline-block w-40 font-bold">{label}</span>
+        <span className="inline-block grow">{value}</span>
     </div>
+);
+
+function ArticleInfo({ article }: ArticleInfoProps) {
+    const articleInfo = [
+        { label: "Title", value: article.title },
+        { label: "Authors", value: article.authors },
+        { label: "URL", value: (
+            <a target="_blank" href={article.link} rel="noopener noreferrer">
+                {article.link}
+            </a>
+        )},
+        { label: "Source", value: article.source },
+        { label: "Published At", value: article.published_at.toLocaleString() },
+    ];
+
+    return (
+        <div className="text-black dark:text-white space-y-2">
+            {articleInfo.map((info, index) => (
+                <InfoRow key={index} label={info.label} value={info.value} />
+            ))}
+        </div>
+    );
 }
 
 export default ArticleInfo;
