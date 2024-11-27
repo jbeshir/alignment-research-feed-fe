@@ -43,6 +43,7 @@ const FeedColumnDefs = ArticleColumnDefs.map((def) => {
     // Set sorting rules; these two produce weird and unwanted results if you try to sort by them right now.
     switch (newDef.colId) {
         case 'title':
+        case 'details_link':
         case 'authors':
             newDef.sortable = false;
     }
