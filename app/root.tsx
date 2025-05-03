@@ -34,6 +34,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 type LoaderData = {
     auth0Domain: string;
+    auth0Audience: string;
     auth0ClientId: string;
     auth0DefaultRedirectUri: string;
 }
@@ -41,19 +42,21 @@ type LoaderData = {
 export const loader: LoaderFunction = async ({ context }): Promise<LoaderData> => {
     return {
         auth0Domain: context.cloudflare.env.AUTH0_DOMAIN,
+        auth0Audience: context.cloudflare.env.AUTH0_AUDIENCE,
         auth0ClientId: context.cloudflare.env.AUTH0_CLIENT_ID,
         auth0DefaultRedirectUri: context.cloudflare.env.AUTH0_DEFAULT_REDIRECT_URI,
     };
 };
 
 export default function App() {
-    const { auth0Domain, auth0ClientId, auth0DefaultRedirectUri } = useLoaderData<LoaderData>();
+    const { auth0Domain, auth0Audience, auth0ClientId, auth0DefaultRedirectUri } = useLoaderData<LoaderData>();
 
     return <Auth0Provider
       domain={auth0Domain}
       clientId={auth0ClientId}
       authorizationParams={{
-          redirect_uri: auth0DefaultRedirectUri
+          redirect_uri: auth0DefaultRedirectUri,
+          audience: auth0Audience,
       }}
       cacheLocation="localstorage"
       useRefreshTokens={true}
