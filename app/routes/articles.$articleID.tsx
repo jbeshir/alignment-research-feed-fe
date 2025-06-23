@@ -32,7 +32,7 @@ export const loader: LoaderFunction = async ({
   params,
 }): Promise<LoaderData> => {
   return {
-    articleID: params.articleID,
+    articleID: params.articleID!,
     apiBaseURL: context.cloudflare.env.ALIGNMENT_FEED_BASE_URL,
   };
 };
