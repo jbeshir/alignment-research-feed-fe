@@ -1,13 +1,12 @@
-# Welcome to Remix + Cloudflare!
+# Alignment Research Feed Frontend
 
-- 📖 [Remix docs](https://remix.run/docs)
-- 📖 [Remix Cloudflare docs](https://remix.run/guides/vite#cloudflare)
+A web application for browsing and searching alignment research articles, built with Remix, React, and Cloudflare Pages.
 
 ## Development
 
 ### Getting Started
 
-Install your dependences:
+Install dependencies:
 
 ```sh
 npm install
@@ -19,49 +18,50 @@ Populate your environment variables:
 cp .dev.vars.example .dev.vars
 ```
 
-Run the dev server:
+Run the development server:
 
 ```sh
 npm run dev
 ```
 
-To run Wrangler:
+To run with Wrangler (production-like environment):
 
 ```sh
 npm run build
 npm run start
 ```
 
-## Typegen
+### Code Quality
 
-Generate types for your Cloudflare bindings in `wrangler.toml`:
+This project uses ESLint and Prettier to maintain code quality and consistency.
 
-```sh
-npm run typegen
-```
+#### Linting
 
-You will need to rerun typegen whenever you make changes to `wrangler.toml`.
-
-## Deployment
-
-> [!WARNING]  
-> Cloudflare does _not_ use `wrangler.toml` to configure deployment bindings.
-> You **MUST** [configure deployment bindings manually in the Cloudflare dashboard][bindings].
-
-First, build your app for production:
+Check for linting errors:
 
 ```sh
-npm run build
+npm run lint
 ```
 
-Then, deploy your app to Cloudflare Pages:
+#### Formatting
+
+Check if code is properly formatted:
 
 ```sh
-npm run deploy
+npm run format:check
 ```
 
-[bindings]: https://developers.cloudflare.com/pages/functions/bindings/
+Automatically format all files:
 
-## Styling
+```sh
+npm run format
+```
 
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever css framework you prefer. See the [Vite docs on css](https://vitejs.dev/guide/features.html#css) for more information.
+#### Pre-commit Workflow
+
+Before committing your code, run:
+
+```sh
+npm run format    # Format all files
+npm run lint      # Check for linting errors
+```
