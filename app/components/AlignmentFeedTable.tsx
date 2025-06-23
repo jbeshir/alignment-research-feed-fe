@@ -131,7 +131,7 @@ function AlignmentFeedTable({ apiBaseURL }: AlignmentFeedTableProps) {
             ? (page - 1) * pageSize + articles.length
             : null;
 
-        params.successCallback(articles, lastRow);
+        params.successCallback(articles, lastRow ?? undefined);
       },
     };
   }, [apiBaseURL, auth0Context]);
@@ -139,7 +139,7 @@ function AlignmentFeedTable({ apiBaseURL }: AlignmentFeedTableProps) {
   return (
     <div className="ag-theme-quartz-auto-dark" style={{ height: "100%" }}>
       <MemoizedAgGridReact
-        columnDefs={FeedColumnDefs}
+        columnDefs={FeedColumnDefs as any} // eslint-disable-line @typescript-eslint/no-explicit-any
         rowModelType="infinite"
         cacheBlockSize={100}
         datasource={dataSource}
