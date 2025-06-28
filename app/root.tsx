@@ -9,6 +9,7 @@ import {
 import "./tailwind.css";
 import { Auth0Provider } from "@auth0/auth0-react";
 import type { LoaderFunction } from "@remix-run/cloudflare";
+import React from "react";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (

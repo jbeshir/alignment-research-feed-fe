@@ -90,13 +90,21 @@ export default function ArticleDetails() {
           {data.article.title}
         </h2>
         <div className="px-5">
-          <ArticleInfo article={data.article} />
+          <ArticleInfo 
+            apiBaseURL={loaderData.apiBaseURL}
+            auth0Context={auth0Context}
+            article={data.article} 
+          />
         </div>
         <div className="text-xl font-medium text-black dark:text-white px-5">
           Articles similar to this one in the dataset.
         </div>
         <div className="grow px-5">
-          <ArticleTable articles={data.similarArticles} />
+          <ArticleTable 
+            apiBaseURL={loaderData.apiBaseURL}
+            auth0Context={auth0Context}
+            articles={data.similarArticles} 
+          />
         </div>
       </div>
     );

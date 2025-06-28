@@ -11,8 +11,12 @@ import {
 } from "@ag-grid-community/core";
 import { ClientSideRowModelModule } from "@ag-grid-community/client-side-row-model";
 import { Link } from "@remix-run/react";
+import ArticleLink from "~/components/ArticleLink";
+import { Auth0ContextInterface } from "@auth0/auth0-react";
 
 type ArticleTableProps = {
+  apiBaseURL: string;
+  auth0Context: Auth0ContextInterface;
   articles: Article[];
 };
 
@@ -24,85 +28,84 @@ export const Article = z.object({
   authors: z.string(),
   source: z.string(),
   published_at: z.string().datetime().pipe(z.coerce.date()),
+  have_read: z.boolean().optional(),
+  thumbs_up: z.boolean().optional(),
+  thumbs_down: z.boolean().optional(),
 });
 
 export type Article = z.infer<typeof Article>;
 
-export const ArticleColumnDefs: ColDef[] = [
-  {
-    flex: 3,
-    colId: "title",
-    field: "title",
-    sortable: true,
-    cellRenderer: MakeLinkCellRenderer(
-      (props: ICellRendererParams<Article>) => {
+export const MakeArticleColumnDefs = (apiBaseURL: string, auth0Context: Auth0ContextInterface): ColDef[] => {
+  return [
+    {
+      flex: 3,
+      colId: "title",
+      field: "title",
+      sortable: true,
+      cellRenderer: MakeLinkCellRenderer(apiBaseURL, auth0Context, (props: ICellRendererParams<Article>) => {
         return props.value || "";
-      }
-    ),
-  },
-  {
-    flex: 2,
-    colId: "authors",
-    field: "authors",
-    sortable: true,
-    cellRenderer: MakeLinkCellRenderer(
-      (props: ICellRendererParams<Article>) => {
-        return props.value || "";
-      }
-    ),
-  },
-  {
-    flex: 1,
-    colId: "source",
-    field: "source",
-    sortable: true,
-    cellRenderer: MakeLinkCellRenderer(
-      (props: ICellRendererParams<Article>) => {
-        return props.value || "";
-      }
-    ),
-  },
-  {
-    flex: 1,
-    colId: "published_at",
-    field: "published_at",
-    headerName: "Published At",
-    sortable: true,
-    cellRenderer: MakeLinkCellRenderer(
-      (props: ICellRendererParams<Article>) => {
-        return props.value?.toLocaleString() || "";
-      }
-    ),
-  },
-  {
-    colId: "details_link",
-    field: "",
-    headerName: "",
-    resizable: false,
-    width: 100,
-    lockPosition: "right",
-    cellRenderer: (props: ICellRendererParams<Article>) => {
-      if (props.data) {
-        const detailsURL = `/articles/${props.data.hash_id}`;
-        return (
-          <Link
-            className="bg-blue-500 hover:bg-blue-700 dark:bg-blue-800 hover:dark:bg-blue-500 text-white px-2 py-2 rounded"
-            to={detailsURL}
-          >
-            Similar
-          </Link>
-        );
-      }
-      return "";
+      }),
     },
-  },
-];
+    {
+      flex: 2,
+      colId: "authors",
+      field: "authors",
+      sortable: true,
+      cellRenderer: MakeLinkCellRenderer(apiBaseURL, auth0Context, (props: ICellRendererParams<Article>) => {
+        return props.value || "";
+      }),
+    },
+    {
+      flex: 1,
+      colId: "source",
+      field: "source",
+      sortable: true,
+      cellRenderer: MakeLinkCellRenderer(apiBaseURL, auth0Context, (props: ICellRendererParams<Article>) => {
+        return props.value || "";
+      }),
+    },
+    {
+      flex: 1,
+      colId: "published_at",
+      field: "published_at",
+      headerName: "Published At",
+      sortable: true,
+      cellRenderer: MakeLinkCellRenderer(apiBaseURL, auth0Context, (props: ICellRendererParams<Article>) => {
+        return props.value?.toLocaleString() || "";
+      }),
+    },
+    {
+      colId: "details_link",
+      field: "",
+      headerName: "",
+      resizable: false,
+      width: 100,
+      lockPosition: "right",
+      cellRenderer: (props: ICellRendererParams<Article>) => {
+        if (props.data) {
+          const detailsURL = `/articles/${props.data.hash_id}`;
+          return (
+            <Link
+              className="bg-blue-500 hover:bg-blue-700 dark:bg-blue-800 hover:dark:bg-blue-500 text-white px-2 py-2 rounded"
+              to={detailsURL}
+            >
+              Similar
+            </Link>
+          );
+        }
+        return "";
+      },
+    },
+  ];
+};
 
 export const GetArticleRowId = (params: GetRowIdParams) => {
   return params.data.hash_id;
 };
 
 function MakeLinkCellRenderer(
+  apiBaseURL: string,
+  auth0Context: Auth0ContextInterface,
   baseCellRenderer: (props: ICellRendererParams<Article>) => string
 ) {
   const LinkCell = (props: ICellRendererParams<Article>) => {
@@ -111,27 +114,27 @@ function MakeLinkCellRenderer(
     }
 
     return (
-      <a
-        href={props.data.link}
-        target="_blank"
-        rel="noreferrer"
+      <ArticleLink 
+        apiBaseURL={apiBaseURL} 
+        auth0Context={auth0Context} 
+        article={props.data} 
         className="inline-block h-full w-full"
       >
         {baseCellRenderer(props)}
-      </a>
+      </ArticleLink>
     );
   };
   LinkCell.displayName = "LinkCell";
   return LinkCell;
 }
 
-function ArticleTable({ articles }: ArticleTableProps) {
+function ArticleTable({ apiBaseURL, auth0Context, articles }: ArticleTableProps) {
   ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
   return (
     <div className="ag-theme-quartz-auto-dark">
       <AgGridReact
-        columnDefs={ArticleColumnDefs}
+        columnDefs={MakeArticleColumnDefs(apiBaseURL, auth0Context)}
         rowData={articles}
         getRowId={GetArticleRowId}
         domLayout="autoHeight"
