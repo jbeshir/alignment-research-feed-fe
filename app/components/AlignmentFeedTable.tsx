@@ -1,6 +1,10 @@
 import React, { useMemo } from "react";
 import { AgGridReact } from "@ag-grid-community/react";
-import { Article, ArticleColumnDefs, GetArticleRowId } from "./ArticleTable";
+import {
+  Article,
+  GetArticleRowId,
+  MakeArticleColumnDefs,
+} from "./ArticleTable";
 
 import "@ag-grid-community/styles/ag-grid.css";
 import "@ag-grid-community/styles/ag-theme-quartz.css";
@@ -8,55 +12,56 @@ import {
   ModuleRegistry,
   IDatasource,
   SortModelItem,
+  ColDef,
 } from "@ag-grid-community/core";
 import { InfiniteRowModelModule } from "@ag-grid-community/infinite-row-model";
 import { AuthenticatedFetch } from "~/utils/request";
 import { useAuth0 } from "@auth0/auth0-react";
-
-type AlignmentFeedTableProps = {
-  apiBaseURL: string;
-};
+import { useApi } from "~/contexts/ApiContext";
 
 // Avoids unnecessary blinking of the table as it reloads its datasources when it doesn't need to rerender.
 const MemoizedAgGridReact = React.memo(AgGridReact);
 
 // Add filtering and sorting rules appropriate supported by our infinite datasource to our column definitions.
-const FeedColumnDefs = ArticleColumnDefs.map(def => {
-  // Set filtering rules
-  const newDef = { ...def };
-  switch (newDef.colId) {
-    case "title":
-    case "authors":
-    case "source":
-      newDef.filter = "agTextColumnFilter";
-      newDef.filterParams = {
-        filterOptions: ["contains"],
-        maxNumConditions: 1,
-      };
-      break;
-    case "published_at":
-      newDef.filter = "agDateColumnFilter";
-      newDef.filterParams = {
-        defaultOption: "greaterThanOrEqual",
-        filterOptions: ["inRange", "lessThanOrEqual", "greaterThanOrEqual"],
-        maxNumConditions: 1,
-      };
-  }
+function MakeFeedColumnDefs(): ColDef[] {
+  return MakeArticleColumnDefs().map((def: ColDef) => {
+    // Set filtering rules
+    const newDef = { ...def };
+    switch (newDef.colId) {
+      case "title":
+      case "authors":
+      case "source":
+        newDef.filter = "agTextColumnFilter";
+        newDef.filterParams = {
+          filterOptions: ["contains"],
+          maxNumConditions: 1,
+        };
+        break;
+      case "published_at":
+        newDef.filter = "agDateColumnFilter";
+        newDef.filterParams = {
+          defaultOption: "greaterThanOrEqual",
+          filterOptions: ["inRange", "lessThanOrEqual", "greaterThanOrEqual"],
+          maxNumConditions: 1,
+        };
+    }
 
-  // Set sorting rules; these two produce weird and unwanted results if you try to sort by them right now.
-  switch (newDef.colId) {
-    case "title":
-    case "authors":
-      newDef.sortable = false;
-  }
+    // Set sorting rules; these two produce weird and unwanted results if you try to sort by them right now.
+    switch (newDef.colId) {
+      case "title":
+      case "authors":
+        newDef.sortable = false;
+    }
 
-  return newDef;
-});
+    return newDef;
+  });
+}
 
-function AlignmentFeedTable({ apiBaseURL }: AlignmentFeedTableProps) {
+function AlignmentFeedTable() {
   ModuleRegistry.registerModules([InfiniteRowModelModule]);
 
   const auth0Context = useAuth0();
+  const { baseURL: apiBaseURL } = useApi();
 
   const dataSource: IDatasource = useMemo(() => {
     return {
@@ -139,7 +144,7 @@ function AlignmentFeedTable({ apiBaseURL }: AlignmentFeedTableProps) {
   return (
     <div className="ag-theme-quartz-auto-dark" style={{ height: "100%" }}>
       <MemoizedAgGridReact
-        columnDefs={FeedColumnDefs as any} // eslint-disable-line @typescript-eslint/no-explicit-any
+        columnDefs={MakeFeedColumnDefs()}
         rowModelType="infinite"
         cacheBlockSize={100}
         datasource={dataSource}

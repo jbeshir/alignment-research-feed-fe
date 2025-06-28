@@ -6,6 +6,7 @@ import TopBar from "~/components/TopBar";
 import { Auth0ContextInterface, useAuth0 } from "@auth0/auth0-react";
 import { AuthenticatedFetch } from "~/utils/request";
 import { useEffect, useState } from "react";
+import { useApi } from "~/contexts/ApiContext";
 
 export const meta: MetaFunction = () => {
   return [
@@ -19,7 +20,6 @@ export const meta: MetaFunction = () => {
 
 type LoaderData = {
   articleID: string;
-  apiBaseURL: string;
 };
 
 type ArticleDetailsData = {
@@ -28,31 +28,30 @@ type ArticleDetailsData = {
 };
 
 export const loader: LoaderFunction = async ({
-  context,
   params,
 }): Promise<LoaderData> => {
   return {
     articleID: params.articleID!,
-    apiBaseURL: context.cloudflare.env.ALIGNMENT_FEED_BASE_URL,
   };
 };
 
 export default function ArticleDetails() {
   const loaderData = useLoaderData<LoaderData>();
   const auth0Context = useAuth0();
+  const { baseURL: apiBaseURL } = useApi();
 
   const [data, setData] = useState<ArticleDetailsData | null>(null);
 
   useEffect(() => {
     const newDataPromise = (async function () {
       const similarArticlesPromise = fetchSimilarArticles(
-        loaderData.apiBaseURL,
+        apiBaseURL,
         auth0Context,
         loaderData.articleID
       );
 
       const articlePromise = fetchArticle(
-        loaderData.apiBaseURL,
+        apiBaseURL,
         auth0Context,
         loaderData.articleID
       );
@@ -71,7 +70,7 @@ export default function ArticleDetails() {
         });
       }
     });
-  }, [loaderData, auth0Context]);
+  }, [loaderData, auth0Context, apiBaseURL]);
 
   if (!data) {
     return (
@@ -123,7 +122,9 @@ async function fetchSimilarArticles(
   auth0Context: Auth0ContextInterface,
   articleID: string
 ): Promise<Article[] | null> {
-  const apiURL = `${apiBaseURL}/v1/articles/${encodeURIComponent(articleID)}/similar`;
+  const apiURL = `${apiBaseURL}/v1/articles/${encodeURIComponent(
+    articleID
+  )}/similar`;
   const req = new Request(apiURL);
   const response = await AuthenticatedFetch(req, auth0Context);
   if (!response) {

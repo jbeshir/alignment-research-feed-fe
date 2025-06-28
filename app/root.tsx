@@ -9,6 +9,8 @@ import {
 import "./tailwind.css";
 import { Auth0Provider } from "@auth0/auth0-react";
 import type { LoaderFunction } from "@remix-run/cloudflare";
+import React from "react";
+import { ApiProvider } from "~/contexts/ApiContext";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -47,6 +49,7 @@ type LoaderData = {
   auth0Audience: string;
   auth0ClientId: string;
   auth0DefaultRedirectUri: string;
+  apiBaseURL: string;
 };
 
 export const loader: LoaderFunction = async ({
@@ -57,12 +60,18 @@ export const loader: LoaderFunction = async ({
     auth0Audience: context.cloudflare.env.AUTH0_AUDIENCE,
     auth0ClientId: context.cloudflare.env.AUTH0_CLIENT_ID,
     auth0DefaultRedirectUri: context.cloudflare.env.AUTH0_DEFAULT_REDIRECT_URI,
+    apiBaseURL: context.cloudflare.env.ALIGNMENT_FEED_BASE_URL,
   };
 };
 
 export default function App() {
-  const { auth0Domain, auth0Audience, auth0ClientId, auth0DefaultRedirectUri } =
-    useLoaderData<LoaderData>();
+  const {
+    auth0Domain,
+    auth0Audience,
+    auth0ClientId,
+    auth0DefaultRedirectUri,
+    apiBaseURL,
+  } = useLoaderData<LoaderData>();
 
   return (
     <Auth0Provider
@@ -75,7 +84,9 @@ export default function App() {
       cacheLocation="localstorage"
       useRefreshTokens={true}
     >
-      <Outlet />
+      <ApiProvider baseURL={apiBaseURL}>
+        <Outlet />
+      </ApiProvider>
     </Auth0Provider>
   );
 }
