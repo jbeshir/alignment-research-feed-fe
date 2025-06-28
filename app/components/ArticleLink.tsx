@@ -15,7 +15,7 @@ type ArticleLinkProps = {
 function ArticleLink({apiBaseURL, auth0Context, article, children, className}: ArticleLinkProps) {
     const markRead = useMemo(
         () => {
-            return async (e: React.MouseEvent) => {
+            return async () => {
                 if (auth0Context.isAuthenticated) {
                     const apiURL = `${apiBaseURL}/v1/articles/${encodeURIComponent(article.hash_id)}/read/true`;
                     const req = new Request(apiURL, {method: 'POST'});

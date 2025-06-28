@@ -1,7 +1,6 @@
 import React, { useMemo } from "react";
 import { AgGridReact } from "@ag-grid-community/react";
-import { Article, GetArticleRowId } from "./ArticleTable";
-import { MakeArticleColumnDefs } from "./ArticleTable";
+import { Article, GetArticleRowId, MakeArticleColumnDefs } from "./ArticleTable";
 
 import "@ag-grid-community/styles/ag-grid.css";
 import "@ag-grid-community/styles/ag-theme-quartz.css";
