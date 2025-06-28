@@ -12,11 +12,8 @@ import {
 import { ClientSideRowModelModule } from "@ag-grid-community/client-side-row-model";
 import { Link } from "@remix-run/react";
 import ArticleLink from "~/components/ArticleLink";
-import { Auth0ContextInterface } from "@auth0/auth0-react";
 
 type ArticleTableProps = {
-  apiBaseURL: string;
-  auth0Context: Auth0ContextInterface;
   articles: Article[];
 };
 
@@ -35,14 +32,14 @@ export const Article = z.object({
 
 export type Article = z.infer<typeof Article>;
 
-export const MakeArticleColumnDefs = (apiBaseURL: string, auth0Context: Auth0ContextInterface): ColDef[] => {
+export const MakeArticleColumnDefs = (): ColDef[] => {
   return [
     {
       flex: 3,
       colId: "title",
       field: "title",
       sortable: true,
-      cellRenderer: MakeLinkCellRenderer(apiBaseURL, auth0Context, (props: ICellRendererParams<Article>) => {
+      cellRenderer: MakeLinkCellRenderer((props: ICellRendererParams<Article>) => {
         return props.value || "";
       }),
     },
@@ -51,7 +48,7 @@ export const MakeArticleColumnDefs = (apiBaseURL: string, auth0Context: Auth0Con
       colId: "authors",
       field: "authors",
       sortable: true,
-      cellRenderer: MakeLinkCellRenderer(apiBaseURL, auth0Context, (props: ICellRendererParams<Article>) => {
+      cellRenderer: MakeLinkCellRenderer((props: ICellRendererParams<Article>) => {
         return props.value || "";
       }),
     },
@@ -60,7 +57,7 @@ export const MakeArticleColumnDefs = (apiBaseURL: string, auth0Context: Auth0Con
       colId: "source",
       field: "source",
       sortable: true,
-      cellRenderer: MakeLinkCellRenderer(apiBaseURL, auth0Context, (props: ICellRendererParams<Article>) => {
+      cellRenderer: MakeLinkCellRenderer((props: ICellRendererParams<Article>) => {
         return props.value || "";
       }),
     },
@@ -70,7 +67,7 @@ export const MakeArticleColumnDefs = (apiBaseURL: string, auth0Context: Auth0Con
       field: "published_at",
       headerName: "Published At",
       sortable: true,
-      cellRenderer: MakeLinkCellRenderer(apiBaseURL, auth0Context, (props: ICellRendererParams<Article>) => {
+      cellRenderer: MakeLinkCellRenderer((props: ICellRendererParams<Article>) => {
         return props.value?.toLocaleString() || "";
       }),
     },
@@ -104,8 +101,6 @@ export const GetArticleRowId = (params: GetRowIdParams) => {
 };
 
 function MakeLinkCellRenderer(
-  apiBaseURL: string,
-  auth0Context: Auth0ContextInterface,
   baseCellRenderer: (props: ICellRendererParams<Article>) => string
 ) {
   const LinkCell = (props: ICellRendererParams<Article>) => {
@@ -115,8 +110,6 @@ function MakeLinkCellRenderer(
 
     return (
       <ArticleLink 
-        apiBaseURL={apiBaseURL} 
-        auth0Context={auth0Context} 
         article={props.data} 
         className="inline-block h-full w-full"
       >
@@ -128,13 +121,13 @@ function MakeLinkCellRenderer(
   return LinkCell;
 }
 
-function ArticleTable({ apiBaseURL, auth0Context, articles }: ArticleTableProps) {
+function ArticleTable({ articles }: ArticleTableProps) {
   ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
   return (
     <div className="ag-theme-quartz-auto-dark">
       <AgGridReact
-        columnDefs={MakeArticleColumnDefs(apiBaseURL, auth0Context)}
+        columnDefs={MakeArticleColumnDefs()}
         rowData={articles}
         getRowId={GetArticleRowId}
         domLayout="autoHeight"

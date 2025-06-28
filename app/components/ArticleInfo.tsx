@@ -1,14 +1,11 @@
 import { Article } from "~/components/ArticleTable";
 import ArticleLink from "~/components/ArticleLink";
-import { Auth0ContextInterface } from "@auth0/auth0-react";
 
 type ArticleInfoProps = {
-  apiBaseURL: string;
-  auth0Context: Auth0ContextInterface;
   article: Article;
 };
 
-function ArticleInfo({ apiBaseURL, auth0Context, article }: ArticleInfoProps) {
+function ArticleInfo({ article }: ArticleInfoProps) {
   return (
     <div className="text-black dark:text-white space-y-2">
       <div className="h-fill py-2 px-4 flex flex-row bg-slate-200 dark:bg-slate-700">
@@ -23,8 +20,6 @@ function ArticleInfo({ apiBaseURL, auth0Context, article }: ArticleInfoProps) {
         <span className="inline-block w-40 font-bold">URL</span>
         <span className="inline-block grow">
           <ArticleLink 
-            apiBaseURL={apiBaseURL} 
-            auth0Context={auth0Context} 
             article={article} 
             className=""
           >

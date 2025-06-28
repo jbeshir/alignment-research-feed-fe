@@ -1,18 +1,19 @@
 import React, {useMemo} from "react";
 
 import {Article} from "~/components/ArticleTable";
-import {Auth0ContextInterface} from "@auth0/auth0-react";
+import {useAuth0} from "@auth0/auth0-react";
 import {AuthenticatedFetch} from "~/utils/request";
+import {useApi} from "~/contexts/ApiContext";
 
 type ArticleLinkProps = {
-    apiBaseURL: string;
-    auth0Context: Auth0ContextInterface;
-    article: Article
+    article: Article;
     children: React.ReactNode;
     className: string;
 }
 
-function ArticleLink({apiBaseURL, auth0Context, article, children, className}: ArticleLinkProps) {
+function ArticleLink({article, children, className}: ArticleLinkProps) {
+    const auth0Context = useAuth0();
+    const { baseURL: apiBaseURL } = useApi();
     const markRead = useMemo(
         () => {
             return async () => {

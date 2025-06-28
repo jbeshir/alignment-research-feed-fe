@@ -12,18 +12,15 @@ import {
 } from "@ag-grid-community/core";
 import { InfiniteRowModelModule } from "@ag-grid-community/infinite-row-model";
 import { AuthenticatedFetch } from "~/utils/request";
-import { Auth0ContextInterface, useAuth0 } from "@auth0/auth0-react";
-
-type AlignmentFeedTableProps = {
-  apiBaseURL: string;
-};
+import { useAuth0 } from "@auth0/auth0-react";
+import { useApi } from "~/contexts/ApiContext";
 
 // Avoids unnecessary blinking of the table as it reloads its datasources when it doesn't need to rerender.
 const MemoizedAgGridReact = React.memo(AgGridReact);
 
 // Add filtering and sorting rules appropriate supported by our infinite datasource to our column definitions.
-function MakeFeedColumnDefs(apiBaseURL: string, auth0Context: Auth0ContextInterface): ColDef[] {
-  return MakeArticleColumnDefs(apiBaseURL, auth0Context).map((def: ColDef) => {
+function MakeFeedColumnDefs(): ColDef[] {
+  return MakeArticleColumnDefs().map((def: ColDef) => {
     // Set filtering rules
     const newDef = { ...def };
     switch (newDef.colId) {
@@ -56,10 +53,11 @@ function MakeFeedColumnDefs(apiBaseURL: string, auth0Context: Auth0ContextInterf
   });
 }
 
-function AlignmentFeedTable({ apiBaseURL }: AlignmentFeedTableProps) {
+function AlignmentFeedTable() {
   ModuleRegistry.registerModules([InfiniteRowModelModule]);
 
   const auth0Context = useAuth0();
+  const { baseURL: apiBaseURL } = useApi();
 
   const dataSource: IDatasource = useMemo(() => {
     return {
@@ -142,7 +140,7 @@ function AlignmentFeedTable({ apiBaseURL }: AlignmentFeedTableProps) {
   return (
     <div className="ag-theme-quartz-auto-dark" style={{ height: "100%" }}>
       <MemoizedAgGridReact
-        columnDefs={MakeFeedColumnDefs(apiBaseURL, auth0Context)}
+        columnDefs={MakeFeedColumnDefs()}
         rowModelType="infinite"
         cacheBlockSize={100}
         datasource={dataSource}

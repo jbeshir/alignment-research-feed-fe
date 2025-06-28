@@ -1,5 +1,4 @@
-import type { LoaderFunction, MetaFunction } from "@remix-run/cloudflare";
-import { useLoaderData } from "@remix-run/react";
+import type { MetaFunction } from "@remix-run/cloudflare";
 import AlignmentFeedTable from "~/components/AlignmentFeedTable";
 import TopBar from "~/components/TopBar";
 
@@ -13,19 +12,7 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-type LoaderData = {
-  apiBaseURL: string;
-};
-
-export const loader: LoaderFunction = async ({
-  context,
-}): Promise<LoaderData> => {
-  return { apiBaseURL: context.cloudflare.env.ALIGNMENT_FEED_BASE_URL };
-};
-
 export default function Index() {
-  const { apiBaseURL } = useLoaderData<LoaderData>();
-
   return (
     <div className="h-screen w-full flex flex-col space-y-4 pb-5">
       <TopBar />
@@ -40,7 +27,7 @@ export default function Index() {
         , updated every day.
       </div>
       <div className="grow px-5">
-        <AlignmentFeedTable apiBaseURL={apiBaseURL} />
+        <AlignmentFeedTable />
       </div>
       <div className="text-xl font-medium text-black dark:text-white px-5">
         An RSS feed of new items coming into this dataset is available{" "}
