@@ -39,27 +39,33 @@ export const MakeArticleColumnDefs = (): ColDef[] => {
       colId: "title",
       field: "title",
       sortable: true,
-      cellRenderer: MakeLinkCellRenderer((props: ICellRendererParams<Article>) => {
-        return props.value || "";
-      }),
+      cellRenderer: MakeLinkCellRenderer(
+        (props: ICellRendererParams<Article>) => {
+          return props.value || "";
+        }
+      ),
     },
     {
       flex: 2,
       colId: "authors",
       field: "authors",
       sortable: true,
-      cellRenderer: MakeLinkCellRenderer((props: ICellRendererParams<Article>) => {
-        return props.value || "";
-      }),
+      cellRenderer: MakeLinkCellRenderer(
+        (props: ICellRendererParams<Article>) => {
+          return props.value || "";
+        }
+      ),
     },
     {
       flex: 1,
       colId: "source",
       field: "source",
       sortable: true,
-      cellRenderer: MakeLinkCellRenderer((props: ICellRendererParams<Article>) => {
-        return props.value || "";
-      }),
+      cellRenderer: MakeLinkCellRenderer(
+        (props: ICellRendererParams<Article>) => {
+          return props.value || "";
+        }
+      ),
     },
     {
       flex: 1,
@@ -67,9 +73,11 @@ export const MakeArticleColumnDefs = (): ColDef[] => {
       field: "published_at",
       headerName: "Published At",
       sortable: true,
-      cellRenderer: MakeLinkCellRenderer((props: ICellRendererParams<Article>) => {
-        return props.value?.toLocaleString() || "";
-      }),
+      cellRenderer: MakeLinkCellRenderer(
+        (props: ICellRendererParams<Article>) => {
+          return props.value?.toLocaleString() || "";
+        }
+      ),
     },
     {
       colId: "details_link",
@@ -109,10 +117,7 @@ function MakeLinkCellRenderer(
     }
 
     return (
-      <ArticleLink 
-        article={props.data} 
-        className="inline-block h-full w-full"
-      >
+      <ArticleLink article={props.data} className="inline-block h-full w-full">
         {baseCellRenderer(props)}
       </ArticleLink>
     );

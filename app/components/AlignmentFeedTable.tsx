@@ -1,6 +1,10 @@
 import React, { useMemo } from "react";
 import { AgGridReact } from "@ag-grid-community/react";
-import { Article, GetArticleRowId, MakeArticleColumnDefs } from "./ArticleTable";
+import {
+  Article,
+  GetArticleRowId,
+  MakeArticleColumnDefs,
+} from "./ArticleTable";
 
 import "@ag-grid-community/styles/ag-grid.css";
 import "@ag-grid-community/styles/ag-theme-quartz.css";
@@ -61,7 +65,7 @@ function AlignmentFeedTable() {
 
   const dataSource: IDatasource = useMemo(() => {
     return {
-      getRows: async (params) => {
+      getRows: async params => {
         const page = Math.floor(params.startRow / 100) + 1;
         const pageSize = 100; // We're using a fixed page size of 100 for this example
 

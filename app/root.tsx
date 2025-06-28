@@ -65,12 +65,12 @@ export const loader: LoaderFunction = async ({
 };
 
 export default function App() {
-  const { 
-    auth0Domain, 
-    auth0Audience, 
-    auth0ClientId, 
-    auth0DefaultRedirectUri, 
-    apiBaseURL 
+  const {
+    auth0Domain,
+    auth0Audience,
+    auth0ClientId,
+    auth0DefaultRedirectUri,
+    apiBaseURL,
   } = useLoaderData<LoaderData>();
 
   return (

@@ -122,7 +122,9 @@ async function fetchSimilarArticles(
   auth0Context: Auth0ContextInterface,
   articleID: string
 ): Promise<Article[] | null> {
-  const apiURL = `${apiBaseURL}/v1/articles/${encodeURIComponent(articleID)}/similar`;
+  const apiURL = `${apiBaseURL}/v1/articles/${encodeURIComponent(
+    articleID
+  )}/similar`;
   const req = new Request(apiURL);
   const response = await AuthenticatedFetch(req, auth0Context);
   if (!response) {

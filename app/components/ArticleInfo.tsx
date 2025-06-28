@@ -19,10 +19,7 @@ function ArticleInfo({ article }: ArticleInfoProps) {
       <div className="h-fill py-2 px-4 flex flex-row bg-slate-200 dark:bg-slate-700">
         <span className="inline-block w-40 font-bold">URL</span>
         <span className="inline-block grow">
-          <ArticleLink 
-            article={article} 
-            className=""
-          >
+          <ArticleLink article={article} className="">
             {article.link}
           </ArticleLink>
         </span>

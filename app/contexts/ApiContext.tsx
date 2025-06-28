@@ -6,17 +6,15 @@ type ApiContextType = {
 
 const ApiContext = createContext<ApiContextType | undefined>(undefined);
 
-export function ApiProvider({ 
-  children, 
-  baseURL 
-}: { 
-  children: React.ReactNode; 
-  baseURL: string; 
+export function ApiProvider({
+  children,
+  baseURL,
+}: {
+  children: React.ReactNode;
+  baseURL: string;
 }) {
   return (
-    <ApiContext.Provider value={{ baseURL }}>
-      {children}
-    </ApiContext.Provider>
+    <ApiContext.Provider value={{ baseURL }}>{children}</ApiContext.Provider>
   );
 }
 
@@ -26,4 +24,4 @@ export function useApi() {
     throw new Error("useApi must be used within an ApiProvider");
   }
   return context;
-} 
+}
