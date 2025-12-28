@@ -15,7 +15,11 @@ import ArticleLink from "~/components/ArticleLink";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useApi } from "~/contexts/ApiContext";
 import { AuthenticatedFetch } from "~/utils/request";
-import { ThumbsUpIcon, ThumbsDownIcon, CheckCircleIcon } from "~/components/Icons";
+import {
+  ThumbsUpIcon,
+  ThumbsDownIcon,
+  CheckCircleIcon,
+} from "~/components/Icons";
 import { useCallback } from "react";
 
 type ArticleTableProps = {
@@ -37,8 +41,6 @@ export const Article = z.object({
 
 export type Article = z.infer<typeof Article>;
 
-
-
 const FeedbackCell = (props: ICellRendererParams<Article>) => {
   const { data } = props;
   const auth0Context = useAuth0();
@@ -49,10 +51,7 @@ const FeedbackCell = (props: ICellRendererParams<Article>) => {
   const haveRead = data?.have_read ?? false;
 
   const handleToggle = useCallback(
-    async (
-      type: "read" | "thumbs_up" | "thumbs_down",
-      value: boolean
-    ) => {
+    async (type: "read" | "thumbs_up" | "thumbs_down", value: boolean) => {
       if (!auth0Context.isAuthenticated || !data) return;
 
       const newValue = !value;
@@ -108,34 +107,43 @@ const FeedbackCell = (props: ICellRendererParams<Article>) => {
   return (
     <div className="flex items-center gap-1 h-full">
       <button
-        onClick={(e) => {
+        onClick={e => {
           e.stopPropagation();
           handleToggle("thumbs_up", thumbsUp);
         }}
-        className={`p-1.5 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors ${thumbsUp ? "text-green-600 dark:text-green-500 bg-green-50 dark:bg-green-900/20" : "text-slate-400 dark:text-slate-500"
-          }`}
+        className={`p-1.5 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors ${
+          thumbsUp
+            ? "text-green-600 dark:text-green-500 bg-green-50 dark:bg-green-900/20"
+            : "text-slate-400 dark:text-slate-500"
+        }`}
         title="Thumbs Up"
       >
         <ThumbsUpIcon className="w-4 h-4" />
       </button>
       <button
-        onClick={(e) => {
+        onClick={e => {
           e.stopPropagation();
           handleToggle("thumbs_down", thumbsDown);
         }}
-        className={`p-1.5 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors ${thumbsDown ? "text-red-600 dark:text-red-500 bg-red-50 dark:bg-red-900/20" : "text-slate-400 dark:text-slate-500"
-          }`}
+        className={`p-1.5 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors ${
+          thumbsDown
+            ? "text-red-600 dark:text-red-500 bg-red-50 dark:bg-red-900/20"
+            : "text-slate-400 dark:text-slate-500"
+        }`}
         title="Thumbs Down"
       >
         <ThumbsDownIcon className="w-4 h-4" />
       </button>
       <button
-        onClick={(e) => {
+        onClick={e => {
           e.stopPropagation();
           handleToggle("read", haveRead);
         }}
-        className={`p-1.5 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors ${haveRead ? "text-blue-600 dark:text-blue-500 bg-blue-50 dark:bg-blue-900/20" : "text-slate-400 dark:text-slate-500"
-          }`}
+        className={`p-1.5 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors ${
+          haveRead
+            ? "text-blue-600 dark:text-blue-500 bg-blue-50 dark:bg-blue-900/20"
+            : "text-slate-400 dark:text-slate-500"
+        }`}
         title="Mark as Read"
       >
         <CheckCircleIcon className="w-4 h-4" />
@@ -224,7 +232,7 @@ export const MakeArticleColumnDefs = (isAuthenticated: boolean): ColDef[] => {
   ];
 
   if (!isAuthenticated) {
-    return columns.filter((col) => col.colId !== "feedback");
+    return columns.filter(col => col.colId !== "feedback");
   }
   return columns;
 };
