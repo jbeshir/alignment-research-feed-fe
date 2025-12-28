@@ -24,7 +24,9 @@ const MemoizedAgGridReact = React.memo(AgGridReact);
 
 // Add filtering and sorting rules appropriate supported by our infinite datasource to our column definitions.
 function MakeFeedColumnDefs(): ColDef[] {
-  return MakeArticleColumnDefs().map((def: ColDef) => {
+  const { isAuthenticated } = useAuth0();
+
+  return MakeArticleColumnDefs(isAuthenticated).map((def: ColDef) => {
     // Set filtering rules
     const newDef = { ...def };
     switch (newDef.colId) {

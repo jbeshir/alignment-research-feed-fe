@@ -9,9 +9,15 @@ type ArticleLinkProps = {
   article: Article;
   children: React.ReactNode;
   className: string;
+  onRead?: () => void;
 };
 
-function ArticleLink({ article, children, className }: ArticleLinkProps) {
+function ArticleLink({
+  article,
+  children,
+  className,
+  onRead,
+}: ArticleLinkProps) {
   const auth0Context = useAuth0();
   const { baseURL: apiBaseURL } = useApi();
   const markRead = useMemo(() => {
@@ -22,9 +28,12 @@ function ArticleLink({ article, children, className }: ArticleLinkProps) {
         )}/read/true`;
         const req = new Request(apiURL, { method: "POST" });
         await AuthenticatedFetch(req, auth0Context);
+        if (onRead) {
+          onRead();
+        }
       }
     };
-  }, [apiBaseURL, article, auth0Context]);
+  }, [apiBaseURL, article, auth0Context, onRead]);
 
   if (auth0Context.isLoading) {
     return "";
