@@ -16,7 +16,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useApi } from "~/contexts/ApiContext";
 import { AuthenticatedFetch } from "~/utils/request";
 import { ThumbsUpIcon, ThumbsDownIcon, CheckCircleIcon } from "~/components/Icons";
-import { useState, useCallback } from "react";
+import { useCallback } from "react";
 
 type ArticleTableProps = {
   articles: Article[];
@@ -73,7 +73,7 @@ const FeedbackCell = (props: ICellRendererParams<Article>) => {
         props.api.refreshCells({ rowNodes: [props.node], force: true });
       }
 
-      // Backend API pattern: /v1/articles/:id/:action/:value
+      // Endpoint pattern for feedback labels: /v1/articles/:id/:label/:value
       const endpoint = type;
       const apiURL = `${apiBaseURL}/v1/articles/${encodeURIComponent(
         data.hash_id
