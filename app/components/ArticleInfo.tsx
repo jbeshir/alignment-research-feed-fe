@@ -1,4 +1,4 @@
-import { Article } from "~/components/ArticleTable";
+import { Article } from "~/types/article";
 import ArticleLink from "~/components/ArticleLink";
 
 type ArticleInfoProps = {

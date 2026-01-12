@@ -1,6 +1,4 @@
 import { AgGridReact } from "@ag-grid-community/react";
-import { z } from "zod";
-
 import "@ag-grid-community/styles/ag-grid.css";
 import "@ag-grid-community/styles/ag-theme-quartz.css";
 import {
@@ -11,8 +9,10 @@ import {
 } from "@ag-grid-community/core";
 import { ClientSideRowModelModule } from "@ag-grid-community/client-side-row-model";
 import { Link } from "@remix-run/react";
-import ArticleLink from "~/components/ArticleLink";
 import { useAuth0 } from "@auth0/auth0-react";
+import { useCallback } from "react";
+
+import ArticleLink from "~/components/ArticleLink";
 import { useApi } from "~/contexts/ApiContext";
 import { AuthenticatedFetch } from "~/utils/request";
 import {
@@ -20,26 +20,14 @@ import {
   ThumbsDownIcon,
   CheckCircleIcon,
 } from "~/components/Icons";
-import { useCallback } from "react";
+import { Article } from "~/types/article";
+
+// Register module once at module level (not inside component)
+ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
 type ArticleTableProps = {
   articles: Article[];
 };
-
-export const Article = z.object({
-  hash_id: z.string(),
-  title: z.string(),
-  link: z.string(),
-  text_start: z.string(),
-  authors: z.string(),
-  source: z.string(),
-  published_at: z.string().datetime().pipe(z.coerce.date()),
-  have_read: z.boolean().optional(),
-  thumbs_up: z.boolean().optional(),
-  thumbs_down: z.boolean().optional(),
-});
-
-export type Article = z.infer<typeof Article>;
 
 const FeedbackCell = (props: ICellRendererParams<Article>) => {
   const { data } = props;
@@ -53,6 +41,13 @@ const FeedbackCell = (props: ICellRendererParams<Article>) => {
   const handleToggle = useCallback(
     async (type: "read" | "thumbs_up" | "thumbs_down", value: boolean) => {
       if (!auth0Context.isAuthenticated || !data) return;
+
+      // Store previous state for rollback
+      const prevState = {
+        have_read: data.have_read,
+        thumbs_up: data.thumbs_up,
+        thumbs_down: data.thumbs_down,
+      };
 
       const newValue = !value;
 
@@ -83,16 +78,10 @@ const FeedbackCell = (props: ICellRendererParams<Article>) => {
         await AuthenticatedFetch(req, auth0Context);
       } catch (e) {
         console.error("Failed to update feedback", e);
-        // Revert on failure
-        if (type === "read") {
-          data.have_read = value;
-        } else if (type === "thumbs_up") {
-          data.thumbs_up = value;
-          // Complex logic to revert mutually exclusive state skipped for brevity,
-          // ideally we'd store the full previous state snapshot.
-        } else if (type === "thumbs_down") {
-          data.thumbs_down = value;
-        }
+        // Revert to previous state on failure
+        data.have_read = prevState.have_read;
+        data.thumbs_up = prevState.thumbs_up;
+        data.thumbs_down = prevState.thumbs_down;
 
         if (props.node && props.api) {
           props.api.refreshCells({ rowNodes: [props.node], force: true });
@@ -272,7 +261,6 @@ function MakeLinkCellRenderer(
 }
 
 function ArticleTable({ articles }: ArticleTableProps) {
-  ModuleRegistry.registerModules([ClientSideRowModelModule]);
   const { isAuthenticated } = useAuth0();
 
   return (

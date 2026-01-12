@@ -1,13 +1,13 @@
-import React, { useMemo } from "react";
+import { useMemo, type ReactNode } from "react";
 
-import { Article } from "~/components/ArticleTable";
+import { Article } from "~/types/article";
 import { useAuth0 } from "@auth0/auth0-react";
 import { AuthenticatedFetch } from "~/utils/request";
 import { useApi } from "~/contexts/ApiContext";
 
 type ArticleLinkProps = {
   article: Article;
-  children: React.ReactNode;
+  children: ReactNode;
   className: string;
   onRead?: () => void;
 };
@@ -36,7 +36,7 @@ function ArticleLink({
   }, [apiBaseURL, article, auth0Context, onRead]);
 
   if (auth0Context.isLoading) {
-    return "";
+    return null;
   }
 
   return (
