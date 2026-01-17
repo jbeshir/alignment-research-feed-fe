@@ -11,7 +11,7 @@ import {
   CheckCircleIcon,
   EllipsisIcon,
 } from "./Icons";
-import { getSourceColor } from "~/constants/sources";
+import { getSourceHeaderColor, getSourceDisplayName } from "~/constants/sources";
 
 interface ArticleCardProps {
   article: Article;
@@ -113,37 +113,24 @@ export function ArticleCard({
       onClick={handleCardClick}
       className="flex flex-col bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden group h-full"
     >
-      {/* Thumbnail placeholder */}
-      <div className="aspect-video bg-slate-200 flex items-center justify-center relative flex-shrink-0">
-        {isVideoSource(article.source) ? (
-          <div className="w-16 h-16 rounded-full bg-white/80 flex items-center justify-center group-hover:bg-white transition-colors">
-            <PlayIcon className="w-8 h-8 text-slate-700 ml-1" />
-          </div>
-        ) : (
-          <div className="text-slate-400 text-sm font-medium">
-            {article.source}
-          </div>
-        )}
-        {/* Read marker overlay */}
-        {haveRead && (
-          <div className="absolute top-2 right-2 bg-white/70 text-green-600 rounded-full p-0.5" title="Read">
-            <CheckCircleIcon className="w-3.5 h-3.5" />
-          </div>
-        )}
+      {/* Source header strip */}
+      <div className={`h-12 px-4 flex items-center justify-between flex-shrink-0 ${getSourceHeaderColor(article.source)}`}>
+        <span className="font-medium text-sm">{getSourceDisplayName(article.source, article.authors)}</span>
+        <div className="flex items-center gap-2">
+          {isVideoSource(article.source) && <PlayIcon className="w-5 h-5" />}
+          {haveRead && (
+            <span title="Read">
+              <CheckCircleIcon className="w-4 h-4 text-green-300" />
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Content - flex-grow to fill available space */}
       <div className="p-4 flex flex-col flex-grow">
-        {/* Source and date tags */}
-        <div className="flex flex-wrap gap-2 mb-2">
-          <span
-            className={`text-xs px-2 py-0.5 rounded ${getSourceColor(article.source)}`}
-          >
-            {article.source}
-          </span>
-          <span className="text-xs text-slate-400">
-            {formatPublishedDate(article.published_at)}
-          </span>
+        {/* Date */}
+        <div className="text-xs text-slate-400 mb-2">
+          {formatPublishedDate(article.published_at)}
         </div>
 
         {/* Author */}
