@@ -20,9 +20,9 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@remix-run/cloudflare": "^2.9.2",
-    "@remix-run/cloudflare-pages": "^2.9.2",
-    "@remix-run/react": "^2.9.2",
+    "@remix-run/cloudflare": "^2.17.4",
+    "@remix-run/cloudflare-pages": "^2.17.4",
+    "@remix-run/react": "^2.17.4",
     "isbot": "^4.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240712.0",
-    "@remix-run/dev": "^2.9.2",
+    "@remix-run/dev": "^2.17.4",
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^14.2.1",
     "@testing-library/user-event": "^14.5.2",
