@@ -1,9 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useAuth } from "~/root";
-import {
-  type Article,
-  parseArticlesResponse,
-} from "~/schemas/article";
+import { type Article, parseArticlesResponse } from "~/schemas/article";
 
 interface UseRecommendedResult {
   articles: Article[];

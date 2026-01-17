@@ -51,7 +51,8 @@ export default function Recommended() {
           {showLoginPrompt ? (
             <div className="flex flex-col items-center justify-center py-16 px-4">
               <p className="text-slate-600 dark:text-slate-400 text-lg mb-4">
-                Log in to see personalized recommendations based on your interests.
+                Log in to see personalized recommendations based on your
+                interests.
               </p>
               <Link to="/auth/login">
                 <Button variant="primary" type="button">

@@ -8,6 +8,7 @@ import {
 } from "@remix-run/react";
 import "./tailwind.css";
 import type { LoaderFunctionArgs } from "@remix-run/cloudflare";
+import { json } from "@remix-run/cloudflare";
 import React, { createContext, useContext } from "react";
 import { getServerAuthContext } from "~/server/auth.server";
 
@@ -65,16 +66,14 @@ type LoaderData = {
   isAuthenticated: boolean;
 };
 
-export const loader = async ({
-  request,
-  context,
-}: LoaderFunctionArgs): Promise<LoaderData> => {
+export const loader = async ({ request, context }: LoaderFunctionArgs) => {
   const env = context.cloudflare.env;
-  const authContext = await getServerAuthContext(request, env);
+  const { authContext, headers } = await getServerAuthContext(request, env);
 
-  return {
-    isAuthenticated: authContext.isAuthenticated,
-  };
+  return json<LoaderData>(
+    { isAuthenticated: authContext.isAuthenticated },
+    headers ? { headers } : undefined
+  );
 };
 
 export default function App() {

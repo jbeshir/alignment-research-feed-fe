@@ -7,4 +7,6 @@ import type { ServerBuild } from "@remix-run/cloudflare";
 import * as build from "../build/server";
 
 // Type assertion needed due to exactOptionalPropertyTypes incompatibility with Remix types
-export const onRequest = createPagesFunctionHandler({ build: build as unknown as ServerBuild });
+export const onRequest = createPagesFunctionHandler({
+  build: build as unknown as ServerBuild,
+});

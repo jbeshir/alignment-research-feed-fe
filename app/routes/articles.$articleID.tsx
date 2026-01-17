@@ -45,7 +45,10 @@ export const loader = async ({
   const apiBaseURL = context.cloudflare.env.ALIGNMENT_FEED_BASE_URL;
 
   // Create an authenticated fetch function for this request
-  const authFetch = await createAuthenticatedFetch(request, context.cloudflare.env);
+  const authFetch = await createAuthenticatedFetch(
+    request,
+    context.cloudflare.env
+  );
 
   // Fetch article and similar articles in parallel
   const [articleResponse, similarResponse] = await Promise.all([
@@ -79,10 +82,7 @@ export const loader = async ({
     }
   }
 
-  return json({
-    article,
-    similarArticles,
-  });
+  return json({ article, similarArticles });
 };
 
 export default function ArticleDetails() {

@@ -6,7 +6,7 @@
  * Prefix added to Auth0 tokens when sending to the backend API.
  * The backend expects tokens in the format: "auth0|<token>"
  */
-export const AUTH0_TOKEN_PREFIX = "auth0|";
+const AUTH0_TOKEN_PREFIX = "auth0|";
 
 /**
  * Builds an Authorization header value with the auth0 prefix.

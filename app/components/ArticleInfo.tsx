@@ -1,5 +1,8 @@
 import { type Article, formatPublishedDate } from "~/schemas/article";
-import { getSourceHeaderColor, getSourceDisplayName } from "~/constants/sources";
+import {
+  getSourceHeaderColor,
+  getSourceDisplayName,
+} from "~/constants/sources";
 import {
   ThumbsUpIcon,
   ThumbsUpFilledIcon,
@@ -29,8 +32,12 @@ export function ArticleInfo({
   return (
     <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm overflow-hidden">
       {/* Source header strip - like the card */}
-      <div className={`h-14 px-6 flex items-center justify-between ${getSourceHeaderColor(article.source)}`}>
-        <span className="font-medium">{getSourceDisplayName(article.source, article.authors)}</span>
+      <div
+        className={`h-14 px-6 flex items-center justify-between ${getSourceHeaderColor(article.source)}`}
+      >
+        <span className="font-medium">
+          {getSourceDisplayName(article.source, article.authors)}
+        </span>
         <div className="flex items-center gap-3">
           {haveRead && (
             <span className="flex items-center gap-1 text-sm opacity-80">

@@ -11,7 +11,10 @@ import {
   CheckCircleIcon,
   EllipsisIcon,
 } from "./Icons";
-import { getSourceHeaderColor, getSourceDisplayName } from "~/constants/sources";
+import {
+  getSourceHeaderColor,
+  getSourceDisplayName,
+} from "~/constants/sources";
 
 interface ArticleCardProps {
   article: Article;
@@ -49,7 +52,7 @@ export function ArticleCard({
     if (!isAuthenticated || !onMarkAsRead || haveRead) return;
 
     // Fire and forget - parent handles state update
-    onMarkAsRead(article.hash_id).catch((error) => {
+    onMarkAsRead(article.hash_id).catch(error => {
       console.error("Failed to mark as read:", error);
     });
   }, [isAuthenticated, onMarkAsRead, haveRead, article.hash_id]);
@@ -115,8 +118,12 @@ export function ArticleCard({
       className="flex flex-col bg-white dark:bg-slate-800 rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden group h-full"
     >
       {/* Source header strip */}
-      <div className={`h-12 px-4 flex items-center justify-between flex-shrink-0 ${getSourceHeaderColor(article.source)}`}>
-        <span className="font-medium text-sm">{getSourceDisplayName(article.source, article.authors)}</span>
+      <div
+        className={`h-12 px-4 flex items-center justify-between flex-shrink-0 ${getSourceHeaderColor(article.source)}`}
+      >
+        <span className="font-medium text-sm">
+          {getSourceDisplayName(article.source, article.authors)}
+        </span>
         <div className="flex items-center gap-2">
           {isVideoSource(article.source) && <PlayIcon className="w-5 h-5" />}
           {haveRead && (
@@ -135,7 +142,9 @@ export function ArticleCard({
         </div>
 
         {/* Author */}
-        <p className="text-sm text-slate-600 dark:text-slate-400 mb-1 truncate">{article.authors}</p>
+        <p className="text-sm text-slate-600 dark:text-slate-400 mb-1 truncate">
+          {article.authors}
+        </p>
 
         {/* Title */}
         <h3 className="font-medium text-slate-900 dark:text-slate-100 line-clamp-2 mb-3 group-hover:text-brand-dark dark:group-hover:text-brand-light transition-colors">
@@ -179,7 +188,7 @@ export function ArticleCard({
           </button>
           <button
             type="button"
-            onClick={(e) => {
+            onClick={e => {
               e.preventDefault();
               e.stopPropagation();
               navigate(`/articles/${article.hash_id}`);

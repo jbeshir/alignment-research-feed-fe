@@ -1,13 +1,16 @@
 // Source-specific colors for visual differentiation (used in tags)
 export const SOURCE_COLORS: Record<string, string> = {
   arxiv: "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-200",
-  lesswrong: "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-200",
-  alignmentforum: "bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-200",
+  lesswrong:
+    "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-200",
+  alignmentforum:
+    "bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-200",
   youtube: "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-200",
   default: "bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-200",
 };
 
-const DEFAULT_COLOR = "bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-200";
+const DEFAULT_COLOR =
+  "bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-200";
 
 export function getSourceColor(source: string): string {
   const normalized = source.toLowerCase();
@@ -16,7 +19,7 @@ export function getSourceColor(source: string): string {
 
 // Header-specific colors with higher contrast for card header backgrounds
 // Dark backgrounds with white text; slightly lighter in dark mode for contrast
-export const SOURCE_HEADER_COLORS: Record<string, string> = {
+const SOURCE_HEADER_COLORS: Record<string, string> = {
   // Research organizations (from dataset)
   arxiv: "bg-red-800 dark:bg-red-700 text-white",
   miri: "bg-indigo-800 dark:bg-indigo-700 text-white",
@@ -92,7 +95,7 @@ export function getSourceHeaderColor(source: string): string {
 }
 
 // Display names for sources (proper formatting)
-export const SOURCE_DISPLAY_NAMES: Record<string, string> = {
+const SOURCE_DISPLAY_NAMES: Record<string, string> = {
   // Research organizations (from dataset)
   arxiv: "arXiv",
   miri: "MIRI",
@@ -160,11 +163,11 @@ export const SOURCE_DISPLAY_NAMES: Record<string, string> = {
 function toTitleCase(str: string): string {
   return str
     .split(/[-_\s]+/)
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join(" ");
 }
 
-export function formatSourceName(source: string): string {
+function formatSourceName(source: string): string {
   const normalized = source.toLowerCase();
   return SOURCE_DISPLAY_NAMES[normalized] ?? toTitleCase(source);
 }
@@ -183,10 +186,7 @@ function getFirstAuthor(authors: string): string {
   return firstAuthor || authors;
 }
 
-export function getSourceDisplayName(
-  source: string,
-  authors?: string
-): string {
+export function getSourceDisplayName(source: string, authors?: string): string {
   // For generic blog sources, prefer author name if available
   if (isGenericBlogSource(source) && authors) {
     const authorName = getFirstAuthor(authors);

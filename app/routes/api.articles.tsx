@@ -19,11 +19,11 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
 
   const response = await authFetch(apiUrl);
 
-  // Return the API response with appropriate headers
   return new Response(response.body, {
     status: response.status,
     headers: {
-      "Content-Type": response.headers.get("Content-Type") || "application/json",
+      "Content-Type":
+        response.headers.get("Content-Type") || "application/json",
     },
   });
 }

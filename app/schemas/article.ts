@@ -20,10 +20,10 @@ export const ArticlesResponseSchema = z.object({
   metadata: z.record(z.unknown()).optional(),
 });
 
-export type ArticlesResponse = z.infer<typeof ArticlesResponseSchema>;
+type ArticlesResponse = z.infer<typeof ArticlesResponseSchema>;
 
 // Discriminated union for parse results
-export type ParseResult<T> =
+type ParseResult<T> =
   | { success: true; data: T }
   | { success: false; error: z.ZodError };
 
@@ -31,7 +31,9 @@ export type ParseResult<T> =
  * Safely parse articles response with discriminated union result.
  * Callers should check success and handle errors appropriately.
  */
-export function parseArticlesResponse(data: unknown): ParseResult<ArticlesResponse> {
+export function parseArticlesResponse(
+  data: unknown
+): ParseResult<ArticlesResponse> {
   const result = ArticlesResponseSchema.safeParse(data);
   if (!result.success) {
     console.error("Failed to parse articles response:", result.error);

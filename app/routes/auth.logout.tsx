@@ -11,7 +11,9 @@ import { getSessionStorage } from "~/server/auth.server";
 export async function action({ request, context }: ActionFunctionArgs) {
   const env = context.cloudflare.env;
   const sessionStorage = getSessionStorage(env);
-  const session = await sessionStorage.getSession(request.headers.get("Cookie"));
+  const session = await sessionStorage.getSession(
+    request.headers.get("Cookie")
+  );
 
   // Build Auth0 logout URL
   const logoutURL = new URL(`https://${env.AUTH0_DOMAIN}/v2/logout`);

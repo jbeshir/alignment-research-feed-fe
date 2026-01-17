@@ -2,9 +2,7 @@ import { useCallback } from "react";
 import { useFeedback } from "./useFeedback";
 import { type Article } from "~/schemas/article";
 
-type ArticleUpdater = (
-  updater: (prev: Article[]) => Article[]
-) => void;
+type ArticleUpdater = (updater: (prev: Article[]) => Article[]) => void;
 
 interface UseArticleFeedbackHandlersOptions {
   /** Optional callback to update article list state after feedback */
@@ -35,8 +33,8 @@ export function useArticleFeedbackHandlers(
 
       // Optimistic update if setArticles is provided
       if (setArticles) {
-        setArticles((prev) =>
-          prev.map((article) => {
+        setArticles(prev =>
+          prev.map(article => {
             if (article.hash_id === articleId) {
               originalThumbsUp = article.thumbs_up;
               originalThumbsDown = article.thumbs_down;
@@ -56,8 +54,8 @@ export function useArticleFeedbackHandlers(
       } catch (error) {
         // Rollback to original state on error
         if (setArticles) {
-          setArticles((prev) =>
-            prev.map((article) =>
+          setArticles(prev =>
+            prev.map(article =>
               article.hash_id === articleId
                 ? {
                     ...article,
@@ -82,8 +80,8 @@ export function useArticleFeedbackHandlers(
 
       // Optimistic update if setArticles is provided
       if (setArticles) {
-        setArticles((prev) =>
-          prev.map((article) => {
+        setArticles(prev =>
+          prev.map(article => {
             if (article.hash_id === articleId) {
               originalThumbsUp = article.thumbs_up;
               originalThumbsDown = article.thumbs_down;
@@ -103,8 +101,8 @@ export function useArticleFeedbackHandlers(
       } catch (error) {
         // Rollback to original state on error
         if (setArticles) {
-          setArticles((prev) =>
-            prev.map((article) =>
+          setArticles(prev =>
+            prev.map(article =>
               article.hash_id === articleId
                 ? {
                     ...article,
@@ -128,8 +126,8 @@ export function useArticleFeedbackHandlers(
 
       // Optimistic update if setArticles is provided
       if (setArticles) {
-        setArticles((prev) =>
-          prev.map((article) => {
+        setArticles(prev =>
+          prev.map(article => {
             if (article.hash_id === articleId) {
               originalHaveRead = article.have_read;
               return { ...article, have_read: true };
@@ -144,8 +142,8 @@ export function useArticleFeedbackHandlers(
       } catch (error) {
         // Rollback to original state on error
         if (setArticles) {
-          setArticles((prev) =>
-            prev.map((article) =>
+          setArticles(prev =>
+            prev.map(article =>
               article.hash_id === articleId
                 ? { ...article, have_read: originalHaveRead }
                 : article

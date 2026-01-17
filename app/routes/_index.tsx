@@ -1,8 +1,7 @@
 import { useState, useCallback } from "react";
-import { useSearchParams } from "@remix-run/react";
+import { useSearchParams, useLoaderData } from "@remix-run/react";
 import type { MetaFunction, LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { json } from "@remix-run/cloudflare";
-import { useLoaderData } from "@remix-run/react";
 import { TopBar } from "~/components/TopBar";
 import { HeroHeader } from "~/components/HeroHeader";
 import { ArticleGrid } from "~/components/ArticleGrid";
@@ -39,7 +38,10 @@ export const loader = async ({
   const apiBaseURL = context.cloudflare.env.ALIGNMENT_FEED_BASE_URL;
 
   try {
-    const authFetch = await createAuthenticatedFetch(request, context.cloudflare.env);
+    const authFetch = await createAuthenticatedFetch(
+      request,
+      context.cloudflare.env
+    );
 
     const params = new URLSearchParams();
     params.set("page", "1");
@@ -53,20 +55,14 @@ export const loader = async ({
 
     if (!response.ok) {
       console.error("Failed to fetch initial articles:", response.status);
-      return json({
-        initialArticles: [],
-        initialSearchQuery: searchQuery,
-      });
+      return json({ initialArticles: [], initialSearchQuery: searchQuery });
     }
 
     const result = parseArticlesResponse(await response.json());
 
     if (!result.success) {
       console.error("Failed to parse articles response:", result.error);
-      return json({
-        initialArticles: [],
-        initialSearchQuery: searchQuery,
-      });
+      return json({ initialArticles: [], initialSearchQuery: searchQuery });
     }
 
     return json({
@@ -91,13 +87,10 @@ export default function Index() {
   const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
 
   // Hooks for data fetching
-  const {
-    articles,
-    isLoading,
-    hasMore,
-    loadMore,
-    setArticles,
-  } = useArticles(searchQuery, { initialArticles });
+  const { articles, isLoading, hasMore, loadMore, setArticles } = useArticles(
+    searchQuery,
+    { initialArticles }
+  );
 
   // Shared feedback handlers with optimistic updates
   const { handleThumbsUp, handleThumbsDown, handleMarkAsRead } =

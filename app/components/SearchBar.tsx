@@ -57,7 +57,7 @@ export function SearchBar({
       <input
         type="text"
         value={localValue}
-        onChange={(e) => setLocalValue(e.target.value)}
+        onChange={e => setLocalValue(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
         className="w-full px-6 py-4 pr-14 text-base text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-dark dark:focus:ring-brand-light focus:border-transparent placeholder:text-slate-400 dark:placeholder:text-slate-500"

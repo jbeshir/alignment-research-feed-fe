@@ -1,9 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useRevalidator } from "@remix-run/react";
-import {
-  type Article,
-  parseArticlesResponse,
-} from "~/schemas/article";
+import { type Article, parseArticlesResponse } from "~/schemas/article";
 
 interface UseArticlesOptions {
   initialArticles?: Article[];
@@ -87,7 +84,7 @@ export function useArticles(
 
         // Only update state if request wasn't aborted
         if (!signal.aborted) {
-          setArticles((prev) =>
+          setArticles(prev =>
             reset ? result.data.data : [...prev, ...result.data.data]
           );
           setHasMore(result.data.data.length === pageSize);

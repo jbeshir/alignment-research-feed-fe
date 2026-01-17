@@ -19,7 +19,9 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
     const user = await authenticator.authenticate("auth0", request);
 
     // Create session with user data
-    const session = await sessionStorage.getSession(request.headers.get("Cookie"));
+    const session = await sessionStorage.getSession(
+      request.headers.get("Cookie")
+    );
     session.set("user", user);
 
     // Redirect to home page with the session cookie
