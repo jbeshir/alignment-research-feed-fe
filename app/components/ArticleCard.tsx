@@ -1,4 +1,4 @@
-import { Link } from "@remix-run/react";
+import { useNavigate } from "@remix-run/react";
 import { useCallback, useState } from "react";
 import { useAuth } from "~/root";
 import { type Article, formatPublishedDate } from "~/schemas/article";
@@ -36,6 +36,7 @@ export function ArticleCard({
   onMarkAsRead,
 }: ArticleCardProps) {
   const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
   const [isUpdating, setIsUpdating] = useState(false);
 
   // Read state directly from props (single source of truth)
@@ -111,7 +112,7 @@ export function ArticleCard({
       target="_blank"
       rel="noopener noreferrer"
       onClick={handleCardClick}
-      className="flex flex-col bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden group h-full"
+      className="flex flex-col bg-white dark:bg-slate-800 rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden group h-full"
     >
       {/* Source header strip */}
       <div className={`h-12 px-4 flex items-center justify-between flex-shrink-0 ${getSourceHeaderColor(article.source)}`}>
@@ -129,15 +130,15 @@ export function ArticleCard({
       {/* Content - flex-grow to fill available space */}
       <div className="p-4 flex flex-col flex-grow">
         {/* Date */}
-        <div className="text-xs text-slate-400 mb-2">
+        <div className="text-xs text-slate-400 dark:text-slate-500 mb-2">
           {formatPublishedDate(article.published_at)}
         </div>
 
         {/* Author */}
-        <p className="text-sm text-slate-600 mb-1 truncate">{article.authors}</p>
+        <p className="text-sm text-slate-600 dark:text-slate-400 mb-1 truncate">{article.authors}</p>
 
         {/* Title */}
-        <h3 className="font-medium text-slate-900 line-clamp-2 mb-3 group-hover:text-brand-dark transition-colors">
+        <h3 className="font-medium text-slate-900 dark:text-slate-100 line-clamp-2 mb-3 group-hover:text-brand-dark dark:group-hover:text-brand-light transition-colors">
           {article.title}
         </h3>
 
@@ -145,13 +146,13 @@ export function ArticleCard({
         <div className="flex-grow" />
 
         {/* Engagement metrics - pinned to bottom */}
-        <div className="flex items-center gap-4 text-sm text-slate-500 mt-auto pt-2 border-t border-slate-100">
+        <div className="flex items-center gap-4 text-sm text-slate-500 dark:text-slate-400 mt-auto pt-2 border-t border-slate-100 dark:border-slate-700">
           <button
             type="button"
             onClick={handleThumbsUp}
             disabled={isUpdating}
-            className={`flex items-center gap-1 hover:text-green-600 transition-colors ${
-              thumbsUp ? "text-green-600" : ""
+            className={`flex items-center gap-1 hover:text-green-600 dark:hover:text-green-400 transition-colors ${
+              thumbsUp ? "text-green-600 dark:text-green-400" : ""
             }`}
             aria-label={thumbsUp ? "Remove thumbs up" : "Thumbs up"}
           >
@@ -165,8 +166,8 @@ export function ArticleCard({
             type="button"
             onClick={handleThumbsDown}
             disabled={isUpdating}
-            className={`flex items-center gap-1 hover:text-red-600 transition-colors ${
-              thumbsDown ? "text-red-600" : ""
+            className={`flex items-center gap-1 hover:text-red-600 dark:hover:text-red-400 transition-colors ${
+              thumbsDown ? "text-red-600 dark:text-red-400" : ""
             }`}
             aria-label={thumbsDown ? "Remove thumbs down" : "Thumbs down"}
           >
@@ -176,14 +177,18 @@ export function ArticleCard({
               <ThumbsDownIcon className="w-4 h-4" />
             )}
           </button>
-          <Link
-            to={`/articles/${article.hash_id}`}
-            onClick={(e) => e.stopPropagation()}
-            className="flex items-center gap-1 hover:text-slate-700 transition-colors ml-auto"
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              navigate(`/articles/${article.hash_id}`);
+            }}
+            className="flex items-center gap-1 hover:text-slate-700 dark:hover:text-slate-300 transition-colors ml-auto"
             aria-label="View details"
           >
             <EllipsisIcon className="w-4 h-4" />
-          </Link>
+          </button>
         </div>
       </div>
     </a>

@@ -33,7 +33,7 @@ export default function Recommended() {
   const showLoginPrompt = !isAuthenticated;
 
   return (
-    <div className="min-h-screen bg-brand-bg">
+    <div className="min-h-screen bg-brand-bg dark:bg-brand-bg-dark">
       <TopBar />
 
       <main>
@@ -50,7 +50,7 @@ export default function Recommended() {
         <div className="max-w-7xl mx-auto">
           {showLoginPrompt ? (
             <div className="flex flex-col items-center justify-center py-16 px-4">
-              <p className="text-slate-600 text-lg mb-4">
+              <p className="text-slate-600 dark:text-slate-400 text-lg mb-4">
                 Log in to see personalized recommendations based on your interests.
               </p>
               <Link to="/auth/login">
@@ -61,10 +61,10 @@ export default function Recommended() {
             </div>
           ) : error ? (
             <div className="flex flex-col items-center justify-center py-16 px-4">
-              <p className="text-red-600 text-lg mb-2">
+              <p className="text-red-600 dark:text-red-400 text-lg mb-2">
                 Failed to load recommendations
               </p>
-              <p className="text-slate-500 text-sm">
+              <p className="text-slate-500 dark:text-slate-400 text-sm">
                 {error.message}
               </p>
             </div>

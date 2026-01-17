@@ -19,7 +19,7 @@ export const meta: MetaFunction = () => {
     { title: "Alignment Feed - AI Safety Research" },
     {
       name: "description",
-      content: "Everything on AI Safety, all in one place.",
+      content: "Your personalised AI Safety research feed.",
     },
   ];
 };
@@ -126,7 +126,7 @@ export default function Index() {
   );
 
   return (
-    <div className="min-h-screen bg-brand-bg">
+    <div className="min-h-screen bg-brand-bg dark:bg-brand-bg-dark">
       <TopBar />
 
       <main>
@@ -140,9 +140,9 @@ export default function Index() {
         <div className="max-w-7xl mx-auto px-6 pt-8">
           <div className="flex items-center justify-between">
             <Tabs tabs={MAIN_TABS} activeTab="all" />
-            <div className="flex items-center gap-2 text-sm text-slate-500">
+            <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
               <span>Sort by:</span>
-              <span className="text-slate-900">Date</span>
+              <span className="text-slate-900 dark:text-slate-100">Date</span>
             </div>
           </div>
         </div>
@@ -169,7 +169,7 @@ export default function Index() {
 
           {/* End of results indicator */}
           {!hasMore && articles.length > 0 && (
-            <div className="text-center py-8 text-slate-500">
+            <div className="text-center py-8 text-slate-500 dark:text-slate-400">
               You&apos;ve reached the end of the results.
             </div>
           )}

@@ -34,7 +34,7 @@ export function ArticleGrid({
   if (!isLoading && articles.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 px-4">
-        <p className="text-slate-500 text-lg">{emptyMessage}</p>
+        <p className="text-slate-500 dark:text-slate-400 text-lg">{emptyMessage}</p>
       </div>
     );
   }
