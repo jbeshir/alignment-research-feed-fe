@@ -22,7 +22,7 @@
   "dependencies": {
     "@remix-run/cloudflare": "^2.9.2",
     "@remix-run/cloudflare-pages": "^2.9.2",
-    "@remix-run/react": "^2.9.2",
+    "@remix-run/react": "^2.17.4",
     "isbot": "^4.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
