@@ -9,7 +9,6 @@ import {
   ThumbsDownFilledIcon,
   PlayIcon,
   CheckCircleIcon,
-  EllipsisIcon,
 } from "./Icons";
 import {
   getSourceHeaderColor,
@@ -193,10 +192,10 @@ export function ArticleCard({
               e.stopPropagation();
               navigate(`/articles/${article.hash_id}`);
             }}
-            className="flex items-center gap-1 hover:text-slate-700 dark:hover:text-slate-300 transition-colors ml-auto"
-            aria-label="View details"
+            className="flex items-center gap-1 text-xs hover:text-slate-700 dark:hover:text-slate-300 transition-colors ml-auto"
+            aria-label="View similar articles"
           >
-            <EllipsisIcon className="w-4 h-4" />
+            Similar
           </button>
         </div>
       </div>
