@@ -1,115 +1,173 @@
-import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/cloudflare";
+import { useState, useCallback } from "react";
+import { useSearchParams, useLoaderData } from "@remix-run/react";
+import type { MetaFunction, LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { json } from "@remix-run/cloudflare";
-import { useLoaderData } from "@remix-run/react";
-import AlignmentFeedTable from "~/components/AlignmentFeedTable";
-import TopBar from "~/components/TopBar";
-import { createAuthenticatedFetch } from "~/services/auth.server";
-import { useMemo } from "react";
-import {
-  Article,
-  SerializedArticle,
-  deserializeArticle,
-  serializeArticle,
-} from "~/types/article";
+import { TopBar } from "~/components/TopBar";
+import { HeroHeader } from "~/components/HeroHeader";
+import { ArticleGrid } from "~/components/ArticleGrid";
+import { Tabs } from "~/components/ui/Tabs";
+import { MAIN_TABS } from "~/constants/navigation";
+import { useArticles } from "~/hooks/useArticles";
+import { useArticleFeedbackHandlers } from "~/hooks/useArticleFeedbackHandlers";
+import { useInfiniteScroll } from "~/hooks/useInfiniteScroll";
+import { createAuthenticatedFetch } from "~/server/auth.server";
+import { parseArticlesResponse, type Article } from "~/schemas/article";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "Alignment Feed" },
+    { title: "Alignment Feed - AI Safety Research" },
     {
       name: "description",
-      content: "Feed of content in the alignment research dataset",
+      content: "Your personalised AI Safety research feed.",
     },
   ];
 };
 
 type LoaderData = {
-  initialArticles: SerializedArticle[];
-  totalCount: number | null;
+  initialArticles: Article[];
+  initialSearchQuery: string;
 };
 
 export const loader = async ({
   request,
   context,
 }: LoaderFunctionArgs): Promise<ReturnType<typeof json<LoaderData>>> => {
+  const url = new URL(request.url);
+  const searchQuery = url.searchParams.get("q") || "";
+
   const apiBaseURL = context.cloudflare.env.ALIGNMENT_FEED_BASE_URL;
-  const sessionSecret = context.cloudflare.env.AUTH_SESSION_SECRET;
 
-  // Create an authenticated fetch function for this request
-  const authFetch = await createAuthenticatedFetch(request, sessionSecret);
-
-  // Fetch the first page of articles server-side
-  const apiParams = new URLSearchParams();
-  apiParams.set("page", "1");
-  apiParams.set("page_size", "100");
-
-  const response = await authFetch(
-    `${apiBaseURL}/v1/articles?${apiParams.toString()}`
-  );
-
-  if (!response.ok) {
-    console.error(
-      `[Index Loader] Failed to fetch articles: ${response.status} ${response.statusText}`
+  try {
+    const authFetch = await createAuthenticatedFetch(
+      request,
+      context.cloudflare.env
     );
-    // Return empty data on error - the client-side will retry
-    return json({ initialArticles: [], totalCount: null });
-  }
 
-  const { data } = (await response.json()) as { data: unknown[] };
-
-  const articles = data.map((item: unknown): Article => {
-    if (typeof item !== "object" || item === null) {
-      throw new Error("item is not object");
+    const params = new URLSearchParams();
+    params.set("page", "1");
+    params.set("page_size", "20");
+    params.set("sort", "published_at_desc");
+    if (searchQuery) {
+      params.set("filter_title_fulltext", searchQuery);
     }
-    return Article.parse(item);
-  });
 
-  const serializedArticles = articles.map(serializeArticle);
+    const response = await authFetch(`${apiBaseURL}/v1/articles?${params}`);
 
-  // If we got fewer than 100 articles, we know the total count
-  const totalCount = articles.length < 100 ? articles.length : null;
+    if (!response.ok) {
+      console.error("Failed to fetch initial articles:", response.status);
+      return json({ initialArticles: [], initialSearchQuery: searchQuery });
+    }
 
-  return json({ initialArticles: serializedArticles, totalCount });
+    const result = parseArticlesResponse(await response.json());
+
+    if (!result.success) {
+      console.error("Failed to parse articles response:", result.error);
+      return json({ initialArticles: [], initialSearchQuery: searchQuery });
+    }
+
+    return json({
+      initialArticles: result.data.data,
+      initialSearchQuery: searchQuery,
+    });
+  } catch (error) {
+    console.error("Error fetching initial articles:", error);
+    return json({
+      initialArticles: [],
+      initialSearchQuery: searchQuery,
+    });
+  }
 };
 
 export default function Index() {
-  const { initialArticles: serializedArticles, totalCount } =
-    useLoaderData<LoaderData>();
+  const { initialArticles, initialSearchQuery } = useLoaderData<LoaderData>();
 
-  // Deserialize articles - stable reference as long as loader data doesn't change
-  const initialArticles = useMemo(
-    () => serializedArticles.map(deserializeArticle),
-    [serializedArticles]
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Search query state (for controlled input with debouncing)
+  const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
+
+  // Hooks for data fetching
+  const { articles, isLoading, hasMore, loadMore, setArticles } = useArticles(
+    searchQuery,
+    { initialArticles }
+  );
+
+  // Shared feedback handlers with optimistic updates
+  const { handleThumbsUp, handleThumbsDown, handleMarkAsRead } =
+    useArticleFeedbackHandlers({ setArticles });
+
+  // Infinite scroll
+  const { sentinelRef } = useInfiniteScroll({
+    onLoadMore: loadMore,
+    hasMore,
+    isLoading,
+  });
+
+  // Handle search - update URL with search query
+  const handleSearch = useCallback(
+    (query: string) => {
+      setSearchQuery(query);
+      const params = new URLSearchParams(searchParams);
+      if (query) {
+        params.set("q", query);
+      } else {
+        params.delete("q");
+      }
+      setSearchParams(params, { preventScrollReset: true });
+    },
+    [searchParams, setSearchParams]
   );
 
   return (
-    <div className="h-screen w-full flex flex-col space-y-4 pb-5">
+    <div className="min-h-screen bg-brand-bg dark:bg-brand-bg-dark">
       <TopBar />
-      <div className="text-xl font-medium text-black dark:text-white px-5">
-        A feed of all content in the{" "}
-        <a
-          href="https://github.com/StampyAI/alignment-research-dataset"
-          className="text-emerald-500 hover:underline"
-        >
-          Alignment Research Dataset
-        </a>
-        , updated every day.
-      </div>
-      <div className="grow px-5">
-        <AlignmentFeedTable
-          initialArticles={initialArticles}
-          initialTotalCount={totalCount}
+
+      <main>
+        <HeroHeader
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          onSearch={handleSearch}
         />
-      </div>
-      <div className="text-xl font-medium text-black dark:text-white px-5">
-        An RSS feed of new items coming into this dataset is available{" "}
-        <a
-          href="https://alignmentfeed.beshir.org/rss"
-          className="text-emerald-500 hover:underline"
-        >
-          here
-        </a>
-        .
-      </div>
+
+        {/* Tabs and Sort */}
+        <div className="max-w-7xl mx-auto px-6 pt-8">
+          <div className="flex items-center justify-between">
+            <Tabs tabs={MAIN_TABS} activeTab="all" />
+            <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+              <span>Sort by:</span>
+              <span className="text-slate-900 dark:text-slate-100">Date</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="max-w-7xl mx-auto">
+          <ArticleGrid
+            articles={articles}
+            isLoading={isLoading}
+            onThumbsUp={handleThumbsUp}
+            onThumbsDown={handleThumbsDown}
+            onMarkAsRead={handleMarkAsRead}
+            emptyMessage={
+              searchQuery
+                ? `No articles found for "${searchQuery}"`
+                : "No articles found"
+            }
+          />
+
+          {/* Infinite scroll sentinel - always rendered to avoid layout shifts */}
+          {hasMore && (
+            <div ref={sentinelRef} className="h-10" aria-hidden="true" />
+          )}
+
+          {/* End of results indicator */}
+          {!hasMore && articles.length > 0 && (
+            <div className="text-center py-8 text-slate-500 dark:text-slate-400">
+              You&apos;ve reached the end of the results.
+            </div>
+          )}
+        </div>
+      </main>
     </div>
   );
 }

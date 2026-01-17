@@ -71,6 +71,28 @@ module.exports = {
         "plugin:import/recommended",
         "plugin:import/typescript",
       ],
+      rules: {
+        "@typescript-eslint/no-unused-vars": [
+          "error",
+          {
+            argsIgnorePattern: "^_",
+            varsIgnorePattern: "^_",
+          },
+        ],
+        "import/no-unused-modules": [
+          "warn",
+          {
+            unusedExports: true,
+            ignoreExports: [
+              "app/routes/**",
+              "app/root.tsx",
+              "app/entry.*.tsx",
+              "*.config.ts",
+              "functions/**",
+            ],
+          },
+        ],
+      },
     },
 
     // Node

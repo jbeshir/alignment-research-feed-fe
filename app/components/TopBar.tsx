@@ -1,15 +1,11 @@
-import LoginLogoutButton from "~/components/LoginLogoutButton";
-import { Link } from "@remix-run/react";
+import { AuthButtons } from "./AuthButtons";
 
-export default function TopBar() {
+export function TopBar() {
   return (
-    <div className="flex flex-row items-center bg-slate-50 dark:bg-slate-950">
-      <h1 className="inline-block grow p-5 text-5xl text-left font-medium text-black dark:text-white">
-        <Link to="/">Alignment Feed</Link>
-      </h1>
-      <div className="inline-block p-5 text-right font-medium text-black dark:text-white">
-        <LoginLogoutButton />
-      </div>
-    </div>
+    <header className="bg-brand-bg dark:bg-brand-bg-dark">
+      <nav className="flex justify-end items-center px-6 py-3">
+        <AuthButtons />
+      </nav>
+    </header>
   );
 }

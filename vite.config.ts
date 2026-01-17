@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import {
   vitePlugin as remix,
   cloudflareDevProxyVitePlugin as remixCloudflareDevProxy,
@@ -17,4 +18,11 @@ export default defineConfig({
     }),
     tsconfigPaths(),
   ],
+  test: {
+    globals: true,
+    environment: "jsdom",
+    setupFiles: ["./app/test/setup.ts"],
+    include: ["app/**/*.{test,spec}.{ts,tsx}"],
+    exclude: ["node_modules", "build"],
+  },
 });
