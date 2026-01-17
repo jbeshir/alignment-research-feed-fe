@@ -5,17 +5,16 @@ import {
   useRouteError,
   isRouteErrorResponse,
 } from "@remix-run/react";
-import ArticleTable from "~/components/ArticleTable";
-import ArticleInfo from "~/components/ArticleInfo";
-import TopBar from "~/components/TopBar";
+import { TopBar } from "~/components/TopBar";
+import { ArticleInfo } from "~/components/ArticleInfo";
+import { ArticleGrid } from "~/components/ArticleGrid";
+import { useArticleFeedbackHandlers } from "~/hooks/useArticleFeedbackHandlers";
 import { createAuthenticatedFetch } from "~/services/auth.server";
-import { useMemo } from "react";
 import {
-  Article,
-  SerializedArticle,
-  deserializeArticle,
-  serializeArticle,
-} from "~/types/article";
+  type Article,
+  ArticleSchema,
+  parseArticlesResponse,
+} from "~/schemas/article";
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   const title = data?.article?.title ?? "Article";
@@ -29,8 +28,8 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 };
 
 type LoaderData = {
-  article: SerializedArticle;
-  similarArticles: SerializedArticle[];
+  article: Article;
+  similarArticles: Article[];
 };
 
 export const loader = async ({
@@ -44,10 +43,9 @@ export const loader = async ({
   }
 
   const apiBaseURL = context.cloudflare.env.ALIGNMENT_FEED_BASE_URL;
-  const sessionSecret = context.cloudflare.env.AUTH_SESSION_SECRET;
 
   // Create an authenticated fetch function for this request
-  const authFetch = await createAuthenticatedFetch(request, sessionSecret);
+  const authFetch = await createAuthenticatedFetch(request, context.cloudflare.env);
 
   // Fetch article and similar articles in parallel
   const [articleResponse, similarResponse] = await Promise.all([
@@ -69,57 +67,61 @@ export const loader = async ({
   }
 
   const articleData = await articleResponse.json();
-  const article = Article.parse(articleData);
+  const article = ArticleSchema.parse(articleData);
 
   // Handle similar articles - don't fail if this request fails
   let similarArticles: Article[] = [];
   if (similarResponse.ok) {
     const similarJson = await similarResponse.json();
-    const { data } = similarJson as { data: unknown[] };
-    if (data && Array.isArray(data)) {
-      similarArticles = data.map((item: unknown): Article => {
-        if (typeof item !== "object" || item === null) {
-          throw new Error("Similar article item is not an object");
-        }
-        return Article.parse(item);
-      });
+    const parsedResponse = parseArticlesResponse(similarJson);
+    if (parsedResponse.success) {
+      similarArticles = parsedResponse.data.data;
     }
   }
 
   return json({
-    article: serializeArticle(article),
-    similarArticles: similarArticles.map(serializeArticle),
+    article,
+    similarArticles,
   });
 };
 
 export default function ArticleDetails() {
-  const loaderData = useLoaderData<LoaderData>();
+  const { article, similarArticles } = useLoaderData<LoaderData>();
 
-  // Deserialize articles back to proper types with Date objects
-  const article = useMemo(
-    () => deserializeArticle(loaderData.article),
-    [loaderData.article]
-  );
-  const similarArticles = useMemo(
-    () => loaderData.similarArticles.map(deserializeArticle),
-    [loaderData.similarArticles]
-  );
+  // Shared feedback handlers (no local state update for detail page)
+  const { handleThumbsUp, handleThumbsDown, handleMarkAsRead } =
+    useArticleFeedbackHandlers();
 
   return (
-    <div className="h-screen w-full flex flex-col space-y-4 pb-5">
+    <div className="min-h-screen bg-brand-bg">
       <TopBar />
-      <h2 className="text-3xl text-center font-medium text-black dark:text-white p-5">
-        {article.title}
-      </h2>
-      <div className="px-5">
-        <ArticleInfo article={article} />
-      </div>
-      <div className="text-xl font-medium text-black dark:text-white px-5">
-        Articles similar to this one in the dataset.
-      </div>
-      <div className="grow px-5">
-        <ArticleTable articles={similarArticles} />
-      </div>
+
+      <main>
+        {/* Article Header */}
+        <div className="max-w-4xl mx-auto px-6 pt-12 pb-8">
+          <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-8">
+            {article.title}
+          </h1>
+          <ArticleInfo article={article} />
+        </div>
+
+        {/* Similar Articles Section */}
+        {similarArticles.length > 0 && (
+          <div className="max-w-7xl mx-auto px-6 py-8">
+            <h2 className="text-2xl font-semibold text-slate-900 mb-6">
+              Similar Articles
+            </h2>
+            <ArticleGrid
+              articles={similarArticles}
+              isLoading={false}
+              onThumbsUp={handleThumbsUp}
+              onThumbsDown={handleThumbsDown}
+              onMarkAsRead={handleMarkAsRead}
+              emptyMessage="No similar articles found"
+            />
+          </div>
+        )}
+      </main>
     </div>
   );
 }
@@ -128,37 +130,43 @@ export function ErrorBoundary() {
   const error = useRouteError();
 
   return (
-    <div className="h-screen w-full flex flex-col space-y-4 pb-5">
+    <div className="min-h-screen bg-brand-bg">
       <TopBar />
-      <div className="flex flex-col items-center justify-center flex-grow p-5">
-        {isRouteErrorResponse(error) ? (
-          <>
-            <h2 className="text-3xl font-medium text-black dark:text-white mb-4">
-              {error.status === 404
-                ? "Article Not Found"
-                : `Error ${error.status}`}
-            </h2>
-            <p className="text-gray-600 dark:text-gray-400">
-              {error.status === 404
-                ? "The article you're looking for doesn't exist or may have been removed."
-                : error.data ||
-                  "Something went wrong while loading this article."}
-            </p>
-          </>
-        ) : (
-          <>
-            <h2 className="text-3xl font-medium text-black dark:text-white mb-4">
-              Something went wrong
-            </h2>
-            <p className="text-gray-600 dark:text-gray-400">
-              We encountered an unexpected error. Please try again later.
-            </p>
-          </>
-        )}
-        <a href="/" className="mt-6 text-emerald-500 hover:underline">
-          Return to home
-        </a>
-      </div>
+
+      <main>
+        <div className="flex flex-col items-center justify-center min-h-[50vh] px-6">
+          {isRouteErrorResponse(error) ? (
+            <>
+              <h2 className="text-3xl font-bold text-slate-900 mb-4">
+                {error.status === 404
+                  ? "Article Not Found"
+                  : `Error ${error.status}`}
+              </h2>
+              <p className="text-slate-600 text-center max-w-md">
+                {error.status === 404
+                  ? "The article you're looking for doesn't exist or may have been removed."
+                  : error.data ||
+                    "Something went wrong while loading this article."}
+              </p>
+            </>
+          ) : (
+            <>
+              <h2 className="text-3xl font-bold text-slate-900 mb-4">
+                Something went wrong
+              </h2>
+              <p className="text-slate-600 text-center max-w-md">
+                We encountered an unexpected error. Please try again later.
+              </p>
+            </>
+          )}
+          <a
+            href="/"
+            className="mt-8 px-6 py-2 bg-slate-900 text-white rounded-md hover:bg-slate-800 transition-colors"
+          >
+            Return to home
+          </a>
+        </div>
+      </main>
     </div>
   );
 }

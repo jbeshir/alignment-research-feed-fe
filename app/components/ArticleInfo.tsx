@@ -1,41 +1,41 @@
-import { Article } from "~/types/article";
-import ArticleLink from "~/components/ArticleLink";
+import { type Article, formatPublishedDate } from "~/schemas/article";
 
 type ArticleInfoProps = {
   article: Article;
 };
 
-function ArticleInfo({ article }: ArticleInfoProps) {
+export function ArticleInfo({ article }: ArticleInfoProps) {
   return (
-    <div className="text-black dark:text-white space-y-2">
-      <div className="h-fill py-2 px-4 flex flex-row bg-slate-200 dark:bg-slate-700">
-        <span className="inline-block w-40 font-bold">Title</span>
-        <span className="inline-block grow">{article.title}</span>
+    <div className="bg-white rounded-lg shadow-sm p-6 space-y-4">
+      <div className="space-y-1">
+        <span className="text-sm font-medium text-slate-500">Title</span>
+        <p className="text-lg font-semibold text-slate-900">{article.title}</p>
       </div>
-      <div className="h-fill py-2 px-4 flex flex-row bg-slate-200 dark:bg-slate-700">
-        <span className="inline-block w-40 font-bold">Authors</span>
-        <span className="inline-block grow">{article.authors}</span>
+      <div className="space-y-1">
+        <span className="text-sm font-medium text-slate-500">Authors</span>
+        <p className="text-slate-700">{article.authors}</p>
       </div>
-      <div className="h-fill py-2 px-4 flex flex-row bg-slate-200 dark:bg-slate-700">
-        <span className="inline-block w-40 font-bold">URL</span>
-        <span className="inline-block grow">
-          <ArticleLink article={article} className="">
-            {article.link}
-          </ArticleLink>
-        </span>
+      <div className="space-y-1">
+        <span className="text-sm font-medium text-slate-500">URL</span>
+        <a
+          href={article.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-600 hover:text-blue-800 hover:underline break-all"
+        >
+          {article.link}
+        </a>
       </div>
-      <div className="h-fill py-2 px-4 flex flex-row bg-slate-200 dark:bg-slate-700">
-        <span className="inline-block w-40 font-bold">Source</span>
-        <span className="inline-block grow">{article.source}</span>
-      </div>
-      <div className="h-fill py-2 px-4 flex flex-row bg-slate-200 dark:bg-slate-700">
-        <span className="inline-block w-40 font-bold">Published At</span>
-        <span className="inline-block grow">
-          {article.published_at.toISOString()}
-        </span>
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-1">
+          <span className="text-sm font-medium text-slate-500">Source</span>
+          <p className="text-slate-700">{article.source}</p>
+        </div>
+        <div className="space-y-1">
+          <span className="text-sm font-medium text-slate-500">Published</span>
+          <p className="text-slate-700">{formatPublishedDate(article.published_at)}</p>
+        </div>
       </div>
     </div>
   );
 }
-
-export default ArticleInfo;

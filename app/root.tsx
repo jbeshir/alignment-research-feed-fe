@@ -7,12 +7,8 @@ import {
   useLoaderData,
 } from "@remix-run/react";
 import "./tailwind.css";
-import { Auth0Provider } from "@auth0/auth0-react";
 import type { LoaderFunctionArgs } from "@remix-run/cloudflare";
-import React from "react";
-import { ApiProvider } from "~/contexts/ApiContext";
-import { AuthProvider } from "~/contexts/AuthContext";
-import { AuthTokenSync } from "~/components/AuthTokenSync";
+import React, { createContext, useContext } from "react";
 import { getServerAuthContext } from "~/services/auth.server";
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -21,6 +17,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){if(window.matchMedia('(prefers-color-scheme: dark)').matches){document.documentElement.classList.add('dark')}})();`,
+          }}
+        />
         <link
           rel="icon"
           type="image/png"
@@ -47,60 +48,46 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
+/**
+ * Auth context for passing authentication state to components.
+ * With server-side auth, this is simply a boolean from the loader.
+ */
+type AuthContextType = {
+  isAuthenticated: boolean;
+};
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export function useAuth(): AuthContextType {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used within root App component");
+  }
+  return context;
+}
+
 type LoaderData = {
-  auth0Domain: string;
-  auth0Audience: string;
-  auth0ClientId: string;
-  auth0DefaultRedirectUri: string;
-  apiBaseURL: string;
-  /** Whether the server has a valid auth cookie */
-  serverWasAuthenticated: boolean;
+  isAuthenticated: boolean;
 };
 
 export const loader = async ({
   request,
   context,
 }: LoaderFunctionArgs): Promise<LoaderData> => {
-  const sessionSecret = context.cloudflare.env.AUTH_SESSION_SECRET;
-  const authContext = await getServerAuthContext(request, sessionSecret);
+  const env = context.cloudflare.env;
+  const authContext = await getServerAuthContext(request, env);
 
   return {
-    auth0Domain: context.cloudflare.env.AUTH0_DOMAIN,
-    auth0Audience: context.cloudflare.env.AUTH0_AUDIENCE,
-    auth0ClientId: context.cloudflare.env.AUTH0_CLIENT_ID,
-    auth0DefaultRedirectUri: context.cloudflare.env.AUTH0_DEFAULT_REDIRECT_URI,
-    apiBaseURL: context.cloudflare.env.ALIGNMENT_FEED_BASE_URL,
-    serverWasAuthenticated: authContext.isAuthenticated,
+    isAuthenticated: authContext.isAuthenticated,
   };
 };
 
 export default function App() {
-  const {
-    auth0Domain,
-    auth0Audience,
-    auth0ClientId,
-    auth0DefaultRedirectUri,
-    apiBaseURL,
-    serverWasAuthenticated,
-  } = useLoaderData<LoaderData>();
+  const { isAuthenticated } = useLoaderData<LoaderData>();
 
   return (
-    <Auth0Provider
-      domain={auth0Domain}
-      clientId={auth0ClientId}
-      authorizationParams={{
-        redirect_uri: auth0DefaultRedirectUri,
-        audience: auth0Audience,
-      }}
-      cacheLocation="localstorage"
-      useRefreshTokens={true}
-    >
-      <ApiProvider baseURL={apiBaseURL}>
-        <AuthProvider serverWasAuthenticated={serverWasAuthenticated}>
-          <AuthTokenSync />
-          <Outlet />
-        </AuthProvider>
-      </ApiProvider>
-    </Auth0Provider>
+    <AuthContext.Provider value={{ isAuthenticated }}>
+      <Outlet />
+    </AuthContext.Provider>
   );
 }
