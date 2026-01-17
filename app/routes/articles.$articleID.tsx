@@ -9,7 +9,7 @@ import { TopBar } from "~/components/TopBar";
 import { ArticleInfo } from "~/components/ArticleInfo";
 import { ArticleGrid } from "~/components/ArticleGrid";
 import { useArticleFeedbackHandlers } from "~/hooks/useArticleFeedbackHandlers";
-import { createAuthenticatedFetch } from "~/services/auth.server";
+import { createAuthenticatedFetch } from "~/server/auth.server";
 import {
   type Article,
   ArticleSchema,

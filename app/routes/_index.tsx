@@ -11,7 +11,7 @@ import { MAIN_TABS } from "~/constants/navigation";
 import { useArticles } from "~/hooks/useArticles";
 import { useArticleFeedbackHandlers } from "~/hooks/useArticleFeedbackHandlers";
 import { useInfiniteScroll } from "~/hooks/useInfiniteScroll";
-import { createAuthenticatedFetch } from "~/services/auth.server";
+import { createAuthenticatedFetch } from "~/server/auth.server";
 import { parseArticlesResponse, type Article } from "~/schemas/article";
 
 export const meta: MetaFunction = () => {

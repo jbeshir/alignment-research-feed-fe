@@ -9,7 +9,7 @@ import {
 import "./tailwind.css";
 import type { LoaderFunctionArgs } from "@remix-run/cloudflare";
 import React, { createContext, useContext } from "react";
-import { getServerAuthContext } from "~/services/auth.server";
+import { getServerAuthContext } from "~/server/auth.server";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (

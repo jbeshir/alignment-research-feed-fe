@@ -1,6 +1,6 @@
 import type { ActionFunctionArgs } from "@remix-run/cloudflare";
 import { json } from "@remix-run/cloudflare";
-import { createAuthenticatedFetch } from "~/services/auth.server";
+import { createAuthenticatedFetch } from "~/server/auth.server";
 
 /**
  * Proxy route for article feedback actions (thumbs up/down, mark as read).

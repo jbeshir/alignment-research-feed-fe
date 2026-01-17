@@ -1,5 +1,5 @@
 import type { LoaderFunctionArgs } from "@remix-run/cloudflare";
-import { getAuthenticator } from "~/services/auth.server";
+import { getAuthenticator } from "~/server/auth.server";
 
 /**
  * Login route - redirects to Auth0 for authentication.

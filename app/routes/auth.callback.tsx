@@ -1,6 +1,6 @@
 import type { LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { redirect } from "@remix-run/cloudflare";
-import { getAuthenticator, getSessionStorage } from "~/services/auth.server";
+import { getAuthenticator, getSessionStorage } from "~/server/auth.server";
 
 /**
  * Auth callback route - handles the OAuth redirect from Auth0.

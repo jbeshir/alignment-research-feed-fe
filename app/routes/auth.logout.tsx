@@ -1,6 +1,6 @@
 import type { ActionFunctionArgs } from "@remix-run/cloudflare";
 import { redirect } from "@remix-run/cloudflare";
-import { getSessionStorage } from "~/services/auth.server";
+import { getSessionStorage } from "~/server/auth.server";
 
 /**
  * Logout route - clears the session and redirects to Auth0 logout.

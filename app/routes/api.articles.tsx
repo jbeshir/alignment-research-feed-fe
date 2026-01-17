@@ -1,5 +1,5 @@
 import type { LoaderFunctionArgs } from "@remix-run/cloudflare";
-import { createAuthenticatedFetch } from "~/services/auth.server";
+import { createAuthenticatedFetch } from "~/server/auth.server";
 
 /**
  * Proxy route for /v1/articles API endpoint.
