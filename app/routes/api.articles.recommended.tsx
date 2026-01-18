@@ -9,7 +9,7 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
   const apiBaseURL = context.cloudflare.env.ALIGNMENT_FEED_BASE_URL;
   const apiUrl = `${apiBaseURL}/v1/articles/recommended`;
 
-  const authFetch = await createAuthenticatedFetch(
+  const { authFetch } = await createAuthenticatedFetch(
     request,
     context.cloudflare.env
   );

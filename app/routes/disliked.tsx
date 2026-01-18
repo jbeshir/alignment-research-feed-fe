@@ -8,35 +8,50 @@ import { Tabs } from "~/components/ui/Tabs";
 import { Button } from "~/components/ui/Button";
 import { MAIN_TABS } from "~/constants/navigation";
 import { useArticleFeedbackHandlers } from "~/hooks/useArticleFeedbackHandlers";
-import { fetchArticlesFromApi } from "~/server/articles.server";
+import { useUserArticles } from "~/hooks/useUserArticles";
+import { useInfiniteScroll } from "~/hooks/useInfiniteScroll";
+import {
+  fetchArticlesFromApi,
+  createPaginationParams,
+} from "~/server/articles.server";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "Recommended - Alignment Feed" },
+    { title: "Disliked - Alignment Feed" },
     {
       name: "description",
-      content: "Personalized AI Safety research recommendations.",
+      content: "Articles you've disliked.",
     },
   ];
 };
 
 export const loader = async ({ request, context }: LoaderFunctionArgs) => {
   return fetchArticlesFromApi(request, context.cloudflare.env, {
-    endpoint: "/v1/articles/recommended",
+    endpoint: "/v1/articles/disliked",
+    params: createPaginationParams(),
     requireAuth: true,
-    label: "recommended articles",
+    label: "disliked articles",
   });
 };
 
-export default function Recommended() {
-  const { articles, isAuthenticated: loaderAuthenticated } =
+export default function Disliked() {
+  const { articles: initialArticles, isAuthenticated: loaderAuthenticated } =
     useLoaderData<typeof loader>();
   const { isAuthenticated: clientAuthenticated } = useAuth();
 
   const isAuthenticated = loaderAuthenticated || clientAuthenticated;
 
+  const { articles, isLoading, hasMore, loadMore, setArticles } =
+    useUserArticles("disliked", { initialArticles });
+
   const { handleThumbsUp, handleThumbsDown, handleMarkAsRead } =
-    useArticleFeedbackHandlers();
+    useArticleFeedbackHandlers({ setArticles });
+
+  const { sentinelRef } = useInfiniteScroll({
+    onLoadMore: loadMore,
+    hasMore,
+    isLoading,
+  });
 
   const showLoginPrompt = !isAuthenticated;
 
@@ -50,7 +65,7 @@ export default function Recommended() {
         {/* Tabs */}
         <div className="max-w-7xl mx-auto px-6 pt-8">
           <div className="flex items-center justify-between">
-            <Tabs tabs={MAIN_TABS} activeTab="recommended" />
+            <Tabs tabs={MAIN_TABS} activeTab="disliked" />
           </div>
         </div>
 
@@ -59,24 +74,35 @@ export default function Recommended() {
           {showLoginPrompt ? (
             <div className="flex flex-col items-center justify-center py-16 px-4">
               <p className="text-slate-600 dark:text-slate-400 text-lg mb-4">
-                Log in to see personalized recommendations based on your
-                interests.
+                Log in to see your disliked articles.
               </p>
               <Link to="/auth/login">
                 <Button variant="primary" type="button">
-                  Log In to See Recommendations
+                  Log In to See Disliked Articles
                 </Button>
               </Link>
             </div>
           ) : (
-            <ArticleGrid
-              articles={articles}
-              isLoading={false}
-              onThumbsUp={handleThumbsUp}
-              onThumbsDown={handleThumbsDown}
-              onMarkAsRead={handleMarkAsRead}
-              emptyMessage="No recommendations yet. Like some articles to get personalized suggestions!"
-            />
+            <>
+              <ArticleGrid
+                articles={articles}
+                isLoading={isLoading}
+                onThumbsUp={handleThumbsUp}
+                onThumbsDown={handleThumbsDown}
+                onMarkAsRead={handleMarkAsRead}
+                emptyMessage="No disliked articles. You haven't disliked anything yet."
+              />
+
+              {hasMore && (
+                <div ref={sentinelRef} className="h-10" aria-hidden="true" />
+              )}
+
+              {!hasMore && articles.length > 0 && (
+                <div className="text-center py-8 text-slate-500 dark:text-slate-400">
+                  You&apos;ve reached the end of the results.
+                </div>
+              )}
+            </>
           )}
         </div>
       </main>

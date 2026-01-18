@@ -38,7 +38,7 @@ export const loader = async ({
   const apiBaseURL = context.cloudflare.env.ALIGNMENT_FEED_BASE_URL;
 
   try {
-    const authFetch = await createAuthenticatedFetch(
+    const { authFetch } = await createAuthenticatedFetch(
       request,
       context.cloudflare.env
     );

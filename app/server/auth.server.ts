@@ -282,25 +282,33 @@ async function serverAuthenticatedFetch(
 }
 
 /**
+ * Result from createAuthenticatedFetch.
+ */
+type AuthenticatedFetchResult = {
+  /** Whether the user is authenticated */
+  isAuthenticated: boolean;
+  /** Fetch function pre-configured with auth context */
+  authFetch: (url: string, init?: RequestInit) => Promise<Response>;
+};
+
+/**
  * Creates a fetch function pre-configured with auth context.
  *
- * Note: Token refresh is handled by the root loader's call to getServerAuthContext,
- * which runs on every request. This function just uses the current session state.
+ * Uses getServerAuthContext to ensure token refresh is handled consistently.
+ * If the token is expired or close to expiring, this will refresh it.
+ *
+ * Returns both the fetch function and auth status so callers can avoid
+ * making requests that will fail if the user is not authenticated.
  */
 export async function createAuthenticatedFetch(
   request: Request,
   env: AuthEnv
-): Promise<(url: string, init?: RequestInit) => Promise<Response>> {
-  const sessionStorage = getSessionStorage(env);
-  const session = await sessionStorage.getSession(
-    request.headers.get("Cookie")
-  );
-  const user = session.get("user");
+): Promise<AuthenticatedFetchResult> {
+  const { authContext } = await getServerAuthContext(request, env);
 
-  const authContext: ServerAuthContext = user?.accessToken
-    ? { isAuthenticated: true, accessToken: user.accessToken, user }
-    : { isAuthenticated: false, accessToken: null, user: null };
-
-  return (url: string, init?: RequestInit) =>
-    serverAuthenticatedFetch(url, authContext, init);
+  return {
+    isAuthenticated: authContext.isAuthenticated,
+    authFetch: (url: string, init?: RequestInit) =>
+      serverAuthenticatedFetch(url, authContext, init),
+  };
 }

@@ -2,15 +2,22 @@ import type { LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { createAuthenticatedFetch } from "~/server/auth.server";
 
 /**
- * Proxy route for /v1/articles API endpoint.
- * Handles client-side article fetches by forwarding to the API with auth.
+ * Proxy route for /v1/articles/liked API endpoint.
+ * Handles client-side liked article fetches by forwarding to the API with auth.
+ * Supports pagination via page and page_size query parameters.
  */
 export async function loader({ request, context }: LoaderFunctionArgs) {
   const apiBaseURL = context.cloudflare.env.ALIGNMENT_FEED_BASE_URL;
   const url = new URL(request.url);
+  const params = new URLSearchParams();
 
-  // Forward query parameters to the API
-  const apiUrl = `${apiBaseURL}/v1/articles?${url.searchParams.toString()}`;
+  // Forward pagination params
+  const page = url.searchParams.get("page");
+  const pageSize = url.searchParams.get("page_size");
+  if (page) params.set("page", page);
+  if (pageSize) params.set("page_size", pageSize);
+
+  const apiUrl = `${apiBaseURL}/v1/articles/liked?${params}`;
 
   const { authFetch } = await createAuthenticatedFetch(
     request,
