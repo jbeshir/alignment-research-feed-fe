@@ -5,12 +5,26 @@ import {
   Scripts,
   ScrollRestoration,
   useLoaderData,
+  useNavigation,
 } from "@remix-run/react";
 import "./tailwind.css";
 import type { LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { json } from "@remix-run/cloudflare";
 import React, { createContext, useContext } from "react";
 import { getServerAuthContext } from "~/server/auth.server";
+
+function NavigationProgressBar() {
+  const navigation = useNavigation();
+  const isNavigating = navigation.state !== "idle";
+
+  if (!isNavigating) return null;
+
+  return (
+    <div className="fixed top-0 left-0 right-0 z-50 h-1 bg-slate-200 dark:bg-slate-700 overflow-hidden">
+      <div className="h-full bg-brand-dark dark:bg-brand-light animate-progress-bar" />
+    </div>
+  );
+}
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -36,6 +50,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body className="bg-slate-100 dark:bg-slate-800">
+        <NavigationProgressBar />
         {children}
         <ScrollRestoration />
         <Scripts />
