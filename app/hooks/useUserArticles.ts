@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { useRevalidator } from "@remix-run/react";
 import { type Article, parseArticlesResponse } from "~/schemas/article";
 
-export type UserArticleStatus = "unreviewed" | "liked" | "disliked";
+type UserArticleStatus = "unreviewed" | "liked" | "disliked";
 
 interface UseUserArticlesOptions {
   initialArticles?: Article[];

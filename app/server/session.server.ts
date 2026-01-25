@@ -20,7 +20,7 @@ export type SessionData = {
   };
 };
 
-export type SessionFlashData = {
+type SessionFlashData = {
   error: string;
 };
 
