@@ -6,6 +6,7 @@ import { TopBar } from "~/components/TopBar";
 import { HeroHeader } from "~/components/HeroHeader";
 import { Button } from "~/components/ui/Button";
 import { TrashIcon, ClipboardIcon } from "~/components/Icons";
+import { formatPublishedDate } from "~/utils/formatting";
 
 export const meta: MetaFunction = () => {
   return [
@@ -37,16 +38,6 @@ type NewTokenState = CreateTokenResponse & {
   name: string;
 };
 
-function formatDate(dateString: string | null): string {
-  if (!dateString) return "Never";
-  const date = new Date(dateString);
-  return date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-}
-
 function TokenCard({
   token,
   onDelete,
@@ -67,10 +58,13 @@ function TokenCard({
             {displayName}
           </h3>
           <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-            Created: {formatDate(token.created_at)}
+            Created: {formatPublishedDate(token.created_at)}
           </p>
           <p className="text-xs text-slate-500 dark:text-slate-400">
-            Last used: {formatDate(token.last_used_at ?? null)}
+            Last used:{" "}
+            {token.last_used_at
+              ? formatPublishedDate(token.last_used_at)
+              : "Never"}
           </p>
         </div>
         <div className="ml-4">
@@ -201,7 +195,7 @@ function CreateTokenForm({
         <input
           type="text"
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={e => setName(e.target.value)}
           placeholder="Token name (optional)"
           className="flex-1 px-3 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-800 text-brand-dark dark:text-brand-light placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-dark dark:focus:ring-brand-light"
         />
@@ -209,7 +203,9 @@ function CreateTokenForm({
           {isCreating ? "Creating..." : "Create Token"}
         </Button>
       </div>
-      {error && <p className="mt-2 text-sm text-red-600 dark:text-red-400">{error}</p>}
+      {error && (
+        <p className="mt-2 text-sm text-red-600 dark:text-red-400">{error}</p>
+      )}
     </form>
   );
 }
@@ -234,7 +230,7 @@ export default function Settings() {
       }
       const data = (await response.json()) as { data: Token[] };
       // Filter out revoked tokens
-      setTokens((data.data || []).filter((t) => !t.revoked));
+      setTokens((data.data || []).filter(t => !t.revoked));
     } catch {
       setError("Failed to load tokens");
     } finally {
@@ -253,7 +249,7 @@ export default function Settings() {
   const handleTokenCreated = (response: CreateTokenResponse, name: string) => {
     setNewToken({ ...response, name });
     // Add the new token to the list (without the token value)
-    setTokens((prev) => [
+    setTokens(prev => [
       {
         id: response.id,
         prefix: response.prefix,
@@ -273,7 +269,7 @@ export default function Settings() {
         method: "DELETE",
       });
       if (response.ok) {
-        setTokens((prev) => prev.filter((t) => t.id !== tokenId));
+        setTokens(prev => prev.filter(t => t.id !== tokenId));
       }
     } catch {
       // Error handling is silent - the token will remain in the list
@@ -314,7 +310,8 @@ export default function Settings() {
                 API Tokens
               </h2>
               <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
-                API tokens allow you to access the Alignment Feed API programmatically.
+                API tokens allow you to access the Alignment Feed API
+                programmatically.
               </p>
 
               {newToken && (
@@ -341,7 +338,7 @@ export default function Settings() {
                 </div>
               ) : (
                 <div className="space-y-3">
-                  {tokens.map((token) => (
+                  {tokens.map(token => (
                     <TokenCard
                       key={token.id}
                       token={token}

@@ -33,7 +33,10 @@ export async function action({ request, params, context }: ActionFunctionArgs) {
   const response = await authFetch(apiUrl, { method: "DELETE" });
 
   if (!response.ok) {
-    return json({ error: "Failed to delete token" }, { status: response.status });
+    return json(
+      { error: "Failed to delete token" },
+      { status: response.status }
+    );
   }
 
   return json({ success: true });
