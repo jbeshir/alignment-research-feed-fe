@@ -5,7 +5,12 @@ import { useAuth } from "~/root";
 import { TopBar } from "~/components/TopBar";
 import { HeroHeader } from "~/components/HeroHeader";
 import { Button } from "~/components/ui/Button";
-import { TrashIcon, ClipboardIcon } from "~/components/Icons";
+import {
+  TrashIcon,
+  ClipboardIcon,
+  DownloadIcon,
+  ArrowRightIcon,
+} from "~/components/Icons";
 import { formatPublishedDate } from "~/utils/formatting";
 
 export const meta: MetaFunction = () => {
@@ -148,6 +153,51 @@ function NewTokenDisplay({
       <Button variant="outline" onClick={onDismiss} className="text-xs">
         I&apos;ve copied the token
       </Button>
+    </div>
+  );
+}
+
+const GITHUB_RELEASES_BASE =
+  "https://github.com/jbeshir/alignment-research-feed/releases/latest/download";
+
+const MCP_PLATFORMS = [
+  { name: "Linux", file: "alignment-feed-mcp-linux-amd64" },
+  { name: "Windows", file: "alignment-feed-mcp-windows-amd64.exe" },
+  { name: "macOS (Intel)", file: "alignment-feed-mcp-darwin-amd64" },
+  { name: "macOS (Apple Silicon)", file: "alignment-feed-mcp-darwin-arm64" },
+];
+
+const MCP_USAGE_CODE = `claude mcp add alignment-feed --transport stdio \\
+  --env ALIGNMENT_FEED_API_TOKEN=<your-token> \\
+  -- /path/to/alignment-feed-mcp`;
+
+function CodeBlock({ code }: { code: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <div className="relative">
+      <pre className="bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-4 pr-12 text-sm font-mono text-slate-700 dark:text-slate-300 overflow-x-auto">
+        {code}
+      </pre>
+      <button
+        onClick={handleCopy}
+        className="absolute top-3 right-3 p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 rounded transition-colors"
+        aria-label={copied ? "Copied" : "Copy code"}
+      >
+        {copied ? (
+          <span className="text-xs font-medium text-green-600 dark:text-green-400">
+            Copied!
+          </span>
+        ) : (
+          <ClipboardIcon className="w-4 h-4" />
+        )}
+      </button>
     </div>
   );
 }
@@ -350,6 +400,68 @@ export default function Settings() {
               )}
             </section>
           )}
+
+          {/* MCP Server Section - Always visible */}
+          <section className="mt-12">
+            <h2 className="text-lg font-medium text-brand-dark dark:text-brand-light mb-4">
+              MCP Server
+            </h2>
+            <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
+              Use the Alignment Feed MCP server to integrate with AI coding
+              assistants like Claude Code, Cursor, and Windsurf.
+            </p>
+
+            <div className="mb-6">
+              <h3 className="text-sm font-medium text-brand-dark dark:text-brand-light mb-3">
+                Download
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {MCP_PLATFORMS.map(platform => (
+                  <a
+                    key={platform.file}
+                    href={`${GITHUB_RELEASES_BASE}/${platform.file}`}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-brand-dark dark:text-brand-light bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-md hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                  >
+                    <DownloadIcon className="w-4 h-4" />
+                    {platform.name}
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-sm font-medium text-brand-dark dark:text-brand-light mb-3">
+                Usage with Claude Code
+              </h3>
+              <CodeBlock code={MCP_USAGE_CODE} />
+              <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
+                Replace <code className="font-mono">&lt;your-token&gt;</code>{" "}
+                with an API token from above and{" "}
+                <code className="font-mono">/path/to/alignment-feed-mcp</code>{" "}
+                with the path to the downloaded binary.
+              </p>
+            </div>
+          </section>
+
+          {/* API Documentation Section - Always visible */}
+          <section className="mt-12">
+            <h2 className="text-lg font-medium text-brand-dark dark:text-brand-light mb-4">
+              API Documentation
+            </h2>
+            <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
+              View the full API documentation for programmatic access to
+              Alignment Feed.
+            </p>
+            <a
+              href="/docs/api.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-brand-dark dark:bg-brand-light dark:text-brand-dark rounded-md hover:opacity-90 transition-opacity"
+            >
+              View API Documentation
+              <ArrowRightIcon className="w-4 h-4" />
+            </a>
+          </section>
         </div>
       </main>
     </div>
