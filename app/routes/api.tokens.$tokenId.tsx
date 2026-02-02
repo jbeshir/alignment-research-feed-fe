@@ -23,7 +23,7 @@ export async function action({ request, params, context }: ActionFunctionArgs) {
 
   const { authFetch, isAuthenticated } = await createAuthenticatedFetch(
     request,
-    context.cloudflare.env
+    context
   );
 
   if (!isAuthenticated) {

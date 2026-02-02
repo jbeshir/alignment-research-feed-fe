@@ -1,16 +1,6 @@
-import { json, defer } from "@remix-run/cloudflare";
+import { json, defer, type AppLoadContext } from "@remix-run/cloudflare";
 import { createAuthenticatedFetch } from "./auth.server";
 import { parseArticlesResponse, type Article } from "~/schemas/article";
-
-type CloudflareEnv = {
-  ALIGNMENT_FEED_BASE_URL: string;
-  AUTH_SESSION_SECRET: string;
-  AUTH0_DOMAIN: string;
-  AUTH0_CLIENT_ID: string;
-  AUTH0_CLIENT_SECRET: string;
-  AUTH0_DEFAULT_REDIRECT_URI: string;
-  AUTH0_AUDIENCE: string;
-};
 
 type FetchArticlesOptions = {
   /** The API endpoint path (e.g., "/v1/articles/liked") */
@@ -33,23 +23,18 @@ export type FetchArticlesResult = {
  * Returns the raw result without wrapping in json().
  */
 async function fetchArticlesInternal(
-  request: Request,
-  env: CloudflareEnv,
+  authFetch: (url: string, init?: RequestInit) => Promise<Response>,
+  isAuthenticated: boolean,
+  apiBaseURL: string,
   options: FetchArticlesOptions
 ): Promise<FetchArticlesResult> {
   const { endpoint, params, requireAuth = false, label = "articles" } = options;
-
-  const { isAuthenticated, authFetch } = await createAuthenticatedFetch(
-    request,
-    env
-  );
 
   // For auth-required endpoints, return early if not authenticated
   if (requireAuth && !isAuthenticated) {
     return { articles: [], isAuthenticated: false };
   }
 
-  const apiBaseURL = env.ALIGNMENT_FEED_BASE_URL;
   const url = params
     ? `${apiBaseURL}${endpoint}?${params}`
     : `${apiBaseURL}${endpoint}`;
@@ -87,11 +72,18 @@ async function fetchArticlesInternal(
  */
 export async function fetchArticlesFromApi(
   request: Request,
-  env: CloudflareEnv,
+  context: AppLoadContext,
   options: FetchArticlesOptions
 ): Promise<ReturnType<typeof json<FetchArticlesResult>>> {
-  const result = await fetchArticlesInternal(request, env, options);
-  return json(result);
+  const { isAuthenticated, authFetch, headers } =
+    await createAuthenticatedFetch(request, context);
+  const result = await fetchArticlesInternal(
+    authFetch,
+    isAuthenticated,
+    context.cloudflare.env.ALIGNMENT_FEED_BASE_URL,
+    options
+  );
+  return json(result, headers ? { headers } : undefined);
 }
 
 /**
@@ -103,25 +95,37 @@ export async function fetchArticlesFromApi(
  */
 export async function fetchArticlesDeferred(
   request: Request,
-  env: CloudflareEnv,
+  context: AppLoadContext,
   options: FetchArticlesOptions
 ) {
   const { requireAuth = false } = options;
 
   // Check auth synchronously so we can show login prompt immediately
-  const { isAuthenticated } = await createAuthenticatedFetch(request, env);
+  const { isAuthenticated, authFetch, headers } =
+    await createAuthenticatedFetch(request, context);
 
   if (requireAuth && !isAuthenticated) {
     // Return immediately resolved promise for unauthenticated case
-    return defer({
-      isAuthenticated: false,
-      articlesData: Promise.resolve({ articles: [], isAuthenticated: false }),
-    });
+    return defer(
+      {
+        isAuthenticated: false,
+        articlesData: Promise.resolve({ articles: [], isAuthenticated: false }),
+      },
+      headers ? { headers } : undefined
+    );
   }
 
   // Defer the actual fetch so page renders immediately
-  const articlesPromise = fetchArticlesInternal(request, env, options);
-  return defer({ isAuthenticated: true, articlesData: articlesPromise });
+  const articlesPromise = fetchArticlesInternal(
+    authFetch,
+    isAuthenticated,
+    context.cloudflare.env.ALIGNMENT_FEED_BASE_URL,
+    options
+  );
+  return defer(
+    { isAuthenticated: true, articlesData: articlesPromise },
+    headers ? { headers } : undefined
+  );
 }
 
 /**

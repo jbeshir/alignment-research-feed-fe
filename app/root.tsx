@@ -82,8 +82,7 @@ type LoaderData = {
 };
 
 export const loader = async ({ request, context }: LoaderFunctionArgs) => {
-  const env = context.cloudflare.env;
-  const { authContext, headers } = await getServerAuthContext(request, env);
+  const { authContext, headers } = await getServerAuthContext(request, context);
 
   return json<LoaderData>(
     { isAuthenticated: authContext.isAuthenticated },

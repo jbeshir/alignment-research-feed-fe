@@ -44,10 +44,7 @@ export async function action({ request, params, context }: ActionFunctionArgs) {
 
   const apiUrl = `${apiBaseURL}/v1/articles/${encodeURIComponent(articleId)}/${endpoint}`;
 
-  const { authFetch } = await createAuthenticatedFetch(
-    request,
-    context.cloudflare.env
-  );
+  const { authFetch } = await createAuthenticatedFetch(request, context);
 
   const response = await authFetch(apiUrl, { method: "POST" });
 

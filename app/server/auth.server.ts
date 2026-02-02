@@ -1,5 +1,6 @@
 import { Authenticator } from "remix-auth";
 import { Auth0Strategy } from "remix-auth-auth0";
+import type { AppLoadContext } from "@remix-run/cloudflare";
 import {
   createSessionStorage,
   type AppSessionStorage,
@@ -184,8 +185,33 @@ async function refreshAccessToken(
  * Get auth context from request session.
  * Returns user data and access token if authenticated.
  * Automatically refreshes tokens that are expired or close to expiring.
+ *
+ * Uses per-request caching to ensure all loaders in a single request share
+ * the same auth result, preventing multiple refresh attempts with single-use
+ * refresh tokens.
  */
 export async function getServerAuthContext(
+  request: Request,
+  context: AppLoadContext
+): Promise<AuthContextResult> {
+  const { authCache } = context;
+
+  if (authCache.authContextPromise) {
+    return authCache.authContextPromise as Promise<AuthContextResult>;
+  }
+
+  const resultPromise = computeServerAuthContext(
+    request,
+    context.cloudflare.env
+  );
+  authCache.authContextPromise = resultPromise;
+  return resultPromise;
+}
+
+/**
+ * Internal implementation of auth context computation.
+ */
+async function computeServerAuthContext(
   request: Request,
   env: AuthEnv
 ): Promise<AuthContextResult> {
@@ -239,13 +265,17 @@ export async function getServerAuthContext(
       }
     }
 
-    // Refresh failed or no refresh token - treat as unauthenticated
+    // Refresh failed or no refresh token - clear session and treat as unauthenticated
+    const headers = new Headers();
+    headers.set("Set-Cookie", await sessionStorage.destroySession(session));
+
     return {
       authContext: {
         isAuthenticated: false,
         accessToken: null,
         user: null,
       },
+      headers,
     };
   }
 
@@ -289,6 +319,8 @@ type AuthenticatedFetchResult = {
   isAuthenticated: boolean;
   /** Fetch function pre-configured with auth context */
   authFetch: (url: string, init?: RequestInit) => Promise<Response>;
+  /** Headers to include in the response (e.g., Set-Cookie for refreshed/cleared tokens) */
+  headers?: Headers;
 };
 
 /**
@@ -302,13 +334,19 @@ type AuthenticatedFetchResult = {
  */
 export async function createAuthenticatedFetch(
   request: Request,
-  env: AuthEnv
+  context: AppLoadContext
 ): Promise<AuthenticatedFetchResult> {
-  const { authContext } = await getServerAuthContext(request, env);
+  const { authContext, headers } = await getServerAuthContext(request, context);
 
-  return {
+  const result: AuthenticatedFetchResult = {
     isAuthenticated: authContext.isAuthenticated,
     authFetch: (url: string, init?: RequestInit) =>
       serverAuthenticatedFetch(url, authContext, init),
   };
+
+  if (headers) {
+    result.headers = headers;
+  }
+
+  return result;
 }

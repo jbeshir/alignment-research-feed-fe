@@ -12,10 +12,7 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
   // Forward query parameters to the API
   const apiUrl = `${apiBaseURL}/v1/articles?${url.searchParams.toString()}`;
 
-  const { authFetch } = await createAuthenticatedFetch(
-    request,
-    context.cloudflare.env
-  );
+  const { authFetch } = await createAuthenticatedFetch(request, context);
 
   const response = await authFetch(apiUrl);
 
