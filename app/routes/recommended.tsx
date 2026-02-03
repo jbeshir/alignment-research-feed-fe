@@ -1,7 +1,6 @@
 import React, { Suspense } from "react";
 import type { MetaFunction, LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { Link, useLoaderData, Await } from "@remix-run/react";
-import { useAuth } from "~/root";
 import { TopBar } from "~/components/TopBar";
 import { HeroHeader } from "~/components/HeroHeader";
 import { ArticleGrid } from "~/components/ArticleGrid";
@@ -26,7 +25,7 @@ export const meta: MetaFunction = () => {
 };
 
 export const loader = async ({ request, context }: LoaderFunctionArgs) => {
-  return fetchArticlesDeferred(request, context.cloudflare.env, {
+  return fetchArticlesDeferred(request, context, {
     endpoint: "/v1/articles/recommended",
     requireAuth: true,
     label: "recommended articles",
@@ -60,11 +59,7 @@ function RecommendedContent({
 }
 
 export default function Recommended() {
-  const { isAuthenticated: loaderAuthenticated, articlesData } =
-    useLoaderData<LoaderData>();
-  const { isAuthenticated: clientAuthenticated } = useAuth();
-
-  const isAuthenticated = loaderAuthenticated || clientAuthenticated;
+  const { isAuthenticated, articlesData } = useLoaderData<LoaderData>();
   const showLoginPrompt = !isAuthenticated;
 
   return (

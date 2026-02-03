@@ -19,10 +19,7 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
 
   const apiUrl = `${apiBaseURL}/v1/articles/liked?${params}`;
 
-  const { authFetch } = await createAuthenticatedFetch(
-    request,
-    context.cloudflare.env
-  );
+  const { authFetch } = await createAuthenticatedFetch(request, context);
 
   const response = await authFetch(apiUrl);
 

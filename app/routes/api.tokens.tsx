@@ -18,7 +18,7 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
 
   const { authFetch, isAuthenticated } = await createAuthenticatedFetch(
     request,
-    context.cloudflare.env
+    context
   );
 
   if (!isAuthenticated) {
@@ -46,7 +46,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
 
   const { authFetch, isAuthenticated } = await createAuthenticatedFetch(
     request,
-    context.cloudflare.env
+    context
   );
 
   if (!isAuthenticated) {

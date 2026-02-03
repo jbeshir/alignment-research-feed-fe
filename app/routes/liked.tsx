@@ -1,6 +1,5 @@
 import type { MetaFunction, LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { Link, useLoaderData } from "@remix-run/react";
-import { useAuth } from "~/root";
 import { TopBar } from "~/components/TopBar";
 import { HeroHeader } from "~/components/HeroHeader";
 import { ArticleGrid } from "~/components/ArticleGrid";
@@ -26,7 +25,7 @@ export const meta: MetaFunction = () => {
 };
 
 export const loader = async ({ request, context }: LoaderFunctionArgs) => {
-  return fetchArticlesFromApi(request, context.cloudflare.env, {
+  return fetchArticlesFromApi(request, context, {
     endpoint: "/v1/articles/liked",
     params: createPaginationParams(),
     requireAuth: true,
@@ -35,11 +34,8 @@ export const loader = async ({ request, context }: LoaderFunctionArgs) => {
 };
 
 export default function Liked() {
-  const { articles: initialArticles, isAuthenticated: loaderAuthenticated } =
+  const { articles: initialArticles, isAuthenticated } =
     useLoaderData<typeof loader>();
-  const { isAuthenticated: clientAuthenticated } = useAuth();
-
-  const isAuthenticated = loaderAuthenticated || clientAuthenticated;
 
   const { articles, isLoading, hasMore, loadMore, setArticles } =
     useUserArticles("liked", { initialArticles });
