@@ -34,11 +34,20 @@ export const loader = async ({ request, context }: LoaderFunctionArgs) => {
 };
 
 export default function Liked() {
-  const { articles: initialArticles, isAuthenticated } =
-    useLoaderData<typeof loader>();
+  const {
+    articles: initialArticles,
+    isAuthenticated,
+    error: loaderError,
+  } = useLoaderData<typeof loader>();
 
-  const { articles, isLoading, hasMore, loadMore, setArticles } =
-    useUserArticles("liked", { initialArticles });
+  const {
+    articles,
+    isLoading,
+    hasMore,
+    loadMore,
+    setArticles,
+    error: fetchError,
+  } = useUserArticles("liked", { initialArticles });
 
   const { handleThumbsUp, handleThumbsDown, handleMarkAsRead } =
     useArticleFeedbackHandlers({ setArticles });
@@ -50,6 +59,7 @@ export default function Liked() {
   });
 
   const showLoginPrompt = !isAuthenticated;
+  const error = loaderError ?? fetchError?.message;
 
   return (
     <div className="min-h-screen bg-brand-bg dark:bg-brand-bg-dark">
@@ -77,6 +87,10 @@ export default function Liked() {
                   Log In to See Liked Articles
                 </Button>
               </Link>
+            </div>
+          ) : error ? (
+            <div className="flex flex-col items-center justify-center py-16 px-4">
+              <p className="text-red-600 dark:text-red-400 text-lg">{error}</p>
             </div>
           ) : (
             <>

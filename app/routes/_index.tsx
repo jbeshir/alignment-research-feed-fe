@@ -26,6 +26,7 @@ export const meta: MetaFunction = () => {
 type LoaderData = {
   initialArticles: Article[];
   initialSearchQuery: string;
+  error?: string;
 };
 
 export const loader = async ({
@@ -52,14 +53,23 @@ export const loader = async ({
 
     if (!response.ok) {
       console.error("Failed to fetch initial articles:", response.status);
-      return json({ initialArticles: [], initialSearchQuery: searchQuery });
+      return json({
+        initialArticles: [],
+        initialSearchQuery: searchQuery,
+        error: "Failed to load articles. Please try again later.",
+      });
     }
 
     const result = parseArticlesResponse(await response.json());
 
     if (!result.success) {
       console.error("Failed to parse articles response:", result.error);
-      return json({ initialArticles: [], initialSearchQuery: searchQuery });
+      return json({
+        initialArticles: [],
+        initialSearchQuery: searchQuery,
+        error:
+          "Failed to load articles. The server returned an unexpected response.",
+      });
     }
 
     return json({
@@ -71,12 +81,18 @@ export const loader = async ({
     return json({
       initialArticles: [],
       initialSearchQuery: searchQuery,
+      error:
+        "Failed to load articles. Please check your connection and try again.",
     });
   }
 };
 
 export default function Index() {
-  const { initialArticles, initialSearchQuery } = useLoaderData<LoaderData>();
+  const {
+    initialArticles,
+    initialSearchQuery,
+    error: loaderError,
+  } = useLoaderData<LoaderData>();
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -84,10 +100,17 @@ export default function Index() {
   const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
 
   // Hooks for data fetching
-  const { articles, isLoading, hasMore, loadMore, setArticles } = useArticles(
-    searchQuery,
-    { initialArticles }
-  );
+  const {
+    articles,
+    isLoading,
+    hasMore,
+    loadMore,
+    setArticles,
+    error: fetchError,
+  } = useArticles(searchQuery, { initialArticles });
+
+  // Combine loader and fetch errors
+  const error = loaderError ?? fetchError?.message;
 
   // Shared feedback handlers with optimistic updates
   const { handleThumbsUp, handleThumbsDown, handleMarkAsRead } =
@@ -139,29 +162,37 @@ export default function Index() {
 
         {/* Content */}
         <div className="max-w-7xl mx-auto">
-          <ArticleGrid
-            articles={articles}
-            isLoading={isLoading}
-            onThumbsUp={handleThumbsUp}
-            onThumbsDown={handleThumbsDown}
-            onMarkAsRead={handleMarkAsRead}
-            emptyMessage={
-              searchQuery
-                ? `No articles found for "${searchQuery}"`
-                : "No articles found"
-            }
-          />
-
-          {/* Infinite scroll sentinel - always rendered to avoid layout shifts */}
-          {hasMore && (
-            <div ref={sentinelRef} className="h-10" aria-hidden="true" />
-          )}
-
-          {/* End of results indicator */}
-          {!hasMore && articles.length > 0 && (
-            <div className="text-center py-8 text-slate-500 dark:text-slate-400">
-              You&apos;ve reached the end of the results.
+          {error && articles.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-16 px-4">
+              <p className="text-red-600 dark:text-red-400 text-lg">{error}</p>
             </div>
+          ) : (
+            <>
+              <ArticleGrid
+                articles={articles}
+                isLoading={isLoading}
+                onThumbsUp={handleThumbsUp}
+                onThumbsDown={handleThumbsDown}
+                onMarkAsRead={handleMarkAsRead}
+                emptyMessage={
+                  searchQuery
+                    ? `No articles found for "${searchQuery}"`
+                    : "No articles found"
+                }
+              />
+
+              {/* Infinite scroll sentinel - always rendered to avoid layout shifts */}
+              {hasMore && (
+                <div ref={sentinelRef} className="h-10" aria-hidden="true" />
+              )}
+
+              {/* End of results indicator */}
+              {!hasMore && articles.length > 0 && (
+                <div className="text-center py-8 text-slate-500 dark:text-slate-400">
+                  You&apos;ve reached the end of the results.
+                </div>
+              )}
+            </>
           )}
         </div>
       </main>

@@ -6,7 +6,11 @@ import {
   type AppSessionStorage,
   type SessionData,
 } from "./session.server";
-import { buildAuthorizationHeader } from "~/constants/auth";
+import {
+  buildAuthorizationHeader,
+  TOKEN_REFRESH_THRESHOLD_MS,
+  DEFAULT_TOKEN_EXPIRY_SECONDS,
+} from "~/constants/auth";
 
 /**
  * User type stored in the session after authentication.
@@ -110,7 +114,8 @@ export function getAuthenticator(env: AuthEnv): Authenticator<User> {
         email,
         accessToken,
         refreshToken,
-        expiresAt: Date.now() + (expiresIn ?? 86400) * 1000,
+        expiresAt:
+          Date.now() + (expiresIn ?? DEFAULT_TOKEN_EXPIRY_SECONDS) * 1000,
       };
     }
   );
@@ -147,11 +152,6 @@ type AuthContextResult = {
 };
 
 /**
- * Time before expiry when we should refresh the token (5 minutes).
- */
-const TOKEN_REFRESH_THRESHOLD_MS = 5 * 60 * 1000;
-
-/**
  * Check if a token needs refreshing (expired or close to expiring).
  */
 function shouldRefreshToken(expiresAt: number): boolean {
@@ -173,7 +173,9 @@ async function refreshAccessToken(
       accessToken: tokens.accessToken(),
       refreshToken: tokens.refreshToken() ?? refreshToken,
       expiresAt:
-        Date.now() + (tokens.accessTokenExpiresInSeconds() ?? 86400) * 1000,
+        Date.now() +
+        (tokens.accessTokenExpiresInSeconds() ?? DEFAULT_TOKEN_EXPIRY_SECONDS) *
+          1000,
     };
   } catch (error) {
     console.error("Failed to refresh access token:", error);
