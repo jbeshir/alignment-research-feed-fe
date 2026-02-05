@@ -21,6 +21,14 @@ export const meta: MetaFunction = () => {
       name: "description",
       content: "Personalized AI Safety research recommendations.",
     },
+    { property: "og:title", content: "Recommended - Alignment Feed" },
+    {
+      property: "og:description",
+      content: "Personalized AI Safety research recommendations.",
+    },
+    { property: "og:type", content: "website" },
+    { property: "og:site_name", content: "Alignment Feed" },
+    { name: "twitter:card", content: "summary" },
   ];
 };
 

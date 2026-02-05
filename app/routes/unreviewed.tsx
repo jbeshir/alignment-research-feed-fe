@@ -21,6 +21,14 @@ export const meta: MetaFunction = () => {
       name: "description",
       content: "Articles you haven't reviewed yet.",
     },
+    { property: "og:title", content: "Unreviewed - Alignment Feed" },
+    {
+      property: "og:description",
+      content: "Articles you haven't reviewed yet.",
+    },
+    { property: "og:type", content: "website" },
+    { property: "og:site_name", content: "Alignment Feed" },
+    { name: "twitter:card", content: "summary" },
   ];
 };
 
