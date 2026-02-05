@@ -21,6 +21,11 @@ export const meta: MetaFunction = () => {
       name: "description",
       content: "Articles you've disliked.",
     },
+    { property: "og:title", content: "Disliked - Alignment Feed" },
+    { property: "og:description", content: "Articles you've disliked." },
+    { property: "og:type", content: "website" },
+    { property: "og:site_name", content: "Alignment Feed" },
+    { name: "twitter:card", content: "summary" },
   ];
 };
 

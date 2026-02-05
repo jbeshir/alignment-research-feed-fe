@@ -20,6 +20,14 @@ export const meta: MetaFunction = () => {
       name: "description",
       content: "Your personalised AI Safety research feed.",
     },
+    { property: "og:title", content: "Alignment Feed - AI Safety Research" },
+    {
+      property: "og:description",
+      content: "Your personalised AI Safety research feed.",
+    },
+    { property: "og:type", content: "website" },
+    { property: "og:site_name", content: "Alignment Feed" },
+    { name: "twitter:card", content: "summary" },
   ];
 };
 
@@ -149,15 +157,9 @@ export default function Index() {
           onSearch={handleSearch}
         />
 
-        {/* Tabs and Sort */}
+        {/* Tabs */}
         <div className="max-w-7xl mx-auto px-6 pt-8">
-          <div className="flex items-center justify-between">
-            <Tabs tabs={MAIN_TABS} activeTab="all" />
-            <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
-              <span>Sort by:</span>
-              <span className="text-slate-900 dark:text-slate-100">Date</span>
-            </div>
-          </div>
+          <Tabs tabs={MAIN_TABS} activeTab="all" />
         </div>
 
         {/* Content */}

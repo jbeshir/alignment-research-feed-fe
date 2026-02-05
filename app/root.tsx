@@ -8,6 +8,7 @@ import {
   useNavigation,
   useRouteError,
   isRouteErrorResponse,
+  useRouteLoaderData,
   Link,
 } from "@remix-run/react";
 import "./tailwind.css";
@@ -31,7 +32,13 @@ function NavigationProgressBar() {
   );
 }
 
+export function useRootLoaderData() {
+  return useRouteLoaderData<LoaderData>("root");
+}
+
 export function Layout({ children }: { children: React.ReactNode }) {
+  const rootData = useRouteLoaderData<LoaderData>("root");
+
   return (
     <html lang="en">
       <head>
@@ -51,6 +58,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
           href="/apple-touch-icon.png"
         />
         <link rel="manifest" href="/site.webmanifest" />
+        {rootData?.rssUrl && (
+          <link
+            rel="alternate"
+            type="application/rss+xml"
+            title="Alignment Feed"
+            href={rootData.rssUrl}
+          />
+        )}
         <Meta />
         <Links />
       </head>
@@ -85,15 +100,19 @@ export function useAuth(): AuthContextType {
 type LoaderData = {
   isAuthenticated: boolean;
   sentryDsn: string | undefined;
+  rssUrl: string;
 };
 
 export const loader = async ({ request, context }: LoaderFunctionArgs) => {
   const { authContext, headers } = await getServerAuthContext(request, context);
 
+  const rssUrl = `${context.cloudflare.env.ALIGNMENT_FEED_BASE_URL}/v1/rss`;
+
   return json<LoaderData>(
     {
       isAuthenticated: authContext.isAuthenticated,
       sentryDsn: context.cloudflare.env.SENTRY_DSN,
+      rssUrl,
     },
     headers ? { headers } : undefined
   );

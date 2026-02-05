@@ -1,6 +1,7 @@
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/cloudflare";
 import { json } from "@remix-run/cloudflare";
 import {
+  Link,
   useLoaderData,
   useRouteError,
   isRouteErrorResponse,
@@ -18,12 +19,17 @@ import {
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   const title = data?.article?.title ?? "Article";
+  const description = data?.article?.text_start
+    ? data.article.text_start.slice(0, 200)
+    : "Similar articles in the alignment research dataset";
   return [
     { title: `${title} - Alignment Feed` },
-    {
-      name: "description",
-      content: "Similar articles in the alignment research dataset",
-    },
+    { name: "description", content: description },
+    { property: "og:title", content: `${title} - Alignment Feed` },
+    { property: "og:description", content: description },
+    { property: "og:type", content: "website" },
+    { property: "og:site_name", content: "Alignment Feed" },
+    { name: "twitter:card", content: "summary" },
   ];
 };
 
@@ -96,12 +102,12 @@ export default function ArticleDetails() {
       <main>
         {/* Article Header */}
         <div className="max-w-4xl mx-auto px-6 pt-12 pb-8">
-          <a
-            href="/"
+          <Link
+            to="/"
             className="block text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 mb-6"
           >
             ← Back to feed
-          </a>
+          </Link>
           <ArticleInfo
             article={article}
             onThumbsUp={handleThumbsUp}
@@ -163,12 +169,12 @@ export function ErrorBoundary() {
               </p>
             </>
           )}
-          <a
-            href="/"
+          <Link
+            to="/"
             className="mt-8 px-6 py-2 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-md hover:bg-slate-800 dark:hover:bg-slate-200 transition-colors"
           >
             Return to home
-          </a>
+          </Link>
         </div>
       </main>
     </div>

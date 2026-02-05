@@ -20,6 +20,14 @@ export const meta: MetaFunction = () => {
       name: "description",
       content: "Manage your account settings and API tokens.",
     },
+    { property: "og:title", content: "Settings - Alignment Feed" },
+    {
+      property: "og:description",
+      content: "Manage your account settings and API tokens.",
+    },
+    { property: "og:type", content: "website" },
+    { property: "og:site_name", content: "Alignment Feed" },
+    { name: "twitter:card", content: "summary" },
   ];
 };
 
