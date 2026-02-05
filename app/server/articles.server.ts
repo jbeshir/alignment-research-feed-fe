@@ -16,6 +16,8 @@ type FetchArticlesOptions = {
 export type FetchArticlesResult = {
   articles: Article[];
   isAuthenticated: boolean;
+  /** Error message if fetch or parse failed */
+  error?: string;
 };
 
 /**
@@ -49,20 +51,32 @@ async function fetchArticlesInternal(
 
     if (!response.ok) {
       console.error(`Failed to fetch ${label}:`, response.status);
-      return { articles: [], isAuthenticated };
+      return {
+        articles: [],
+        isAuthenticated,
+        error: `Failed to load ${label}. Please try again later.`,
+      };
     }
 
     const result = parseArticlesResponse(await response.json());
 
     if (!result.success) {
       console.error(`Failed to parse ${label}:`, result.error);
-      return { articles: [], isAuthenticated };
+      return {
+        articles: [],
+        isAuthenticated,
+        error: `Failed to load ${label}. The server returned an unexpected response.`,
+      };
     }
 
     return { articles: result.data.data, isAuthenticated };
   } catch (error) {
     console.error(`Error fetching ${label}:`, error);
-    return { articles: [], isAuthenticated };
+    return {
+      articles: [],
+      isAuthenticated,
+      error: `Failed to load ${label}. Please check your connection and try again.`,
+    };
   }
 }
 

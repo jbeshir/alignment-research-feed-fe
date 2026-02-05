@@ -4,28 +4,40 @@
  * For more information, see https://remix.run/file-conventions/entry.server
  */
 
+import * as Sentry from "@sentry/remix";
 import type { AppLoadContext, EntryContext } from "@remix-run/cloudflare";
 import { RemixServer } from "@remix-run/react";
 import { isbot } from "isbot";
 import { renderToReadableStream } from "react-dom/server";
+
+// Initialize Sentry for server-side error tracking
+// Note: In Cloudflare Workers, initialization happens per-request
+const initSentry = (context: AppLoadContext) => {
+  const dsn = context.cloudflare?.env?.SENTRY_DSN;
+  if (dsn && !Sentry.isInitialized()) {
+    Sentry.init({
+      dsn,
+      tracesSampleRate: 0.1,
+    });
+  }
+};
 
 export default async function handleRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
   remixContext: EntryContext,
-  // This is ignored so we can keep it in the template for visibility.  Feel
-  // free to delete this parameter in your app if you're not using it!
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   loadContext: AppLoadContext
 ) {
+  initSentry(loadContext);
+
   const body = await renderToReadableStream(
     <RemixServer context={remixContext} url={request.url} />,
     {
       signal: request.signal,
       onError(error: unknown) {
-        // Log streaming rendering errors from inside the shell
         console.error(error);
+        Sentry.captureException(error);
         responseStatusCode = 500;
       },
     }

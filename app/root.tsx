@@ -6,12 +6,17 @@ import {
   ScrollRestoration,
   useLoaderData,
   useNavigation,
+  useRouteError,
+  isRouteErrorResponse,
+  Link,
 } from "@remix-run/react";
 import "./tailwind.css";
 import type { LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { json } from "@remix-run/cloudflare";
 import React, { createContext, useContext } from "react";
 import { getServerAuthContext } from "~/server/auth.server";
+import { SentryProvider } from "~/contexts/SentryContext";
+import { captureRemixErrorBoundaryError } from "@sentry/remix";
 
 function NavigationProgressBar() {
   const navigation = useNavigation();
@@ -79,23 +84,95 @@ export function useAuth(): AuthContextType {
 
 type LoaderData = {
   isAuthenticated: boolean;
+  sentryDsn: string | undefined;
 };
 
 export const loader = async ({ request, context }: LoaderFunctionArgs) => {
   const { authContext, headers } = await getServerAuthContext(request, context);
 
   return json<LoaderData>(
-    { isAuthenticated: authContext.isAuthenticated },
+    {
+      isAuthenticated: authContext.isAuthenticated,
+      sentryDsn: context.cloudflare.env.SENTRY_DSN,
+    },
     headers ? { headers } : undefined
   );
 };
 
 export default function App() {
-  const { isAuthenticated } = useLoaderData<LoaderData>();
+  const { isAuthenticated, sentryDsn } = useLoaderData<LoaderData>();
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated }}>
-      <Outlet />
-    </AuthContext.Provider>
+    <SentryProvider dsn={sentryDsn}>
+      <AuthContext.Provider value={{ isAuthenticated }}>
+        <Outlet />
+      </AuthContext.Provider>
+    </SentryProvider>
+  );
+}
+
+/**
+ * Global error boundary for unhandled errors.
+ * Catches errors at the root level and displays a user-friendly error page.
+ */
+export function ErrorBoundary() {
+  const error = useRouteError();
+
+  // Report error to Sentry
+  captureRemixErrorBoundaryError(error);
+
+  let title = "Something went wrong";
+  let message = "An unexpected error occurred. Please try again later.";
+  let statusCode: number | undefined;
+
+  if (isRouteErrorResponse(error)) {
+    statusCode = error.status;
+    if (error.status === 404) {
+      title = "Page not found";
+      message = "The page you're looking for doesn't exist.";
+    } else if (error.status === 500) {
+      title = "Server error";
+      message = "Something went wrong on our end. Please try again later.";
+    } else {
+      title = `Error ${error.status}`;
+      message = error.statusText || message;
+    }
+  } else if (error instanceof Error) {
+    // Don't expose error details in production
+    if (process.env.NODE_ENV === "development") {
+      message = error.message;
+    }
+  }
+
+  return (
+    <html lang="en">
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>{`${title} - Alignment Feed`}</title>
+        <Meta />
+        <Links />
+      </head>
+      <body className="bg-slate-100 dark:bg-slate-800 min-h-screen flex items-center justify-center">
+        <div className="max-w-md mx-auto px-6 py-12 text-center">
+          {statusCode && (
+            <p className="text-6xl font-bold text-slate-300 dark:text-slate-600 mb-4">
+              {statusCode}
+            </p>
+          )}
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4">
+            {title}
+          </h1>
+          <p className="text-slate-600 dark:text-slate-400 mb-8">{message}</p>
+          <Link
+            to="/"
+            className="inline-block px-6 py-3 bg-brand-dark dark:bg-brand-light text-white dark:text-slate-900 rounded-lg font-medium hover:opacity-90 transition-opacity"
+          >
+            Back to Home
+          </Link>
+        </div>
+        <Scripts />
+      </body>
+    </html>
   );
 }

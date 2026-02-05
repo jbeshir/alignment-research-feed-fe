@@ -1,4 +1,5 @@
 import { createCookieSessionStorage } from "@remix-run/cloudflare";
+import { SESSION_MAX_AGE_SECONDS } from "~/constants/auth";
 
 /**
  * Server-side session management using remix-auth compatible session storage.
@@ -38,8 +39,8 @@ export function createSessionStorage(secret: string) {
       secrets: [secret],
       // Allow HTTP in dev, Cloudflare enforces HTTPS in production
       secure: false,
-      // Session cookie lasts 7 days, but token expiry is checked separately
-      maxAge: 60 * 60 * 24 * 7,
+      // Session cookie duration - token expiry is checked separately
+      maxAge: SESSION_MAX_AGE_SECONDS,
     },
   });
 }
