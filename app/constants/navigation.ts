@@ -6,4 +6,9 @@ export const MAIN_TABS: Tab[] = [
   { id: "unreviewed", label: "Unreviewed", to: "/unreviewed" },
   { id: "liked", label: "Liked", to: "/liked" },
   { id: "disliked", label: "Disliked", to: "/disliked" },
+  {
+    id: "semantic-search",
+    label: "Find Related Research",
+    to: "/semantic-search",
+  },
 ];
