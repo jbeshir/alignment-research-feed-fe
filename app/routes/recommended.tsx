@@ -3,7 +3,7 @@ import type { MetaFunction, LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { Link, useLoaderData, Await } from "@remix-run/react";
 import { TopBar } from "~/components/TopBar";
 import { HeroHeader } from "~/components/HeroHeader";
-import { ArticleGrid } from "~/components/ArticleGrid";
+import { ArticleList } from "~/components/ArticleList";
 import { Tabs } from "~/components/ui/Tabs";
 import { Button } from "~/components/ui/Button";
 import { MAIN_TABS } from "~/constants/navigation";
@@ -55,7 +55,7 @@ function RecommendedContent({
     useArticleFeedbackHandlers();
 
   return (
-    <ArticleGrid
+    <ArticleList
       articles={articlesData.articles}
       isLoading={false}
       onThumbsUp={handleThumbsUp}

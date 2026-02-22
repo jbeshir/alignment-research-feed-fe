@@ -124,6 +124,11 @@ export function ArticleCard({
           {getSourceDisplayName(article.source, article.authors)}
         </span>
         <div className="flex items-center gap-2">
+          {article.category && (
+            <span className="text-xs px-1.5 py-0.5 rounded bg-white/20 dark:bg-black/20">
+              {article.category}
+            </span>
+          )}
           {isVideoSource(article.source) && <PlayIcon className="w-5 h-5" />}
           {haveRead && (
             <span title="Read">

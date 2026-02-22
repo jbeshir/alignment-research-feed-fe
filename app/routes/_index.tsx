@@ -4,7 +4,7 @@ import type { MetaFunction, LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { json } from "@remix-run/cloudflare";
 import { TopBar } from "~/components/TopBar";
 import { HeroHeader } from "~/components/HeroHeader";
-import { ArticleGrid } from "~/components/ArticleGrid";
+import { ArticleList } from "~/components/ArticleList";
 import { Tabs } from "~/components/ui/Tabs";
 import { MAIN_TABS } from "~/constants/navigation";
 import { useArticles } from "~/hooks/useArticles";
@@ -170,7 +170,7 @@ export default function Index() {
             </div>
           ) : (
             <>
-              <ArticleGrid
+              <ArticleList
                 articles={articles}
                 isLoading={isLoading}
                 onThumbsUp={handleThumbsUp}

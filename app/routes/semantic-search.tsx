@@ -2,7 +2,7 @@ import { useState, useCallback } from "react";
 import type { MetaFunction } from "@remix-run/cloudflare";
 import { TopBar } from "~/components/TopBar";
 import { HeroHeader } from "~/components/HeroHeader";
-import { ArticleGrid } from "~/components/ArticleGrid";
+import { ArticleList } from "~/components/ArticleList";
 import { Tabs } from "~/components/ui/Tabs";
 import { Button } from "~/components/ui/Button";
 import { MAIN_TABS } from "~/constants/navigation";
@@ -123,7 +123,7 @@ export default function SemanticSearch() {
               <p className="text-red-600 dark:text-red-400 text-lg">{error}</p>
             </div>
           ) : (
-            <ArticleGrid
+            <ArticleList
               articles={articles}
               isLoading={isLoading}
               onThumbsUp={handleThumbsUp}
