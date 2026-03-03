@@ -1,6 +1,6 @@
 import { type Article, formatPublishedDate } from "~/schemas/article";
 import {
-  getSourceHeaderColor,
+  getCategoryHeaderColor,
   getSourceDisplayName,
 } from "~/constants/sources";
 import {
@@ -33,7 +33,7 @@ export function ArticleInfo({
     <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm overflow-hidden">
       {/* Source header strip - like the card */}
       <div
-        className={`h-14 px-6 flex items-center justify-between ${getSourceHeaderColor(article.source)}`}
+        className={`h-14 px-6 flex items-center justify-between ${getCategoryHeaderColor(article.category)}`}
       >
         <span className="font-medium">
           {getSourceDisplayName(article.source, article.authors)}

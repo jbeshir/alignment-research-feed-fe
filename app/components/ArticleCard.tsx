@@ -11,7 +11,7 @@ import {
   CheckCircleIcon,
 } from "./Icons";
 import {
-  getSourceHeaderColor,
+  getCategoryHeaderColor,
   getSourceDisplayName,
 } from "~/constants/sources";
 
@@ -118,7 +118,7 @@ export function ArticleCard({
     >
       {/* Source header strip */}
       <div
-        className={`h-12 px-4 flex items-center justify-between gap-2 flex-shrink-0 ${getSourceHeaderColor(article.source)}`}
+        className={`h-12 px-4 flex items-center justify-between gap-2 flex-shrink-0 ${getCategoryHeaderColor(article.category)}`}
       >
         <span className="font-medium text-sm truncate">
           {getSourceDisplayName(article.source, article.authors)}

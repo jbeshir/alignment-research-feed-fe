@@ -1,24 +1,33 @@
 import { describe, it, expect } from "vitest";
-import { getSourceColor, SOURCE_COLORS } from "./sources";
+import { getCategoryHeaderColor } from "./sources";
 
-describe("getSourceColor", () => {
-  it("returns correct color for known sources", () => {
-    expect(getSourceColor("arxiv")).toBe(SOURCE_COLORS["arxiv"]);
-    expect(getSourceColor("lesswrong")).toBe(SOURCE_COLORS["lesswrong"]);
-    expect(getSourceColor("alignmentforum")).toBe(
-      SOURCE_COLORS["alignmentforum"]
+describe("getCategoryHeaderColor", () => {
+  it("returns correct color for known categories", () => {
+    expect(getCategoryHeaderColor("Interpretability")).toContain("bg-teal");
+    expect(getCategoryHeaderColor("Safety Techniques")).toContain("bg-blue");
+    expect(getCategoryHeaderColor("Governance & Policy")).toContain(
+      "bg-indigo"
     );
-    expect(getSourceColor("youtube")).toBe(SOURCE_COLORS["youtube"]);
+    expect(getCategoryHeaderColor("Deception & Misalignment")).toContain(
+      "bg-red"
+    );
+    expect(getCategoryHeaderColor("AI Capabilities & Behavior")).toContain(
+      "bg-amber"
+    );
+    expect(getCategoryHeaderColor("Risks & Strategy")).toContain("bg-rose");
+    expect(getCategoryHeaderColor("Forecasting")).toContain("bg-cyan");
+    expect(getCategoryHeaderColor("AI & Society")).toContain("bg-purple");
+    expect(getCategoryHeaderColor("Field Building")).toContain("bg-green");
+    expect(getCategoryHeaderColor("Other")).toContain("bg-slate");
   });
 
-  it("handles case-insensitive matching", () => {
-    expect(getSourceColor("ArXiv")).toBe(SOURCE_COLORS["arxiv"]);
-    expect(getSourceColor("LESSWRONG")).toBe(SOURCE_COLORS["lesswrong"]);
-    expect(getSourceColor("YouTube")).toBe(SOURCE_COLORS["youtube"]);
+  it("returns default color for unknown categories", () => {
+    expect(getCategoryHeaderColor("unknown")).toContain("bg-slate");
+    expect(getCategoryHeaderColor("random-category")).toContain("bg-slate");
   });
 
-  it("returns default color for unknown sources", () => {
-    expect(getSourceColor("unknown")).toContain("bg-slate");
-    expect(getSourceColor("random-source")).toContain("bg-slate");
+  it("returns default color for null or undefined", () => {
+    expect(getCategoryHeaderColor(null)).toContain("bg-slate");
+    expect(getCategoryHeaderColor(undefined)).toContain("bg-slate");
   });
 });

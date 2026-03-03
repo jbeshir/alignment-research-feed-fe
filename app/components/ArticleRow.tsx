@@ -13,7 +13,7 @@ import {
   ExternalLinkIcon,
 } from "./Icons";
 import {
-  getSourceHeaderColor,
+  getCategoryHeaderColor,
   getSourceDisplayName,
 } from "~/constants/sources";
 
@@ -162,7 +162,7 @@ export function ArticleRow({
     <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm overflow-hidden">
       {/* Source header strip */}
       <div
-        className={`h-10 px-4 flex items-center justify-between ${getSourceHeaderColor(article.source)}`}
+        className={`h-10 px-4 flex items-center justify-between ${getCategoryHeaderColor(article.category)}`}
       >
         <span className="font-medium text-sm">
           {getSourceDisplayName(article.source, article.authors)}
