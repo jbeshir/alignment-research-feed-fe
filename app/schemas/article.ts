@@ -7,7 +7,7 @@ export const ArticleSchema = z.object({
   text_start: z.string(),
   authors: z.string(),
   source: z.string(),
-  published_at: z.string(),
+  published_at: z.string().nullable(),
   summary: z.string().optional().nullable(),
   key_points: z.array(z.string()).optional().nullable(),
   implication: z.string().optional().nullable(),

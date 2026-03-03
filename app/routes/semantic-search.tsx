@@ -2,11 +2,13 @@ import { useState, useCallback } from "react";
 import type { MetaFunction } from "@remix-run/cloudflare";
 import { TopBar } from "~/components/TopBar";
 import { HeroHeader } from "~/components/HeroHeader";
-import { ArticleList } from "~/components/ArticleList";
+import { ArticleFeed } from "~/components/ArticleFeed";
+import { ViewToggle } from "~/components/ViewToggle";
 import { Tabs } from "~/components/ui/Tabs";
 import { Button } from "~/components/ui/Button";
 import { MAIN_TABS } from "~/constants/navigation";
 import { useArticleFeedbackHandlers } from "~/hooks/useArticleFeedbackHandlers";
+import { useViewPreference } from "~/hooks/useViewPreference";
 import { parseArticlesResponse, type Article } from "~/schemas/article";
 
 export const meta: MetaFunction = () => {
@@ -38,6 +40,8 @@ export default function SemanticSearch() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hasSearched, setHasSearched] = useState(false);
+
+  const [viewMode, setViewMode] = useViewPreference();
 
   const { handleThumbsUp, handleThumbsDown, handleMarkAsRead } =
     useArticleFeedbackHandlers({ setArticles });
@@ -93,7 +97,10 @@ export default function SemanticSearch() {
 
         {/* Tabs */}
         <div className="max-w-7xl mx-auto px-6 pt-8">
-          <Tabs tabs={MAIN_TABS} activeTab="semantic-search" />
+          <div className="flex items-center justify-between">
+            <Tabs tabs={MAIN_TABS} activeTab="semantic-search" />
+            <ViewToggle viewMode={viewMode} onChange={setViewMode} />
+          </div>
         </div>
 
         {/* Search Input */}
@@ -123,7 +130,8 @@ export default function SemanticSearch() {
               <p className="text-red-600 dark:text-red-400 text-lg">{error}</p>
             </div>
           ) : (
-            <ArticleList
+            <ArticleFeed
+              viewMode={viewMode}
               articles={articles}
               isLoading={isLoading}
               onThumbsUp={handleThumbsUp}

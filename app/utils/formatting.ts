@@ -1,9 +1,12 @@
 /**
  * Format a date string for display.
- * @param dateString - ISO date string or parseable date format
- * @returns Formatted date like "Jan 15, 2024"
+ * @param dateString - ISO date string, parseable date format, or null
+ * @returns Formatted date like "Jan 15, 2024", or null if input is null
  */
-export function formatPublishedDate(dateString: string): string {
+export function formatPublishedDate(dateString: string | null): string | null {
+  if (dateString === null) {
+    return null;
+  }
   try {
     const date = new Date(dateString);
     // Check if the date is valid

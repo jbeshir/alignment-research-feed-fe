@@ -191,7 +191,7 @@ export function getSourceDisplayName(source: string, authors?: string): string {
   if (isGenericBlogSource(source) && authors) {
     const authorName = getFirstAuthor(authors);
     if (authorName) {
-      return `Blogs - ${authorName}`;
+      return authorName;
     }
   }
   return formatSourceName(source);

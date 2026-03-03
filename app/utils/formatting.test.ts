@@ -21,4 +21,8 @@ describe("formatPublishedDate", () => {
     expect(formatPublishedDate("not-a-date")).toBe("not-a-date");
     expect(formatPublishedDate("")).toBe("");
   });
+
+  it("returns null for null input", () => {
+    expect(formatPublishedDate(null)).toBeNull();
+  });
 });

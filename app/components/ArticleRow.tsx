@@ -1,5 +1,5 @@
 import { useNavigate } from "@remix-run/react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useAuth } from "~/root";
 import { type Article, formatPublishedDate } from "~/schemas/article";
 import { parseArticlesResponse } from "~/schemas/article";
@@ -53,6 +53,15 @@ export function ArticleRow({
   const thumbsUp = article.thumbs_up ?? false;
   const thumbsDown = article.thumbs_down ?? false;
   const haveRead = article.have_read ?? false;
+
+  const summaryRef = useRef<HTMLParagraphElement>(null);
+  const [isSummaryTruncated, setIsSummaryTruncated] = useState(false);
+
+  useEffect(() => {
+    const el = summaryRef.current;
+    if (!el) return;
+    setIsSummaryTruncated(el.scrollHeight > el.clientHeight);
+  }, [article.summary]);
 
   const hasKeyPoints = article.key_points && article.key_points.length > 0;
   const hasImplication = !!article.implication;
@@ -190,17 +199,24 @@ export function ArticleRow({
           </a>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
             {article.authors}
-            <span className="mx-1.5 text-slate-300 dark:text-slate-600">
-              &middot;
-            </span>
-            {formatPublishedDate(article.published_at)}
+            {article.published_at && (
+              <>
+                <span className="mx-1.5 text-slate-300 dark:text-slate-600">
+                  &middot;
+                </span>
+                {formatPublishedDate(article.published_at)}
+              </>
+            )}
           </p>
         </div>
 
         {/* Right: AI summary (3/5) */}
         {article.summary && (
           <div className="min-w-0 md:col-span-3">
-            <p className="text-sm text-slate-600 dark:text-slate-400 line-clamp-4">
+            <p
+              ref={summaryRef}
+              className="text-sm text-slate-600 dark:text-slate-400 line-clamp-4"
+            >
               {article.summary}
             </p>
           </div>
@@ -249,7 +265,7 @@ export function ArticleRow({
         <div className="w-px h-5 bg-slate-200 dark:bg-slate-600 mx-1" />
 
         {/* Expand buttons - only shown when data exists */}
-        {article.summary && (
+        {isSummaryTruncated && (
           <button
             type="button"
             onClick={() => toggleSection("summary")}
