@@ -115,6 +115,52 @@ export default function ArticleDetails() {
           />
         </div>
 
+        {/* Analysis Section */}
+        {article.summary && (
+          <div className="max-w-4xl mx-auto px-6 pb-8">
+            <div className="bg-white dark:bg-slate-800 rounded-lg p-6 shadow-sm">
+              <div className="flex items-center gap-3 mb-4">
+                <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100">
+                  Analysis
+                </h2>
+                {article.category && (
+                  <span className="inline-block px-2.5 py-0.5 text-xs font-medium rounded-full bg-brand-light/20 text-brand-dark dark:bg-brand-dark/20 dark:text-brand-light">
+                    {article.category}
+                  </span>
+                )}
+              </div>
+
+              <p className="text-slate-700 dark:text-slate-300 mb-4">
+                {article.summary}
+              </p>
+
+              {article.key_points && article.key_points.length > 0 && (
+                <div className="mb-4">
+                  <h3 className="text-sm font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2">
+                    Key Points
+                  </h3>
+                  <ul className="list-disc list-inside space-y-1 text-slate-700 dark:text-slate-300">
+                    {article.key_points.map((point, i) => (
+                      <li key={i}>{point}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {article.implication && (
+                <div>
+                  <h3 className="text-sm font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2">
+                    Implications for AI Alignment
+                  </h3>
+                  <p className="text-slate-700 dark:text-slate-300">
+                    {article.implication}
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Similar Articles Section */}
         {similarArticles.length > 0 && (
           <div className="max-w-7xl mx-auto px-6 py-8">

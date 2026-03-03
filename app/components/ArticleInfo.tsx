@@ -58,8 +58,12 @@ export function ArticleInfo({
         {/* Meta row */}
         <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-slate-600 dark:text-slate-400">
           <span>{article.authors}</span>
-          <span className="text-slate-400 dark:text-slate-500">•</span>
-          <span>{formatPublishedDate(article.published_at)}</span>
+          {article.published_at && (
+            <>
+              <span className="text-slate-400 dark:text-slate-500">•</span>
+              <span>{formatPublishedDate(article.published_at)}</span>
+            </>
+          )}
         </div>
 
         {/* Actions row */}

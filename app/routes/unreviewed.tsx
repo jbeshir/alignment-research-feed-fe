@@ -2,13 +2,15 @@ import type { MetaFunction, LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { Link, useLoaderData } from "@remix-run/react";
 import { TopBar } from "~/components/TopBar";
 import { HeroHeader } from "~/components/HeroHeader";
-import { ArticleGrid } from "~/components/ArticleGrid";
+import { ArticleFeed } from "~/components/ArticleFeed";
+import { ViewToggle } from "~/components/ViewToggle";
 import { Tabs } from "~/components/ui/Tabs";
 import { Button } from "~/components/ui/Button";
 import { MAIN_TABS } from "~/constants/navigation";
 import { useArticleFeedbackHandlers } from "~/hooks/useArticleFeedbackHandlers";
 import { useUserArticles } from "~/hooks/useUserArticles";
 import { useInfiniteScroll } from "~/hooks/useInfiniteScroll";
+import { useViewPreference } from "~/hooks/useViewPreference";
 import {
   fetchArticlesFromApi,
   createPaginationParams,
@@ -66,6 +68,8 @@ export default function Unreviewed() {
     isLoading,
   });
 
+  const [viewMode, setViewMode] = useViewPreference();
+
   const showLoginPrompt = !isAuthenticated;
   const error = loaderError ?? fetchError?.message;
 
@@ -80,6 +84,7 @@ export default function Unreviewed() {
         <div className="max-w-7xl mx-auto px-6 pt-8">
           <div className="flex items-center justify-between">
             <Tabs tabs={MAIN_TABS} activeTab="unreviewed" />
+            <ViewToggle viewMode={viewMode} onChange={setViewMode} />
           </div>
         </div>
 
@@ -102,7 +107,8 @@ export default function Unreviewed() {
             </div>
           ) : (
             <>
-              <ArticleGrid
+              <ArticleFeed
+                viewMode={viewMode}
                 articles={articles}
                 isLoading={isLoading}
                 onThumbsUp={handleThumbsUp}

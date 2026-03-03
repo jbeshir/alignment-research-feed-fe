@@ -3,11 +3,13 @@ import type { MetaFunction, LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { Link, useLoaderData, Await } from "@remix-run/react";
 import { TopBar } from "~/components/TopBar";
 import { HeroHeader } from "~/components/HeroHeader";
-import { ArticleGrid } from "~/components/ArticleGrid";
+import { ArticleFeed } from "~/components/ArticleFeed";
+import { ViewToggle, type ViewMode } from "~/components/ViewToggle";
 import { Tabs } from "~/components/ui/Tabs";
 import { Button } from "~/components/ui/Button";
 import { MAIN_TABS } from "~/constants/navigation";
 import { useArticleFeedbackHandlers } from "~/hooks/useArticleFeedbackHandlers";
+import { useViewPreference } from "~/hooks/useViewPreference";
 import {
   fetchArticlesDeferred,
   type FetchArticlesResult,
@@ -48,14 +50,17 @@ type LoaderData = {
 
 function RecommendedContent({
   articlesData,
+  viewMode,
 }: {
   articlesData: FetchArticlesResult;
+  viewMode: ViewMode;
 }) {
   const { handleThumbsUp, handleThumbsDown, handleMarkAsRead } =
     useArticleFeedbackHandlers();
 
   return (
-    <ArticleGrid
+    <ArticleFeed
+      viewMode={viewMode}
       articles={articlesData.articles}
       isLoading={false}
       onThumbsUp={handleThumbsUp}
@@ -68,6 +73,7 @@ function RecommendedContent({
 
 export default function Recommended() {
   const { isAuthenticated, articlesData } = useLoaderData<LoaderData>();
+  const [viewMode, setViewMode] = useViewPreference();
   const showLoginPrompt = !isAuthenticated;
 
   return (
@@ -81,6 +87,7 @@ export default function Recommended() {
         <div className="max-w-7xl mx-auto px-6 pt-8">
           <div className="flex items-center justify-between">
             <Tabs tabs={MAIN_TABS} activeTab="recommended" />
+            <ViewToggle viewMode={viewMode} onChange={setViewMode} />
           </div>
         </div>
 
@@ -113,7 +120,10 @@ export default function Recommended() {
                 {/* Cast needed: Remix's Await type inference doesn't preserve deferred promise types */}
                 {
                   ((resolved: FetchArticlesResult) => (
-                    <RecommendedContent articlesData={resolved} />
+                    <RecommendedContent
+                      articlesData={resolved}
+                      viewMode={viewMode}
+                    />
                   )) as (value: unknown) => React.ReactNode
                 }
               </Await>

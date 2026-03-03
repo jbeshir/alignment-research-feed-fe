@@ -4,12 +4,14 @@ import type { MetaFunction, LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { json } from "@remix-run/cloudflare";
 import { TopBar } from "~/components/TopBar";
 import { HeroHeader } from "~/components/HeroHeader";
-import { ArticleGrid } from "~/components/ArticleGrid";
+import { ArticleFeed } from "~/components/ArticleFeed";
+import { ViewToggle } from "~/components/ViewToggle";
 import { Tabs } from "~/components/ui/Tabs";
 import { MAIN_TABS } from "~/constants/navigation";
 import { useArticles } from "~/hooks/useArticles";
 import { useArticleFeedbackHandlers } from "~/hooks/useArticleFeedbackHandlers";
 import { useInfiniteScroll } from "~/hooks/useInfiniteScroll";
+import { useViewPreference } from "~/hooks/useViewPreference";
 import { createAuthenticatedFetch } from "~/server/auth.server";
 import { parseArticlesResponse, type Article } from "~/schemas/article";
 
@@ -131,6 +133,8 @@ export default function Index() {
     isLoading,
   });
 
+  const [viewMode, setViewMode] = useViewPreference();
+
   // Handle search - update URL with search query
   const handleSearch = useCallback(
     (query: string) => {
@@ -159,7 +163,10 @@ export default function Index() {
 
         {/* Tabs */}
         <div className="max-w-7xl mx-auto px-6 pt-8">
-          <Tabs tabs={MAIN_TABS} activeTab="all" />
+          <div className="flex items-center justify-between">
+            <Tabs tabs={MAIN_TABS} activeTab="all" />
+            <ViewToggle viewMode={viewMode} onChange={setViewMode} />
+          </div>
         </div>
 
         {/* Content */}
@@ -170,7 +177,8 @@ export default function Index() {
             </div>
           ) : (
             <>
-              <ArticleGrid
+              <ArticleFeed
+                viewMode={viewMode}
                 articles={articles}
                 isLoading={isLoading}
                 onThumbsUp={handleThumbsUp}

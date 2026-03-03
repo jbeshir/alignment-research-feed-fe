@@ -118,12 +118,17 @@ export function ArticleCard({
     >
       {/* Source header strip */}
       <div
-        className={`h-12 px-4 flex items-center justify-between flex-shrink-0 ${getSourceHeaderColor(article.source)}`}
+        className={`h-12 px-4 flex items-center justify-between gap-2 flex-shrink-0 ${getSourceHeaderColor(article.source)}`}
       >
-        <span className="font-medium text-sm">
+        <span className="font-medium text-sm truncate">
           {getSourceDisplayName(article.source, article.authors)}
         </span>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-shrink-0">
+          {article.category && (
+            <span className="text-xs px-1.5 py-0.5 rounded bg-white/20 dark:bg-black/20">
+              {article.category}
+            </span>
+          )}
           {isVideoSource(article.source) && <PlayIcon className="w-5 h-5" />}
           {haveRead && (
             <span title="Read">
@@ -136,9 +141,11 @@ export function ArticleCard({
       {/* Content - flex-grow to fill available space */}
       <div className="p-4 flex flex-col flex-grow">
         {/* Date */}
-        <div className="text-xs text-slate-400 dark:text-slate-500 mb-2">
-          {formatPublishedDate(article.published_at)}
-        </div>
+        {article.published_at && (
+          <div className="text-xs text-slate-400 dark:text-slate-500 mb-2">
+            {formatPublishedDate(article.published_at)}
+          </div>
+        )}
 
         {/* Author */}
         <p className="text-sm text-slate-600 dark:text-slate-400 mb-1 truncate">
@@ -193,9 +200,9 @@ export function ArticleCard({
               navigate(`/articles/${article.hash_id}`);
             }}
             className="flex items-center gap-1 text-xs hover:text-slate-700 dark:hover:text-slate-300 transition-colors ml-auto"
-            aria-label="View similar articles"
+            aria-label="View article details"
           >
-            Similar
+            Details
           </button>
         </div>
       </div>
