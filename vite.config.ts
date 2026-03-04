@@ -7,22 +7,28 @@ import type { AppLoadContext } from "@remix-run/cloudflare";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
+const isTest = process.env.VITEST === "true";
+
 export default defineConfig({
   plugins: [
-    remixCloudflareDevProxy({
-      getLoadContext: ({ context }) =>
-        ({
-          ...context,
-          authCache: {},
-        }) as unknown as AppLoadContext,
-    }),
-    remix({
-      future: {
-        v3_fetcherPersist: true,
-        v3_relativeSplatPath: true,
-        v3_throwAbortReason: true,
-      },
-    }),
+    ...(!isTest
+      ? [
+          remixCloudflareDevProxy({
+            getLoadContext: ({ context }) =>
+              ({
+                ...context,
+                authCache: {},
+              }) as unknown as AppLoadContext,
+          }),
+          remix({
+            future: {
+              v3_fetcherPersist: true,
+              v3_relativeSplatPath: true,
+              v3_throwAbortReason: true,
+            },
+          }),
+        ]
+      : []),
     tsconfigPaths(),
   ],
   test: {
@@ -45,13 +51,10 @@ export default defineConfig({
         "app/root.tsx",
       ],
       thresholds: {
-        // TODO: Increase thresholds as test coverage improves
-        // Current coverage is ~5% - set thresholds just below to allow CI to pass
-        // Target: 60% coverage for all metrics
-        statements: 4,
-        branches: 10,
-        functions: 4,
-        lines: 4,
+        statements: 25,
+        branches: 50,
+        functions: 40,
+        lines: 25,
       },
     },
   },

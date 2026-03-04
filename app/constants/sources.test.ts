@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { getCategoryHeaderColor } from "./sources";
+import { getCategoryHeaderColor, getSourceDisplayName } from "./sources";
 
 describe("getCategoryHeaderColor", () => {
   it("returns correct color for known categories", () => {
@@ -29,5 +29,37 @@ describe("getCategoryHeaderColor", () => {
   it("returns default color for null or undefined", () => {
     expect(getCategoryHeaderColor(null)).toContain("bg-slate");
     expect(getCategoryHeaderColor(undefined)).toContain("bg-slate");
+  });
+});
+
+describe("getSourceDisplayName", () => {
+  it("returns formatted name for known sources", () => {
+    expect(getSourceDisplayName("arxiv")).toBe("arXiv");
+    expect(getSourceDisplayName("lesswrong")).toBe("LessWrong");
+    expect(getSourceDisplayName("miri")).toBe("MIRI");
+    expect(getSourceDisplayName("youtube")).toBe("YouTube");
+  });
+
+  it("handles case-insensitive matching", () => {
+    expect(getSourceDisplayName("ArXiv")).toBe("arXiv");
+    expect(getSourceDisplayName("LESSWRONG")).toBe("LessWrong");
+  });
+
+  it("title-cases unknown sources", () => {
+    expect(getSourceDisplayName("some_new_source")).toBe("Some New Source");
+    expect(getSourceDisplayName("my-blog")).toBe("My Blog");
+  });
+
+  it("uses author name for generic blog sources", () => {
+    expect(getSourceDisplayName("blogs", "Jane Smith")).toBe("Jane Smith");
+    expect(getSourceDisplayName("substack", "John Doe, Jane Smith")).toBe(
+      "John Doe"
+    );
+    expect(getSourceDisplayName("medium", "Alice and Bob")).toBe("Alice");
+  });
+
+  it("falls back to source name when generic blog has no authors", () => {
+    expect(getSourceDisplayName("blogs")).toBe("Blogs");
+    expect(getSourceDisplayName("substack")).toBe("Substack");
   });
 });
