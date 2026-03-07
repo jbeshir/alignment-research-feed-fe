@@ -138,6 +138,22 @@ export function ArticleCard({
         </div>
       </div>
 
+      {/* Thumbnail */}
+      {article.thumbnail_url && (
+        <div className="aspect-video w-full overflow-hidden bg-slate-100 dark:bg-slate-700">
+          <img
+            src={article.thumbnail_url}
+            alt=""
+            loading="lazy"
+            className="h-full w-full object-cover"
+            onError={e => {
+              (e.target as HTMLImageElement).parentElement!.style.display =
+                "none";
+            }}
+          />
+        </div>
+      )}
+
       {/* Content - flex-grow to fill available space */}
       <div className="p-4 flex flex-col flex-grow">
         {/* Date */}

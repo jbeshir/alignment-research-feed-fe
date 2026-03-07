@@ -16,6 +16,7 @@ export function mockArticle(overrides?: Partial<Article>): Article {
     key_points: ["Point 1", "Point 2"],
     implication: "Test implication",
     category: "Interpretability",
+    thumbnail_url: null,
     have_read: false,
     thumbs_up: false,
     thumbs_down: false,

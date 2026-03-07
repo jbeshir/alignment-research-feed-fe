@@ -22,15 +22,24 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
   const description = data?.article?.text_start
     ? data.article.text_start.slice(0, 200)
     : "Similar articles in the alignment research dataset";
-  return [
+  const thumbnailUrl = data?.article?.thumbnail_url;
+  const tags = [
     { title: `${title} - Alignment Feed` },
     { name: "description", content: description },
     { property: "og:title", content: `${title} - Alignment Feed` },
     { property: "og:description", content: description },
     { property: "og:type", content: "website" },
     { property: "og:site_name", content: "Alignment Feed" },
-    { name: "twitter:card", content: "summary" },
+    {
+      name: "twitter:card",
+      content: thumbnailUrl ? "summary_large_image" : "summary",
+    },
   ];
+  if (thumbnailUrl) {
+    tags.push({ property: "og:image", content: thumbnailUrl });
+    tags.push({ name: "twitter:image", content: thumbnailUrl });
+  }
+  return tags;
 };
 
 type LoaderData = {

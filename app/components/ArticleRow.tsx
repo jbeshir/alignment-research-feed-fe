@@ -186,28 +186,47 @@ export function ArticleRow({
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4 p-4">
         {/* Left: metadata (2/5) */}
         <div className="min-w-0 md:col-span-2">
-          <a
-            href={article.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={handleMarkAsRead}
-            className="group block"
-          >
-            <h3 className="font-medium text-slate-900 dark:text-slate-100 group-hover:text-brand-dark dark:group-hover:text-brand-light transition-colors">
-              {article.title}
-            </h3>
-          </a>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-            {article.authors}
-            {article.published_at && (
-              <>
-                <span className="mx-1.5 text-slate-300 dark:text-slate-600">
-                  &middot;
-                </span>
-                {formatPublishedDate(article.published_at)}
-              </>
+          <div className="flex gap-3">
+            {article.thumbnail_url && (
+              <div className="hidden sm:block flex-shrink-0 w-16 h-16 rounded overflow-hidden bg-slate-100 dark:bg-slate-700">
+                <img
+                  src={article.thumbnail_url}
+                  alt=""
+                  loading="lazy"
+                  className="h-full w-full object-cover"
+                  onError={e => {
+                    (
+                      e.target as HTMLImageElement
+                    ).parentElement!.style.display = "none";
+                  }}
+                />
+              </div>
             )}
-          </p>
+            <div className="min-w-0">
+              <a
+                href={article.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={handleMarkAsRead}
+                className="group block"
+              >
+                <h3 className="font-medium text-slate-900 dark:text-slate-100 group-hover:text-brand-dark dark:group-hover:text-brand-light transition-colors">
+                  {article.title}
+                </h3>
+              </a>
+              <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+                {article.authors}
+                {article.published_at && (
+                  <>
+                    <span className="mx-1.5 text-slate-300 dark:text-slate-600">
+                      &middot;
+                    </span>
+                    {formatPublishedDate(article.published_at)}
+                  </>
+                )}
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Right: AI summary (3/5) */}

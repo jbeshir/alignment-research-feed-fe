@@ -90,4 +90,26 @@ describe("ArticleCard", () => {
       await screen.findByLabelText("View article details")
     ).toBeInTheDocument();
   });
+
+  it("renders thumbnail when thumbnail_url is present", async () => {
+    mockUseAuth.mockReturnValue({ isAuthenticated: false });
+    const article = mockArticle({
+      thumbnail_url: "https://example.com/img.jpg",
+    });
+    renderArticleCard(article);
+
+    const img = await screen.findByRole("img");
+    expect(img).toBeInTheDocument();
+    expect(img).toHaveAttribute("src", "https://example.com/img.jpg");
+    expect(img).toHaveAttribute("loading", "lazy");
+  });
+
+  it("does not render thumbnail when thumbnail_url is null", async () => {
+    mockUseAuth.mockReturnValue({ isAuthenticated: false });
+    const article = mockArticle({ thumbnail_url: null });
+    renderArticleCard(article);
+
+    await screen.findByText(article.title);
+    expect(screen.queryByRole("img")).not.toBeInTheDocument();
+  });
 });

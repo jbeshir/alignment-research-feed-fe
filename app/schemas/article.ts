@@ -12,6 +12,7 @@ export const ArticleSchema = z.object({
   key_points: z.array(z.string()).optional().nullable(),
   implication: z.string().optional().nullable(),
   category: z.string().optional().nullable(),
+  thumbnail_url: z.string().url().optional().nullable(),
   have_read: z.boolean().optional().nullable(),
   thumbs_up: z.boolean().optional().nullable(),
   thumbs_down: z.boolean().optional().nullable(),

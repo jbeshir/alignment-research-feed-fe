@@ -55,6 +55,22 @@ export function ArticleInfo({
           {article.title}
         </h1>
 
+        {/* Thumbnail */}
+        {article.thumbnail_url && (
+          <div className="rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-700 max-w-2xl">
+            <img
+              src={article.thumbnail_url}
+              alt=""
+              loading="eager"
+              className="w-full h-auto object-contain"
+              onError={e => {
+                (e.target as HTMLImageElement).parentElement!.style.display =
+                  "none";
+              }}
+            />
+          </div>
+        )}
+
         {/* Meta row */}
         <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-slate-600 dark:text-slate-400">
           <span>{article.authors}</span>

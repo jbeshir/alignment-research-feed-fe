@@ -57,6 +57,41 @@ describe("ArticleSchema", () => {
     });
     expect(result.success).toBe(false);
   });
+
+  it("parses article with valid thumbnail_url", () => {
+    const result = ArticleSchema.safeParse({
+      ...validArticle,
+      thumbnail_url: "https://example.com/thumb.jpg",
+    });
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.thumbnail_url).toBe("https://example.com/thumb.jpg");
+    }
+  });
+
+  it("parses article with null thumbnail_url", () => {
+    const result = ArticleSchema.safeParse({
+      ...validArticle,
+      thumbnail_url: null,
+    });
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.thumbnail_url).toBeNull();
+    }
+  });
+
+  it("parses article without thumbnail_url", () => {
+    const result = ArticleSchema.safeParse(validArticle);
+    expect(result.success).toBe(true);
+  });
+
+  it("rejects article with invalid thumbnail_url", () => {
+    const result = ArticleSchema.safeParse({
+      ...validArticle,
+      thumbnail_url: "not-a-url",
+    });
+    expect(result.success).toBe(false);
+  });
 });
 
 describe("ArticlesResponseSchema", () => {
