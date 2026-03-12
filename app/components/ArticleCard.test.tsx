@@ -104,12 +104,13 @@ describe("ArticleCard", () => {
     expect(img).toHaveAttribute("loading", "lazy");
   });
 
-  it("does not render thumbnail when thumbnail_url is null", async () => {
+  it("renders placeholder when thumbnail_url is null", async () => {
     mockUseAuth.mockReturnValue({ isAuthenticated: false });
     const article = mockArticle({ thumbnail_url: null });
     renderArticleCard(article);
 
     await screen.findByText(article.title);
     expect(screen.queryByRole("img")).not.toBeInTheDocument();
+    expect(screen.getByTestId("thumbnail-placeholder")).toBeInTheDocument();
   });
 });

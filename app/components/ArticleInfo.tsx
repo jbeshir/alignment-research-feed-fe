@@ -3,6 +3,7 @@ import {
   getCategoryHeaderColor,
   getSourceDisplayName,
 } from "~/constants/sources";
+import { useState } from "react";
 import {
   ThumbsUpIcon,
   ThumbsUpFilledIcon,
@@ -11,6 +12,7 @@ import {
   ExternalLinkIcon,
   CheckCircleIcon,
 } from "./Icons";
+import { ThumbnailPlaceholder } from "./ThumbnailPlaceholder";
 
 type ArticleInfoProps = {
   article: Article;
@@ -25,6 +27,7 @@ export function ArticleInfo({
   onThumbsDown,
   isUpdating = false,
 }: ArticleInfoProps) {
+  const [imageError, setImageError] = useState(false);
   const thumbsUp = article.thumbs_up ?? false;
   const thumbsDown = article.thumbs_down ?? false;
   const haveRead = article.have_read ?? false;
@@ -56,20 +59,22 @@ export function ArticleInfo({
         </h1>
 
         {/* Thumbnail */}
-        {article.thumbnail_url && (
-          <div className="rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-700 max-w-2xl">
+        <div className="rounded-lg overflow-hidden max-w-2xl">
+          {article.thumbnail_url && !imageError ? (
             <img
               src={article.thumbnail_url}
               alt=""
               loading="eager"
               className="w-full h-auto object-contain"
-              onError={e => {
-                (e.target as HTMLImageElement).parentElement!.style.display =
-                  "none";
-              }}
+              onError={() => setImageError(true)}
             />
-          </div>
-        )}
+          ) : (
+            <ThumbnailPlaceholder
+              source={article.source}
+              className="w-full aspect-video"
+            />
+          )}
+        </div>
 
         {/* Meta row */}
         <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-slate-600 dark:text-slate-400">

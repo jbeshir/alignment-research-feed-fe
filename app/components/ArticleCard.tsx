@@ -10,20 +10,18 @@ import {
   PlayIcon,
   CheckCircleIcon,
 } from "./Icons";
+import { ThumbnailPlaceholder } from "./ThumbnailPlaceholder";
 import {
   getCategoryHeaderColor,
   getSourceDisplayName,
 } from "~/constants/sources";
+import { isVideoSource } from "~/constants/sourceIcons";
 
 interface ArticleCardProps {
   article: Article;
   onThumbsUp?: (articleId: string, value: boolean) => Promise<void>;
   onThumbsDown?: (articleId: string, value: boolean) => Promise<void>;
   onMarkAsRead?: (articleId: string) => Promise<void>;
-}
-
-function isVideoSource(source: string): boolean {
-  return source.toLowerCase() === "youtube";
 }
 
 /**
@@ -40,6 +38,7 @@ export function ArticleCard({
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [isUpdating, setIsUpdating] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   // Read state directly from props (single source of truth)
   const thumbsUp = article.thumbs_up ?? false;
@@ -139,20 +138,22 @@ export function ArticleCard({
       </div>
 
       {/* Thumbnail */}
-      {article.thumbnail_url && (
-        <div className="aspect-video w-full overflow-hidden bg-slate-100 dark:bg-slate-700">
+      <div className="aspect-video w-full overflow-hidden">
+        {article.thumbnail_url && !imageError ? (
           <img
             src={article.thumbnail_url}
             alt=""
             loading="lazy"
             className="h-full w-full object-cover"
-            onError={e => {
-              (e.target as HTMLImageElement).parentElement!.style.display =
-                "none";
-            }}
+            onError={() => setImageError(true)}
           />
-        </div>
-      )}
+        ) : (
+          <ThumbnailPlaceholder
+            source={article.source}
+            className="h-full w-full"
+          />
+        )}
+      </div>
 
       {/* Content - flex-grow to fill available space */}
       <div className="p-4 flex flex-col flex-grow">

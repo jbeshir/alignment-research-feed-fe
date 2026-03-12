@@ -12,10 +12,12 @@ import {
   CheckCircleIcon,
   ExternalLinkIcon,
 } from "./Icons";
+import { ThumbnailPlaceholder } from "./ThumbnailPlaceholder";
 import {
   getCategoryHeaderColor,
   getSourceDisplayName,
 } from "~/constants/sources";
+import { isVideoSource } from "~/constants/sourceIcons";
 
 interface ArticleRowProps {
   article: Article;
@@ -31,10 +33,6 @@ type ExpandedSection =
   | "implication"
   | "similar";
 
-function isVideoSource(source: string): boolean {
-  return source.toLowerCase() === "youtube";
-}
-
 export function ArticleRow({
   article,
   onThumbsUp,
@@ -49,6 +47,7 @@ export function ArticleRow({
     null
   );
   const [isFetchingSimilar, setIsFetchingSimilar] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   const thumbsUp = article.thumbs_up ?? false;
   const thumbsDown = article.thumbs_down ?? false;
@@ -187,21 +186,22 @@ export function ArticleRow({
         {/* Left: metadata (2/5) */}
         <div className="min-w-0 md:col-span-2">
           <div className="flex gap-3">
-            {article.thumbnail_url && (
-              <div className="hidden sm:block flex-shrink-0 w-16 h-16 rounded overflow-hidden bg-slate-100 dark:bg-slate-700">
+            <div className="hidden sm:block flex-shrink-0 w-16 h-16 rounded overflow-hidden">
+              {article.thumbnail_url && !imageError ? (
                 <img
                   src={article.thumbnail_url}
                   alt=""
                   loading="lazy"
                   className="h-full w-full object-cover"
-                  onError={e => {
-                    (
-                      e.target as HTMLImageElement
-                    ).parentElement!.style.display = "none";
-                  }}
+                  onError={() => setImageError(true)}
                 />
-              </div>
-            )}
+              ) : (
+                <ThumbnailPlaceholder
+                  source={article.source}
+                  className="h-full w-full"
+                />
+              )}
+            </div>
             <div className="min-w-0">
               <a
                 href={article.link}

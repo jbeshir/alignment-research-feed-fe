@@ -49,12 +49,13 @@ describe("ArticleRow", () => {
     expect(img).toHaveAttribute("src", "https://example.com/row-thumb.jpg");
   });
 
-  it("does not render thumbnail when thumbnail_url is null", async () => {
+  it("renders placeholder when thumbnail_url is null", async () => {
     mockUseAuth.mockReturnValue({ isAuthenticated: false });
     const article = mockArticle({ thumbnail_url: null });
     renderArticleRow(article);
 
     await screen.findByText(article.title);
     expect(screen.queryByRole("img")).not.toBeInTheDocument();
+    expect(screen.getByTestId("thumbnail-placeholder")).toBeInTheDocument();
   });
 });
