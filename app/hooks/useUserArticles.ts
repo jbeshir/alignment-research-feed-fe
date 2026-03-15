@@ -81,8 +81,6 @@ export function useUserArticles(
           signal,
         });
 
-        if (signal.aborted) return;
-
         if (response.status === 401) {
           throw new Error("Authentication required");
         }
@@ -108,7 +106,7 @@ export function useUserArticles(
         if (err instanceof Error && err.name === "AbortError") return;
         setError(err instanceof Error ? err : new Error("Unknown error"));
       } finally {
-        if (!abortControllerRef.current?.signal.aborted) {
+        if (!signal.aborted) {
           setIsLoading(false);
         }
       }

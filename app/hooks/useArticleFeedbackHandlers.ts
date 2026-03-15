@@ -15,6 +15,54 @@ interface UseArticleFeedbackHandlersResult {
   handleMarkAsRead: (articleId: string) => Promise<void>;
 }
 
+async function withOptimisticVote(
+  articleId: string,
+  value: boolean,
+  field: "thumbs_up" | "thumbs_down",
+  apiCall: (id: string, value: boolean) => Promise<void>,
+  setArticles: ArticleUpdater | undefined
+): Promise<void> {
+  let originalThumbsUp: boolean | null | undefined;
+  let originalThumbsDown: boolean | null | undefined;
+  const oppositeField = field === "thumbs_up" ? "thumbs_down" : "thumbs_up";
+
+  if (setArticles) {
+    setArticles(prev =>
+      prev.map(article => {
+        if (article.hash_id === articleId) {
+          originalThumbsUp = article.thumbs_up;
+          originalThumbsDown = article.thumbs_down;
+          return {
+            ...article,
+            [field]: value,
+            [oppositeField]: value ? false : article[oppositeField],
+          };
+        }
+        return article;
+      })
+    );
+  }
+
+  try {
+    await apiCall(articleId, value);
+  } catch (error) {
+    if (setArticles) {
+      setArticles(prev =>
+        prev.map(article =>
+          article.hash_id === articleId
+            ? {
+                ...article,
+                thumbs_up: originalThumbsUp,
+                thumbs_down: originalThumbsDown,
+              }
+            : article
+        )
+      );
+    }
+    throw error;
+  }
+}
+
 /**
  * Shared hook for article feedback handlers with optimistic updates.
  * Encapsulates the common pattern of updating feedback state across routes.
@@ -26,105 +74,33 @@ export function useArticleFeedbackHandlers(
   const { setThumbsUp, setThumbsDown, markAsRead } = useFeedback();
 
   const handleThumbsUp = useCallback(
-    async (articleId: string, value: boolean) => {
-      // Capture original state for rollback
-      let originalThumbsUp: boolean | null | undefined;
-      let originalThumbsDown: boolean | null | undefined;
-
-      // Optimistic update if setArticles is provided
-      if (setArticles) {
-        setArticles(prev =>
-          prev.map(article => {
-            if (article.hash_id === articleId) {
-              originalThumbsUp = article.thumbs_up;
-              originalThumbsDown = article.thumbs_down;
-              return {
-                ...article,
-                thumbs_up: value,
-                thumbs_down: value ? false : article.thumbs_down,
-              };
-            }
-            return article;
-          })
-        );
-      }
-
-      try {
-        await setThumbsUp(articleId, value);
-      } catch (error) {
-        // Rollback to original state on error
-        if (setArticles) {
-          setArticles(prev =>
-            prev.map(article =>
-              article.hash_id === articleId
-                ? {
-                    ...article,
-                    thumbs_up: originalThumbsUp,
-                    thumbs_down: originalThumbsDown,
-                  }
-                : article
-            )
-          );
-        }
-        throw error;
-      }
-    },
+    (articleId: string, value: boolean) =>
+      withOptimisticVote(
+        articleId,
+        value,
+        "thumbs_up",
+        setThumbsUp,
+        setArticles
+      ),
     [setThumbsUp, setArticles]
   );
 
   const handleThumbsDown = useCallback(
-    async (articleId: string, value: boolean) => {
-      // Capture original state for rollback
-      let originalThumbsUp: boolean | null | undefined;
-      let originalThumbsDown: boolean | null | undefined;
-
-      // Optimistic update if setArticles is provided
-      if (setArticles) {
-        setArticles(prev =>
-          prev.map(article => {
-            if (article.hash_id === articleId) {
-              originalThumbsUp = article.thumbs_up;
-              originalThumbsDown = article.thumbs_down;
-              return {
-                ...article,
-                thumbs_down: value,
-                thumbs_up: value ? false : article.thumbs_up,
-              };
-            }
-            return article;
-          })
-        );
-      }
-
-      try {
-        await setThumbsDown(articleId, value);
-      } catch (error) {
-        // Rollback to original state on error
-        if (setArticles) {
-          setArticles(prev =>
-            prev.map(article =>
-              article.hash_id === articleId
-                ? {
-                    ...article,
-                    thumbs_up: originalThumbsUp,
-                    thumbs_down: originalThumbsDown,
-                  }
-                : article
-            )
-          );
-        }
-        throw error;
-      }
-    },
+    (articleId: string, value: boolean) =>
+      withOptimisticVote(
+        articleId,
+        value,
+        "thumbs_down",
+        setThumbsDown,
+        setArticles
+      ),
     [setThumbsDown, setArticles]
   );
 
   const handleMarkAsRead = useCallback(
     async (articleId: string) => {
-      // Capture original state for rollback
       let originalHaveRead: boolean | null | undefined;
 
-      // Optimistic update if setArticles is provided
       if (setArticles) {
         setArticles(prev =>
           prev.map(article => {
@@ -138,9 +114,8 @@ export function useArticleFeedbackHandlers(
       }
 
       try {
-        await markAsRead(articleId, true);
+        await markAsRead(articleId);
       } catch (error) {
-        // Rollback to original state on error
         if (setArticles) {
           setArticles(prev =>
             prev.map(article =>

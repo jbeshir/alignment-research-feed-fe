@@ -1,25 +1,20 @@
 import type { LoaderFunctionArgs } from "@remix-run/cloudflare";
+import { json } from "@remix-run/cloudflare";
 import { createAuthenticatedFetch } from "~/server/auth.server";
 
-/**
- * Proxy route for /v1/articles/unreviewed API endpoint.
- * Handles client-side unreviewed article fetches by forwarding to the API with auth.
- * Supports pagination via page and page_size query parameters.
- */
 export async function loader({ request, context }: LoaderFunctionArgs) {
+  const { authFetch, isAuthenticated } = await createAuthenticatedFetch(
+    request,
+    context
+  );
+
+  if (!isAuthenticated) {
+    return json({ error: "Not authenticated" }, { status: 401 });
+  }
+
   const apiBaseURL = context.cloudflare.env.ALIGNMENT_FEED_BASE_URL;
   const url = new URL(request.url);
-  const params = new URLSearchParams();
-
-  // Forward pagination params
-  const page = url.searchParams.get("page");
-  const pageSize = url.searchParams.get("page_size");
-  if (page) params.set("page", page);
-  if (pageSize) params.set("page_size", pageSize);
-
-  const apiUrl = `${apiBaseURL}/v1/articles/unreviewed?${params}`;
-
-  const { authFetch } = await createAuthenticatedFetch(request, context);
+  const apiUrl = `${apiBaseURL}/v1/articles/unreviewed?${url.searchParams}`;
 
   const response = await authFetch(apiUrl);
 

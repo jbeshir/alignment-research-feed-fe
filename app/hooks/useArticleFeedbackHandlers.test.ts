@@ -148,7 +148,7 @@ describe("useArticleFeedbackHandlers", () => {
     );
     await act(() => result.current.handleMarkAsRead("id-1"));
 
-    expect(mockMarkAsRead).toHaveBeenCalledWith("id-1", true);
+    expect(mockMarkAsRead).toHaveBeenCalledWith("id-1");
     expect(state.first.have_read).toBe(true);
   });
 

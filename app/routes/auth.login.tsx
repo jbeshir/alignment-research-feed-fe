@@ -12,6 +12,5 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
   const env = context.cloudflare.env;
   const authenticator = getAuthenticator(env);
 
-  // The authenticate method will redirect to Auth0
   return authenticator.authenticate("auth0", request);
 }

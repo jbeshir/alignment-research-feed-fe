@@ -40,22 +40,19 @@ export function useFeedback() {
     []
   );
 
-  const markAsRead = useCallback(
-    async (articleId: string, value: boolean): Promise<void> => {
-      const response = await fetch(`/api/articles/${articleId}/feedback`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ action: "read", value }),
-      });
+  const markAsRead = useCallback(async (articleId: string): Promise<void> => {
+    const response = await fetch(`/api/articles/${articleId}/feedback`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ action: "read", value: true }),
+    });
 
-      if (!response.ok) {
-        throw new Error("Failed to mark as read");
-      }
-    },
-    []
-  );
+    if (!response.ok) {
+      throw new Error("Failed to mark as read");
+    }
+  }, []);
 
   return { setThumbsUp, setThumbsDown, markAsRead };
 }

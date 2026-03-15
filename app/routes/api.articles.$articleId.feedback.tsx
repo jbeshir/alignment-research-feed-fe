@@ -17,7 +17,7 @@ export async function action({ request, params, context }: ActionFunctionArgs) {
   const apiBaseURL = context.cloudflare.env.ALIGNMENT_FEED_BASE_URL;
 
   // Parse the action from the request body
-  let body: { action: string; value: boolean };
+  let body: { action: "thumbs_up" | "thumbs_down" | "read"; value: boolean };
   try {
     body = await request.json();
   } catch {

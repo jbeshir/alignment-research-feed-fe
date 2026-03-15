@@ -40,7 +40,7 @@ describe("useFeedback", () => {
     vi.stubGlobal("fetch", mockFetch);
 
     const { result } = renderHook(() => useFeedback());
-    await result.current.markAsRead("article-3", true);
+    await result.current.markAsRead("article-3");
 
     expect(mockFetch).toHaveBeenCalledWith("/api/articles/article-3/feedback", {
       method: "POST",
@@ -80,7 +80,7 @@ describe("useFeedback", () => {
     );
 
     const { result } = renderHook(() => useFeedback());
-    await expect(result.current.markAsRead("article-1", true)).rejects.toThrow(
+    await expect(result.current.markAsRead("article-1")).rejects.toThrow(
       "Failed to mark as read"
     );
   });

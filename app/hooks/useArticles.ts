@@ -69,9 +69,6 @@ export function useArticles(
           signal,
         });
 
-        // Check if request was aborted
-        if (signal.aborted) return;
-
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }

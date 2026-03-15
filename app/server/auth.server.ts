@@ -233,14 +233,11 @@ async function computeServerAuthContext(
     };
   }
 
-  // Check if token needs refresh
   if (user.expiresAt && shouldRefreshToken(user.expiresAt)) {
-    // Try to refresh if we have a refresh token
     if (user.refreshToken) {
       const newTokens = await refreshAccessToken(user.refreshToken, env);
 
       if (newTokens) {
-        // Update user with new tokens
         const updatedUser: User = {
           id: user.id,
           email: user.email,
@@ -251,7 +248,6 @@ async function computeServerAuthContext(
           }),
         };
 
-        // Update session
         session.set("user", updatedUser);
         const headers = new Headers();
         headers.set("Set-Cookie", await sessionStorage.commitSession(session));
