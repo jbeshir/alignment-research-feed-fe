@@ -39,6 +39,9 @@ type LoaderData = {
   error?: string;
 };
 
+// Error strategy convention: list route loaders return json({error, ...partial data}) so the
+// page can render with whatever data is available. Detail route loaders (e.g. articles.$articleID)
+// throw Response so Remix's ErrorBoundary handles the failure instead.
 export const loader = async ({
   request,
   context,

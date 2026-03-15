@@ -1,5 +1,6 @@
 import type { ActionFunctionArgs } from "@remix-run/cloudflare";
 import { json } from "@remix-run/cloudflare";
+import { z } from "zod";
 import { createAuthenticatedFetch } from "~/server/auth.server";
 
 /**
@@ -16,15 +17,19 @@ export async function action({ request, params, context }: ActionFunctionArgs) {
 
   const apiBaseURL = context.cloudflare.env.ALIGNMENT_FEED_BASE_URL;
 
-  // Parse the action from the request body
-  let body: { action: "thumbs_up" | "thumbs_down" | "read"; value: boolean };
-  try {
-    body = await request.json();
-  } catch {
+  const feedbackSchema = z.object({
+    action: z.enum(["thumbs_up", "thumbs_down", "read"]),
+    value: z.boolean(),
+  });
+
+  const parsed = feedbackSchema.safeParse(
+    await request.json().catch(() => null)
+  );
+  if (!parsed.success) {
     return json({ error: "Invalid request body" }, { status: 400 });
   }
 
-  const { action: feedbackAction, value } = body;
+  const { action: feedbackAction, value } = parsed.data;
 
   // Map action to API endpoint
   let endpoint: string;
@@ -38,8 +43,6 @@ export async function action({ request, params, context }: ActionFunctionArgs) {
     case "read":
       endpoint = `read/${value}`;
       break;
-    default:
-      return json({ error: "Invalid action" }, { status: 400 });
   }
 
   const apiUrl = `${apiBaseURL}/v1/articles/${encodeURIComponent(articleId)}/${endpoint}`;

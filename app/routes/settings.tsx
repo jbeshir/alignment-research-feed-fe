@@ -1,5 +1,6 @@
 import type { MetaFunction } from "@remix-run/cloudflare";
 import { Link } from "@remix-run/react";
+import { z } from "zod";
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "~/root";
 import { TopBar } from "~/components/TopBar";
@@ -31,21 +32,26 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-type Token = {
-  id: string;
-  prefix: string;
-  name?: string | null;
-  created_at: string;
-  last_used_at?: string | null;
-  expires_at?: string | null;
-  revoked: boolean;
-};
+const tokenSchema = z.object({
+  id: z.string(),
+  prefix: z.string(),
+  name: z.string().nullish(),
+  created_at: z.string(),
+  last_used_at: z.string().nullish(),
+  expires_at: z.string().nullish(),
+  revoked: z.boolean(),
+});
 
-type CreateTokenResponse = {
-  id: string;
-  token: string;
-  prefix: string;
-};
+const tokenListSchema = z.object({ data: z.array(tokenSchema) });
+
+const createTokenResponseSchema = z.object({
+  id: z.string(),
+  token: z.string(),
+  prefix: z.string(),
+});
+
+type Token = z.infer<typeof tokenSchema>;
+type CreateTokenResponse = z.infer<typeof createTokenResponseSchema>;
 
 type NewTokenState = CreateTokenResponse & {
   name: string;
@@ -237,7 +243,7 @@ function CreateTokenForm({
         throw new Error("Failed to create token");
       }
 
-      const data = (await response.json()) as CreateTokenResponse;
+      const data = createTokenResponseSchema.parse(await response.json());
       onTokenCreated(data, tokenName);
       setName("");
     } catch {
@@ -286,9 +292,8 @@ export default function Settings() {
         }
         throw new Error("Failed to load tokens");
       }
-      const data = (await response.json()) as { data: Token[] };
-      // Filter out revoked tokens
-      setTokens((data.data || []).filter(t => !t.revoked));
+      const data = tokenListSchema.parse(await response.json());
+      setTokens(data.data.filter(t => !t.revoked));
     } catch {
       setError("Failed to load tokens");
     } finally {
