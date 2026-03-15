@@ -1,8 +1,5 @@
 import { describe, it, expect } from "vitest";
-import {
-  isVideoSource,
-  getSourcePlaceholderIcon,
-} from "./sourceIcons";
+import { isVideoSource, getSourcePlaceholderIcon } from "./sourceIcons";
 import {
   PlayIcon,
   ChatBubbleIcon,
