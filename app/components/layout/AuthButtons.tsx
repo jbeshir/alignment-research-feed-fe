@@ -1,6 +1,6 @@
 import { Form, Link } from "@remix-run/react";
 import { useAuth } from "~/root";
-import { Button } from "./ui/Button";
+import { Button } from "../ui/Button";
 
 /**
  * Authentication buttons that use server-side auth routes.

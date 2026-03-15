@@ -37,7 +37,7 @@ describe("useUserArticles", () => {
     expect(calledUrl).toContain("/api/articles/liked?");
   });
 
-  it("handles 401 as Authentication required", async () => {
+  it("handles 401 as HTTP error", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue({ ok: false, status: 401 })
@@ -49,7 +49,7 @@ describe("useUserArticles", () => {
     });
 
     await waitFor(() => {
-      expect(result.current.error?.message).toBe("Authentication required");
+      expect(result.current.error?.message).toBe("HTTP error! status: 401");
     });
   });
 

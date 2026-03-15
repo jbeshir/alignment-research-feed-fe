@@ -1,5 +1,5 @@
 import { type Article } from "~/schemas/article";
-import type { ViewMode } from "./ViewToggle";
+import type { ViewMode } from "../layout/ViewToggle";
 import { ArticleList } from "./ArticleList";
 import { ArticleGrid } from "./ArticleGrid";
 

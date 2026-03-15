@@ -1,10 +1,10 @@
 import React, { Suspense } from "react";
 import type { MetaFunction, LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { Link, useLoaderData, Await } from "@remix-run/react";
-import { TopBar } from "~/components/TopBar";
-import { HeroHeader } from "~/components/HeroHeader";
-import { ArticleFeed } from "~/components/ArticleFeed";
-import { ViewToggle, type ViewMode } from "~/components/ViewToggle";
+import { TopBar } from "~/components/layout/TopBar";
+import { HeroHeader } from "~/components/layout/HeroHeader";
+import { ArticleFeed } from "~/components/article/ArticleFeed";
+import { ViewToggle, type ViewMode } from "~/components/layout/ViewToggle";
 import { Tabs } from "~/components/ui/Tabs";
 import { Button } from "~/components/ui/Button";
 import { MAIN_TABS } from "~/constants/navigation";
@@ -14,7 +14,7 @@ import {
   fetchArticlesDeferred,
   type FetchArticlesResult,
 } from "~/server/articles.server";
-import { RecommendationsLoading } from "~/components/RecommendationsLoading";
+import { RecommendationsLoading } from "~/components/article/RecommendationsLoading";
 
 export const meta: MetaFunction = () => {
   return [

@@ -1,0 +1,526 @@
+{
+  "version": 8,
+  "created": "2026-03-15T20:05:15+00:00",
+  "updated": "2026-03-15T20:05:50+00:00",
+  "queue_order": [
+    "subjective::abstraction_fitness",
+    "subjective::ai_generated_debt",
+    "subjective::api_surface_coherence",
+    "subjective::authorization_consistency",
+    "subjective::contract_coherence",
+    "subjective::convention_outlier",
+    "subjective::cross_module_architecture",
+    "subjective::dependency_health",
+    "subjective::design_coherence",
+    "subjective::error_consistency",
+    "subjective::high_level_elegance",
+    "subjective::incomplete_migration",
+    "subjective::initialization_coupling",
+    "subjective::logic_clarity",
+    "subjective::low_level_elegance",
+    "subjective::mid_level_elegance",
+    "subjective::naming_quality",
+    "subjective::package_organization",
+    "subjective::test_strategy",
+    "subjective::type_safety"
+  ],
+  "deferred": [],
+  "skipped": {},
+  "active_cluster": null,
+  "overrides": {
+    "test_coverage::../constants/sourceIcons.ts::untested_module": {
+      "issue_id": "test_coverage::../constants/sourceIcons.ts::untested_module",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/test_coverage",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "test_coverage::../routes/api.articles.recommended.tsx::untested_module": {
+      "issue_id": "test_coverage::../routes/api.articles.recommended.tsx::untested_module",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/test_coverage",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "test_coverage::../hooks/useArticleInteractions.ts::untested_module": {
+      "issue_id": "test_coverage::../hooks/useArticleInteractions.ts::untested_module",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/test_coverage",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "test_coverage::../routes/recommended.tsx::untested_module": {
+      "issue_id": "test_coverage::../routes/recommended.tsx::untested_module",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/test_coverage",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "test_coverage::article/ThumbnailPlaceholder.tsx::untested_module": {
+      "issue_id": "test_coverage::article/ThumbnailPlaceholder.tsx::untested_module",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/test_coverage",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "test_coverage::../contexts/SentryContext.tsx::untested_module": {
+      "issue_id": "test_coverage::../contexts/SentryContext.tsx::untested_module",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/test_coverage",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "test_coverage::article/ArticleFeed.tsx::untested_module": {
+      "issue_id": "test_coverage::article/ArticleFeed.tsx::untested_module",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/test_coverage",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "test_coverage::../routes/api.articles.tsx::untested_module": {
+      "issue_id": "test_coverage::../routes/api.articles.tsx::untested_module",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/test_coverage",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "test_coverage::../routes/api.articles.semantic-search.tsx::untested_module": {
+      "issue_id": "test_coverage::../routes/api.articles.semantic-search.tsx::untested_module",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/test_coverage",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "test_coverage::../routes/auth.callback.tsx::untested_module": {
+      "issue_id": "test_coverage::../routes/auth.callback.tsx::untested_module",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/test_coverage",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "test_coverage::../routes/api.tokens.$tokenId.tsx::untested_module": {
+      "issue_id": "test_coverage::../routes/api.tokens.$tokenId.tsx::untested_module",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/test_coverage",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "test_coverage::article/ArticleGrid.tsx::untested_module": {
+      "issue_id": "test_coverage::article/ArticleGrid.tsx::untested_module",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/test_coverage",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "test_coverage::../routes/auth.logout.tsx::untested_module": {
+      "issue_id": "test_coverage::../routes/auth.logout.tsx::untested_module",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/test_coverage",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "test_coverage::../root.tsx::untested_module": {
+      "issue_id": "test_coverage::../root.tsx::untested_module",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/test_coverage",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "test_coverage::../server/articles.server.ts::untested_module": {
+      "issue_id": "test_coverage::../server/articles.server.ts::untested_module",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/test_coverage",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "test_coverage::../server/session.server.ts::untested_module": {
+      "issue_id": "test_coverage::../server/session.server.ts::untested_module",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/test_coverage",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "test_coverage::../server/auth.server.ts::untested_module": {
+      "issue_id": "test_coverage::../server/auth.server.ts::untested_module",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/test_coverage",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "test_coverage::../routes/semantic-search.tsx::untested_module": {
+      "issue_id": "test_coverage::../routes/semantic-search.tsx::untested_module",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/test_coverage",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "test_coverage::../routes/disliked.tsx::untested_module": {
+      "issue_id": "test_coverage::../routes/disliked.tsx::untested_module",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/test_coverage",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "test_coverage::layout/Icons.tsx::untested_module": {
+      "issue_id": "test_coverage::layout/Icons.tsx::untested_module",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/test_coverage",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "test_coverage::../routes/auth.login.tsx::untested_module": {
+      "issue_id": "test_coverage::../routes/auth.login.tsx::untested_module",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/test_coverage",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "test_coverage::../entry.client.tsx::untested_module": {
+      "issue_id": "test_coverage::../entry.client.tsx::untested_module",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/test_coverage",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "test_coverage::../hooks/usePaginatedArticles.ts::untested_module": {
+      "issue_id": "test_coverage::../hooks/usePaginatedArticles.ts::untested_module",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/test_coverage",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "test_coverage::../../functions/[[path]].ts::untested_module": {
+      "issue_id": "test_coverage::../../functions/[[path]].ts::untested_module",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/test_coverage",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "test_coverage::article/ArticleCollection.tsx::untested_module": {
+      "issue_id": "test_coverage::article/ArticleCollection.tsx::untested_module",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/test_coverage",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "test_coverage::../routes/api.articles.$articleId.feedback.tsx::untested_module": {
+      "issue_id": "test_coverage::../routes/api.articles.$articleId.feedback.tsx::untested_module",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/test_coverage",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "test_coverage::../entry.server.tsx::untested_module": {
+      "issue_id": "test_coverage::../entry.server.tsx::untested_module",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/test_coverage",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "test_coverage::article/ArticleList.tsx::untested_module": {
+      "issue_id": "test_coverage::article/ArticleList.tsx::untested_module",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/test_coverage",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "test_coverage::../routes/api.tokens.tsx::untested_module": {
+      "issue_id": "test_coverage::../routes/api.tokens.tsx::untested_module",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/test_coverage",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "test_coverage::../routes/liked.tsx::untested_module": {
+      "issue_id": "test_coverage::../routes/liked.tsx::untested_module",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/test_coverage",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "test_coverage::../routes/_index.tsx::untested_module": {
+      "issue_id": "test_coverage::../routes/_index.tsx::untested_module",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/test_coverage",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "test_coverage::../routes/api.articles.$articleId.similar.tsx::untested_module": {
+      "issue_id": "test_coverage::../routes/api.articles.$articleId.similar.tsx::untested_module",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/test_coverage",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "test_coverage::../routes/unreviewed.tsx::untested_module": {
+      "issue_id": "test_coverage::../routes/unreviewed.tsx::untested_module",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/test_coverage",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "test_coverage::../utils/userArticlesProxy.ts::untested_module": {
+      "issue_id": "test_coverage::../utils/userArticlesProxy.ts::untested_module",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/test_coverage",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "test_coverage::../routes/articles.$articleID.tsx::untested_module": {
+      "issue_id": "test_coverage::../routes/articles.$articleID.tsx::untested_module",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/test_coverage",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "subjective::abstraction_fitness": {
+      "issue_id": "subjective::abstraction_fitness",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/initial-review",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "subjective::ai_generated_debt": {
+      "issue_id": "subjective::ai_generated_debt",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/initial-review",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "subjective::api_surface_coherence": {
+      "issue_id": "subjective::api_surface_coherence",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/initial-review",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "subjective::authorization_consistency": {
+      "issue_id": "subjective::authorization_consistency",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/initial-review",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "subjective::contract_coherence": {
+      "issue_id": "subjective::contract_coherence",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/initial-review",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "subjective::convention_outlier": {
+      "issue_id": "subjective::convention_outlier",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/initial-review",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "subjective::cross_module_architecture": {
+      "issue_id": "subjective::cross_module_architecture",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/initial-review",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "subjective::dependency_health": {
+      "issue_id": "subjective::dependency_health",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/initial-review",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "subjective::design_coherence": {
+      "issue_id": "subjective::design_coherence",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/initial-review",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "subjective::error_consistency": {
+      "issue_id": "subjective::error_consistency",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/initial-review",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "subjective::high_level_elegance": {
+      "issue_id": "subjective::high_level_elegance",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/initial-review",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "subjective::incomplete_migration": {
+      "issue_id": "subjective::incomplete_migration",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/initial-review",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "subjective::initialization_coupling": {
+      "issue_id": "subjective::initialization_coupling",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/initial-review",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "subjective::logic_clarity": {
+      "issue_id": "subjective::logic_clarity",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/initial-review",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "subjective::low_level_elegance": {
+      "issue_id": "subjective::low_level_elegance",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/initial-review",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "subjective::mid_level_elegance": {
+      "issue_id": "subjective::mid_level_elegance",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/initial-review",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "subjective::naming_quality": {
+      "issue_id": "subjective::naming_quality",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/initial-review",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "subjective::package_organization": {
+      "issue_id": "subjective::package_organization",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/initial-review",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "subjective::test_strategy": {
+      "issue_id": "subjective::test_strategy",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/initial-review",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    },
+    "subjective::type_safety": {
+      "issue_id": "subjective::type_safety",
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "cluster": "auto/initial-review",
+      "updated_at": "2026-03-15T20:05:50+00:00"
+    }
+  },
+  "clusters": {
+    "auto/test_coverage": {
+      "name": "auto/test_coverage",
+      "description": "Fix 35 test coverage issues",
+      "issue_ids": [
+        "test_coverage::../constants/sourceIcons.ts::untested_module",
+        "test_coverage::../routes/api.articles.recommended.tsx::untested_module",
+        "test_coverage::../hooks/useArticleInteractions.ts::untested_module",
+        "test_coverage::../routes/recommended.tsx::untested_module",
+        "test_coverage::article/ThumbnailPlaceholder.tsx::untested_module",
+        "test_coverage::../contexts/SentryContext.tsx::untested_module",
+        "test_coverage::article/ArticleFeed.tsx::untested_module",
+        "test_coverage::../routes/api.articles.tsx::untested_module",
+        "test_coverage::../routes/api.articles.semantic-search.tsx::untested_module",
+        "test_coverage::../routes/auth.callback.tsx::untested_module",
+        "test_coverage::../routes/api.tokens.$tokenId.tsx::untested_module",
+        "test_coverage::article/ArticleGrid.tsx::untested_module",
+        "test_coverage::../routes/auth.logout.tsx::untested_module",
+        "test_coverage::../root.tsx::untested_module",
+        "test_coverage::../server/articles.server.ts::untested_module",
+        "test_coverage::../server/session.server.ts::untested_module",
+        "test_coverage::../server/auth.server.ts::untested_module",
+        "test_coverage::../routes/semantic-search.tsx::untested_module",
+        "test_coverage::../routes/disliked.tsx::untested_module",
+        "test_coverage::layout/Icons.tsx::untested_module",
+        "test_coverage::../routes/auth.login.tsx::untested_module",
+        "test_coverage::../entry.client.tsx::untested_module",
+        "test_coverage::../hooks/usePaginatedArticles.ts::untested_module",
+        "test_coverage::../../functions/[[path]].ts::untested_module",
+        "test_coverage::article/ArticleCollection.tsx::untested_module",
+        "test_coverage::../routes/api.articles.$articleId.feedback.tsx::untested_module",
+        "test_coverage::../entry.server.tsx::untested_module",
+        "test_coverage::article/ArticleList.tsx::untested_module",
+        "test_coverage::../routes/api.tokens.tsx::untested_module",
+        "test_coverage::../routes/liked.tsx::untested_module",
+        "test_coverage::../routes/_index.tsx::untested_module",
+        "test_coverage::../routes/api.articles.$articleId.similar.tsx::untested_module",
+        "test_coverage::../routes/unreviewed.tsx::untested_module",
+        "test_coverage::../utils/userArticlesProxy.ts::untested_module",
+        "test_coverage::../routes/articles.$articleID.tsx::untested_module"
+      ],
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "updated_at": "2026-03-15T20:05:50+00:00",
+      "auto": true,
+      "cluster_key": "detector::test_coverage",
+      "action": "add tests for untested production modules \u2014 prioritize by import count",
+      "user_modified": false
+    },
+    "auto/initial-review": {
+      "name": "auto/initial-review",
+      "description": "Initial review of 20 unscored subjective dimensions",
+      "issue_ids": [
+        "subjective::abstraction_fitness",
+        "subjective::ai_generated_debt",
+        "subjective::api_surface_coherence",
+        "subjective::authorization_consistency",
+        "subjective::contract_coherence",
+        "subjective::convention_outlier",
+        "subjective::cross_module_architecture",
+        "subjective::dependency_health",
+        "subjective::design_coherence",
+        "subjective::error_consistency",
+        "subjective::high_level_elegance",
+        "subjective::incomplete_migration",
+        "subjective::initialization_coupling",
+        "subjective::logic_clarity",
+        "subjective::low_level_elegance",
+        "subjective::mid_level_elegance",
+        "subjective::naming_quality",
+        "subjective::package_organization",
+        "subjective::test_strategy",
+        "subjective::type_safety"
+      ],
+      "created_at": "2026-03-15T20:05:50+00:00",
+      "updated_at": "2026-03-15T20:05:50+00:00",
+      "auto": true,
+      "cluster_key": "subjective::unscored",
+      "action": "desloppify review --prepare --dimensions abstraction_fitness,ai_generated_debt,api_surface_coherence,authorization_consistency,contract_coherence,convention_outlier,cross_module_architecture,dependency_health,design_coherence,error_consistency,high_level_elegance,incomplete_migration,initialization_coupling,logic_clarity,low_level_elegance,mid_level_elegance,naming_quality,package_organization,test_strategy,type_safety",
+      "user_modified": false
+    }
+  },
+  "superseded": {},
+  "promoted_ids": [],
+  "plan_start_scores": {
+    "strict": 24.9,
+    "overall": 24.9,
+    "objective": 99.6,
+    "verified": 99.6
+  },
+  "refresh_state": {
+    "postflight_scan_completed_at_scan_count": 1,
+    "lifecycle_phase": "review"
+  },
+  "execution_log": [
+    {
+      "timestamp": "2026-03-15T20:05:15+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::package_organization::components_dir_overloaded"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Created app/components/layout/ (TopBar, HeroHeader, SearchBar, AuthButtons, ViewToggle, Icons) and app/components/article/ (ArticleCard, ArticleRow, ArticleInfo, ArticleFeed, ArticleGrid, ArticleList, ArticleCollection, LoadingCard, LoadingRow, RecommendationsLoading, ThumbnailPlaceholder); updated all imports in routes, hooks, and constants",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-03-15T20:05:50+00:00",
+      "action": "sync_subjective",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "changes": true
+      }
+    },
+    {
+      "timestamp": "2026-03-15T20:05:50+00:00",
+      "action": "auto_cluster",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "changes": true
+      }
+    },
+    {
+      "timestamp": "2026-03-15T20:05:50+00:00",
+      "action": "seed_start_scores",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-03-15T20:05:50+00:00",
+      "action": "complete_postflight_scan",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "scan_count": 1
+      }
+    },
+    {
+      "timestamp": "2026-03-15T20:05:50+00:00",
+      "action": "sync_lifecycle_phase",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "phase": "review"
+      }
+    }
+  ],
+  "epic_triage_meta": {},
+  "commit_log": [],
+  "uncommitted_issues": [],
+  "commit_tracking_branch": null,
+  "scan_count_at_plan_start": 1
+}

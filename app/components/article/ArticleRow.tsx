@@ -1,8 +1,10 @@
 import { useNavigate } from "@remix-run/react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useAuth } from "~/root";
-import { type Article, formatPublishedDate } from "~/schemas/article";
-import { parseArticlesResponse } from "~/schemas/article";
+import {
+  type Article,
+  formatPublishedDate,
+  parseArticlesResponse,
+} from "~/schemas/article";
 import {
   ThumbsUpIcon,
   ThumbsUpFilledIcon,
@@ -11,13 +13,14 @@ import {
   PlayIcon,
   CheckCircleIcon,
   ExternalLinkIcon,
-} from "./Icons";
+} from "../layout/Icons";
 import { ThumbnailPlaceholder } from "./ThumbnailPlaceholder";
 import {
   getCategoryHeaderColor,
   getSourceDisplayName,
 } from "~/constants/sources";
 import { isVideoSource } from "~/constants/sourceIcons";
+import { useArticleInteractions } from "~/hooks/useArticleInteractions";
 
 interface ArticleRowProps {
   article: Article;
@@ -39,9 +42,7 @@ export function ArticleRow({
   onThumbsDown,
   onMarkAsRead,
 }: ArticleRowProps) {
-  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
-  const [isUpdating, setIsUpdating] = useState(false);
   const [expandedSection, setExpandedSection] = useState<ExpandedSection>(null);
   const [similarArticles, setSimilarArticles] = useState<Article[] | null>(
     null
@@ -62,100 +63,43 @@ export function ArticleRow({
     setIsSummaryTruncated(el.scrollHeight > el.clientHeight);
   }, [article.summary]);
 
+  useEffect(() => {
+    if (expandedSection !== "similar" || similarArticles !== null) return;
+
+    setIsFetchingSimilar(true);
+
+    async function fetchSimilar() {
+      try {
+        const res = await fetch(`/api/articles/${article.hash_id}/similar`);
+        if (!res.ok) throw new Error("Failed to fetch similar articles");
+        const data = await res.json();
+        const result = parseArticlesResponse(data);
+        setSimilarArticles(result.success ? result.data.data : []);
+      } catch (error) {
+        console.error("Failed to fetch similar articles:", error);
+        setSimilarArticles([]);
+      } finally {
+        setIsFetchingSimilar(false);
+      }
+    }
+
+    fetchSimilar();
+  }, [expandedSection, similarArticles, article.hash_id]);
+
+  const { handleThumbsUp, handleThumbsDown, handleMarkAsRead, isUpdating } =
+    useArticleInteractions({
+      article,
+      ...(onThumbsUp ? { onThumbsUp } : {}),
+      ...(onThumbsDown ? { onThumbsDown } : {}),
+      ...(onMarkAsRead ? { onMarkAsRead } : {}),
+    });
+
   const hasKeyPoints = article.key_points && article.key_points.length > 0;
   const hasImplication = !!article.implication;
 
-  const handleMarkAsRead = useCallback(() => {
-    if (!isAuthenticated || !onMarkAsRead || haveRead) return;
-    onMarkAsRead(article.hash_id).catch(error => {
-      console.error("Failed to mark as read:", error);
-    });
-  }, [isAuthenticated, onMarkAsRead, haveRead, article.hash_id]);
-
-  const handleThumbsUp = useCallback(
-    async (e: React.MouseEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-
-      if (!isAuthenticated) {
-        window.location.href = "/auth/login";
-        return;
-      }
-
-      if (isUpdating || !onThumbsUp) return;
-
-      setIsUpdating(true);
-      try {
-        await onThumbsUp(article.hash_id, !thumbsUp);
-      } catch (error) {
-        console.error("Failed to update thumbs up:", error);
-      } finally {
-        setIsUpdating(false);
-      }
-    },
-    [isAuthenticated, isUpdating, onThumbsUp, thumbsUp, article.hash_id]
-  );
-
-  const handleThumbsDown = useCallback(
-    async (e: React.MouseEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-
-      if (!isAuthenticated) {
-        window.location.href = "/auth/login";
-        return;
-      }
-
-      if (isUpdating || !onThumbsDown) return;
-
-      setIsUpdating(true);
-      try {
-        await onThumbsDown(article.hash_id, !thumbsDown);
-      } catch (error) {
-        console.error("Failed to update thumbs down:", error);
-      } finally {
-        setIsUpdating(false);
-      }
-    },
-    [isAuthenticated, isUpdating, onThumbsDown, thumbsDown, article.hash_id]
-  );
-
-  const toggleSection = useCallback(
-    (section: ExpandedSection) => {
-      if (expandedSection === section) {
-        setExpandedSection(null);
-        return;
-      }
-
-      setExpandedSection(section);
-
-      // Fetch similar articles on first expand
-      if (section === "similar" && similarArticles === null) {
-        setIsFetchingSimilar(true);
-        fetch(`/api/articles/${article.hash_id}/similar`)
-          .then(res => {
-            if (!res.ok) throw new Error("Failed to fetch similar articles");
-            return res.json();
-          })
-          .then(data => {
-            const result = parseArticlesResponse(data);
-            if (result.success) {
-              setSimilarArticles(result.data.data);
-            } else {
-              setSimilarArticles([]);
-            }
-          })
-          .catch(error => {
-            console.error("Failed to fetch similar articles:", error);
-            setSimilarArticles([]);
-          })
-          .finally(() => {
-            setIsFetchingSimilar(false);
-          });
-      }
-    },
-    [expandedSection, similarArticles, article.hash_id]
-  );
+  const handleSectionToggle = useCallback((section: ExpandedSection) => {
+    setExpandedSection(prev => (prev === section ? null : section));
+  }, []);
 
   return (
     <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm overflow-hidden">
@@ -287,7 +231,7 @@ export function ArticleRow({
         {isSummaryTruncated && (
           <button
             type="button"
-            onClick={() => toggleSection("summary")}
+            onClick={() => handleSectionToggle("summary")}
             className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
               expandedSection === "summary"
                 ? "bg-brand-dark text-white dark:bg-brand-light dark:text-slate-900"
@@ -300,7 +244,7 @@ export function ArticleRow({
         {hasKeyPoints && (
           <button
             type="button"
-            onClick={() => toggleSection("key_points")}
+            onClick={() => handleSectionToggle("key_points")}
             className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
               expandedSection === "key_points"
                 ? "bg-brand-dark text-white dark:bg-brand-light dark:text-slate-900"
@@ -313,7 +257,7 @@ export function ArticleRow({
         {hasImplication && (
           <button
             type="button"
-            onClick={() => toggleSection("implication")}
+            onClick={() => handleSectionToggle("implication")}
             className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
               expandedSection === "implication"
                 ? "bg-brand-dark text-white dark:bg-brand-light dark:text-slate-900"
@@ -325,7 +269,7 @@ export function ArticleRow({
         )}
         <button
           type="button"
-          onClick={() => toggleSection("similar")}
+          onClick={() => handleSectionToggle("similar")}
           className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
             expandedSection === "similar"
               ? "bg-brand-dark text-white dark:bg-brand-light dark:text-slate-900"

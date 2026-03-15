@@ -2,10 +2,10 @@ import { useState, useCallback } from "react";
 import { useSearchParams, useLoaderData } from "@remix-run/react";
 import type { MetaFunction, LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { json } from "@remix-run/cloudflare";
-import { TopBar } from "~/components/TopBar";
-import { HeroHeader } from "~/components/HeroHeader";
-import { ArticleFeed } from "~/components/ArticleFeed";
-import { ViewToggle } from "~/components/ViewToggle";
+import { TopBar } from "~/components/layout/TopBar";
+import { HeroHeader } from "~/components/layout/HeroHeader";
+import { ArticleFeed } from "~/components/article/ArticleFeed";
+import { ViewToggle } from "~/components/layout/ViewToggle";
 import { Tabs } from "~/components/ui/Tabs";
 import { MAIN_TABS } from "~/constants/navigation";
 import { useArticles } from "~/hooks/useArticles";
@@ -39,6 +39,9 @@ type LoaderData = {
   error?: string;
 };
 
+// Error strategy convention: list route loaders return json({error, ...partial data}) so the
+// page can render with whatever data is available. Detail route loaders (e.g. articles.$articleID)
+// throw Response so Remix's ErrorBoundary handles the failure instead.
 export const loader = async ({
   request,
   context,

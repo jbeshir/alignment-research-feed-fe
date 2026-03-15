@@ -6,9 +6,9 @@ import {
   useRouteError,
   isRouteErrorResponse,
 } from "@remix-run/react";
-import { TopBar } from "~/components/TopBar";
-import { ArticleInfo } from "~/components/ArticleInfo";
-import { ArticleGrid } from "~/components/ArticleGrid";
+import { TopBar } from "~/components/layout/TopBar";
+import { ArticleInfo } from "~/components/article/ArticleInfo";
+import { ArticleGrid } from "~/components/article/ArticleGrid";
 import { useArticleFeedbackHandlers } from "~/hooks/useArticleFeedbackHandlers";
 import { createAuthenticatedFetch } from "~/server/auth.server";
 import {

@@ -1,5 +1,5 @@
 import type { LoaderFunctionArgs } from "@remix-run/cloudflare";
-import { getAuthenticator } from "~/server/auth.server";
+import { getOrCreateAuthenticator } from "~/server/auth.server";
 
 /**
  * Login route - redirects to Auth0 for authentication.
@@ -10,8 +10,7 @@ import { getAuthenticator } from "~/server/auth.server";
  */
 export async function loader({ request, context }: LoaderFunctionArgs) {
   const env = context.cloudflare.env;
-  const authenticator = getAuthenticator(env);
+  const authenticator = getOrCreateAuthenticator(env);
 
-  // The authenticate method will redirect to Auth0
   return authenticator.authenticate("auth0", request);
 }

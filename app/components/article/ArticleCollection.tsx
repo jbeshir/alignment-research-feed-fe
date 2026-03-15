@@ -1,36 +1,49 @@
 import { type Article } from "~/schemas/article";
-import { ArticleCard } from "./ArticleCard";
-import { LoadingCard } from "./LoadingCard";
 
-interface ArticleGridProps {
-  articles: Article[];
-  isLoading: boolean;
+interface ArticleItemProps {
+  article: Article;
   onThumbsUp?: (articleId: string, value: boolean) => Promise<void>;
   onThumbsDown?: (articleId: string, value: boolean) => Promise<void>;
   onMarkAsRead?: (articleId: string) => Promise<void>;
-  emptyMessage?: string;
 }
 
-export function ArticleGrid({
+export interface ArticleCollectionProps {
+  articles: Article[];
+  isLoading: boolean;
+  emptyMessage?: string;
+  onThumbsUp?: (articleId: string, value: boolean) => Promise<void>;
+  onThumbsDown?: (articleId: string, value: boolean) => Promise<void>;
+  onMarkAsRead?: (articleId: string) => Promise<void>;
+  wrapperClassName: string;
+  initialSkeletonCount: number;
+  loadMoreSkeletonCount: number;
+  ItemComponent: React.ComponentType<ArticleItemProps>;
+  SkeletonComponent: React.ComponentType;
+}
+
+export function ArticleCollection({
   articles,
   isLoading,
+  emptyMessage = "No articles found",
   onThumbsUp,
   onThumbsDown,
   onMarkAsRead,
-  emptyMessage = "No articles found",
-}: ArticleGridProps) {
-  // Show loading skeletons
+  wrapperClassName,
+  initialSkeletonCount,
+  loadMoreSkeletonCount,
+  ItemComponent,
+  SkeletonComponent,
+}: ArticleCollectionProps) {
   if (isLoading && articles.length === 0) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-6">
-        {Array.from({ length: 8 }).map((_, i) => (
-          <LoadingCard key={i} />
+      <div className={wrapperClassName}>
+        {Array.from({ length: initialSkeletonCount }).map((_, i) => (
+          <SkeletonComponent key={i} />
         ))}
       </div>
     );
   }
 
-  // Show empty state
   if (!isLoading && articles.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 px-4">
@@ -42,9 +55,9 @@ export function ArticleGrid({
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-6">
+    <div className={wrapperClassName}>
       {articles.map(article => (
-        <ArticleCard
+        <ItemComponent
           key={article.hash_id}
           article={article}
           {...(onThumbsUp ? { onThumbsUp } : {})}
@@ -52,10 +65,9 @@ export function ArticleGrid({
           {...(onMarkAsRead ? { onMarkAsRead } : {})}
         />
       ))}
-      {/* Show loading cards at the end when loading more */}
       {isLoading &&
-        Array.from({ length: 4 }).map((_, i) => (
-          <LoadingCard key={`loading-${i}`} />
+        Array.from({ length: loadMoreSkeletonCount }).map((_, i) => (
+          <SkeletonComponent key={`loading-${i}`} />
         ))}
     </div>
   );
