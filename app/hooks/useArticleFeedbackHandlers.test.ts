@@ -4,16 +4,11 @@ import { useArticleFeedbackHandlers } from "./useArticleFeedbackHandlers";
 import type { Article } from "~/schemas/article";
 import { mockArticle } from "~/test/helpers";
 
-// Mock the useFeedback hook
-const mockSetThumbsUp = vi.fn();
-const mockSetThumbsDown = vi.fn();
-const mockMarkAsRead = vi.fn();
+const mockSendFeedback = vi.fn();
 
 vi.mock("./useFeedback", () => ({
   useFeedback: () => ({
-    setThumbsUp: mockSetThumbsUp,
-    setThumbsDown: mockSetThumbsDown,
-    markAsRead: mockMarkAsRead,
+    sendFeedback: mockSendFeedback,
   }),
 }));
 
@@ -38,15 +33,13 @@ function createArticleState(initial: Article[]) {
 describe("useArticleFeedbackHandlers", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockSetThumbsUp.mockResolvedValue(undefined);
-    mockSetThumbsDown.mockResolvedValue(undefined);
-    mockMarkAsRead.mockResolvedValue(undefined);
+    mockSendFeedback.mockResolvedValue(undefined);
   });
 
-  it("handleThumbsUp calls setThumbsUp", async () => {
+  it("handleThumbsUp calls sendFeedback with thumbs_up action", async () => {
     const { result } = renderHook(() => useArticleFeedbackHandlers());
     await act(() => result.current.handleThumbsUp("id-1", true));
-    expect(mockSetThumbsUp).toHaveBeenCalledWith("id-1", true);
+    expect(mockSendFeedback).toHaveBeenCalledWith("id-1", "thumbs_up", true);
   });
 
   it("handleThumbsUp optimistically updates articles", async () => {
@@ -65,7 +58,7 @@ describe("useArticleFeedbackHandlers", () => {
   });
 
   it("handleThumbsUp rolls back on API error", async () => {
-    mockSetThumbsUp.mockRejectedValue(new Error("API error"));
+    mockSendFeedback.mockRejectedValue(new Error("API error"));
 
     const state = createArticleState([
       mockArticle({ hash_id: "id-1", thumbs_up: false, thumbs_down: true }),
@@ -95,10 +88,10 @@ describe("useArticleFeedbackHandlers", () => {
   it("handleThumbsUp without setArticles just calls API", async () => {
     const { result } = renderHook(() => useArticleFeedbackHandlers());
     await act(() => result.current.handleThumbsUp("id-1", true));
-    expect(mockSetThumbsUp).toHaveBeenCalledWith("id-1", true);
+    expect(mockSendFeedback).toHaveBeenCalledWith("id-1", "thumbs_up", true);
   });
 
-  it("handleThumbsDown calls setThumbsDown and clears thumbsUp", async () => {
+  it("handleThumbsDown calls sendFeedback and clears thumbsUp", async () => {
     const state = createArticleState([
       mockArticle({ hash_id: "id-1", thumbs_up: true, thumbs_down: false }),
     ]);
@@ -108,13 +101,13 @@ describe("useArticleFeedbackHandlers", () => {
     );
     await act(() => result.current.handleThumbsDown("id-1", true));
 
-    expect(mockSetThumbsDown).toHaveBeenCalledWith("id-1", true);
+    expect(mockSendFeedback).toHaveBeenCalledWith("id-1", "thumbs_down", true);
     expect(state.first.thumbs_down).toBe(true);
     expect(state.first.thumbs_up).toBe(false);
   });
 
   it("handleThumbsDown rolls back on error", async () => {
-    mockSetThumbsDown.mockRejectedValue(new Error("fail"));
+    mockSendFeedback.mockRejectedValue(new Error("fail"));
 
     const state = createArticleState([
       mockArticle({ hash_id: "id-1", thumbs_up: true, thumbs_down: false }),
@@ -148,12 +141,12 @@ describe("useArticleFeedbackHandlers", () => {
     );
     await act(() => result.current.handleMarkAsRead("id-1"));
 
-    expect(mockMarkAsRead).toHaveBeenCalledWith("id-1");
+    expect(mockSendFeedback).toHaveBeenCalledWith("id-1", "read", true);
     expect(state.first.have_read).toBe(true);
   });
 
   it("handleMarkAsRead rolls back on error", async () => {
-    mockMarkAsRead.mockRejectedValue(new Error("fail"));
+    mockSendFeedback.mockRejectedValue(new Error("fail"));
 
     const state = createArticleState([
       mockArticle({ hash_id: "id-1", have_read: false }),

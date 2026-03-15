@@ -71,7 +71,7 @@ export function useArticleFeedbackHandlers(
   options: UseArticleFeedbackHandlersOptions = {}
 ): UseArticleFeedbackHandlersResult {
   const { setArticles } = options;
-  const { setThumbsUp, setThumbsDown, markAsRead } = useFeedback();
+  const { sendFeedback } = useFeedback();
 
   const handleThumbsUp = useCallback(
     (articleId: string, value: boolean) =>
@@ -79,10 +79,10 @@ export function useArticleFeedbackHandlers(
         articleId,
         value,
         "thumbs_up",
-        setThumbsUp,
+        (id, val) => sendFeedback(id, "thumbs_up", val),
         setArticles
       ),
-    [setThumbsUp, setArticles]
+    [sendFeedback, setArticles]
   );
 
   const handleThumbsDown = useCallback(
@@ -91,10 +91,10 @@ export function useArticleFeedbackHandlers(
         articleId,
         value,
         "thumbs_down",
-        setThumbsDown,
+        (id, val) => sendFeedback(id, "thumbs_down", val),
         setArticles
       ),
-    [setThumbsDown, setArticles]
+    [sendFeedback, setArticles]
   );
 
   const handleMarkAsRead = useCallback(
@@ -114,7 +114,7 @@ export function useArticleFeedbackHandlers(
       }
 
       try {
-        await markAsRead(articleId);
+        await sendFeedback(articleId, "read", true);
       } catch (error) {
         if (setArticles) {
           setArticles(prev =>
@@ -128,7 +128,7 @@ export function useArticleFeedbackHandlers(
         throw error;
       }
     },
-    [markAsRead, setArticles]
+    [sendFeedback, setArticles]
   );
 
   return { handleThumbsUp, handleThumbsDown, handleMarkAsRead };
