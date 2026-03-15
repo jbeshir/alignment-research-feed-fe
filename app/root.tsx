@@ -106,7 +106,7 @@ type LoaderData = {
 export const loader = async ({ request, context }: LoaderFunctionArgs) => {
   const { authContext, headers } = await getServerAuthContext(request, context);
 
-  const rssUrl = `${context.cloudflare.env.ALIGNMENT_FEED_BASE_URL}/v1/rss`;
+  const rssUrl = `${context.cloudflare.env.ALIGNMENT_FEED_BASE_URL}/rss`;
 
   return json<LoaderData>(
     {
