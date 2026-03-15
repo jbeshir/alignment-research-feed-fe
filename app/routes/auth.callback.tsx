@@ -1,6 +1,9 @@
 import type { LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { redirect } from "@remix-run/cloudflare";
-import { getAuthenticator, getSessionStorage } from "~/server/auth.server";
+import {
+  getOrCreateAuthenticator,
+  getOrCreateSessionStorage,
+} from "~/server/auth.server";
 
 /**
  * Auth callback route - handles the OAuth redirect from Auth0.
@@ -11,8 +14,8 @@ import { getAuthenticator, getSessionStorage } from "~/server/auth.server";
  */
 export async function loader({ request, context }: LoaderFunctionArgs) {
   const env = context.cloudflare.env;
-  const authenticator = getAuthenticator(env);
-  const sessionStorage = getSessionStorage(env);
+  const authenticator = getOrCreateAuthenticator(env);
+  const sessionStorage = getOrCreateSessionStorage(env);
 
   try {
     // Authenticate will exchange the code for tokens and call our verify function

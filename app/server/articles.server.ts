@@ -24,7 +24,7 @@ export type FetchArticlesResult = {
  * Internal function that performs the actual API fetch.
  * Returns the raw result without wrapping in json().
  */
-async function fetchArticlesInternal(
+async function executeArticlesFetch(
   authFetch: (url: string, init?: RequestInit) => Promise<Response>,
   isAuthenticated: boolean,
   apiBaseURL: string,
@@ -91,7 +91,7 @@ export async function fetchArticlesFromApi(
 ): Promise<ReturnType<typeof json<FetchArticlesResult>>> {
   const { isAuthenticated, authFetch, headers } =
     await createAuthenticatedFetch(request, context);
-  const result = await fetchArticlesInternal(
+  const result = await executeArticlesFetch(
     authFetch,
     isAuthenticated,
     context.cloudflare.env.ALIGNMENT_FEED_BASE_URL,
@@ -130,14 +130,14 @@ export async function fetchArticlesDeferred(
   }
 
   // Defer the actual fetch so page renders immediately
-  const articlesPromise = fetchArticlesInternal(
+  const articlesPromise = executeArticlesFetch(
     authFetch,
     isAuthenticated,
     context.cloudflare.env.ALIGNMENT_FEED_BASE_URL,
     options
   );
   return defer(
-    { isAuthenticated: true, articlesData: articlesPromise },
+    { isAuthenticated, articlesData: articlesPromise },
     headers ? { headers } : undefined
   );
 }

@@ -37,7 +37,7 @@ const authenticatorCache = new Map<string, Authenticator<User>>();
 /**
  * Get or create session storage for the given secret.
  */
-export function getSessionStorage(
+export function getOrCreateSessionStorage(
   env: Pick<AuthEnv, "AUTH_SESSION_SECRET">
 ): AppSessionStorage {
   const cached = sessionStorageCache.get(env.AUTH_SESSION_SECRET);
@@ -51,7 +51,7 @@ export function getSessionStorage(
 /**
  * Get or create authenticator for the given environment.
  */
-export function getAuthenticator(env: AuthEnv): Authenticator<User> {
+export function getOrCreateAuthenticator(env: AuthEnv): Authenticator<User> {
   const cacheKey = `${env.AUTH_SESSION_SECRET}:${env.AUTH0_DOMAIN}:${env.AUTH0_CLIENT_ID}`;
   const cached = authenticatorCache.get(cacheKey);
   if (cached) return cached;
@@ -129,7 +129,7 @@ export function getAuthenticator(env: AuthEnv): Authenticator<User> {
  * Get the Auth0Strategy instance for token refresh operations.
  */
 function getAuth0Strategy(env: AuthEnv): Auth0Strategy<User> {
-  const authenticator = getAuthenticator(env);
+  const authenticator = getOrCreateAuthenticator(env);
   return authenticator.get<Auth0Strategy<User>>("auth0")!;
 }
 
@@ -145,7 +145,7 @@ type ServerAuthContext = {
 /**
  * Result from getServerAuthContext, includes optional headers for session updates.
  */
-type AuthContextResult = {
+export type AuthContextResult = {
   authContext: ServerAuthContext;
   /** Headers to include in the response (e.g., Set-Cookie for refreshed tokens) */
   headers?: Headers;
@@ -199,7 +199,7 @@ export async function getServerAuthContext(
   const { authCache } = context;
 
   if (authCache.authContextPromise) {
-    return authCache.authContextPromise as Promise<AuthContextResult>;
+    return authCache.authContextPromise;
   }
 
   const resultPromise = computeServerAuthContext(
@@ -217,7 +217,7 @@ async function computeServerAuthContext(
   request: Request,
   env: AuthEnv
 ): Promise<AuthContextResult> {
-  const sessionStorage = getSessionStorage(env);
+  const sessionStorage = getOrCreateSessionStorage(env);
   const session = await sessionStorage.getSession(
     request.headers.get("Cookie")
   );
@@ -233,7 +233,7 @@ async function computeServerAuthContext(
     };
   }
 
-  if (user.expiresAt && shouldRefreshToken(user.expiresAt)) {
+  if (shouldRefreshToken(user.expiresAt)) {
     if (user.refreshToken) {
       const newTokens = await refreshAccessToken(user.refreshToken, env);
 

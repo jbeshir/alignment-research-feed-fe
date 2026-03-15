@@ -1,6 +1,6 @@
 import type { ActionFunctionArgs } from "@remix-run/cloudflare";
 import { redirect } from "@remix-run/cloudflare";
-import { getSessionStorage } from "~/server/auth.server";
+import { getOrCreateSessionStorage } from "~/server/auth.server";
 
 /**
  * Logout route - clears the session and redirects to Auth0 logout.
@@ -10,7 +10,7 @@ import { getSessionStorage } from "~/server/auth.server";
  */
 export async function action({ request, context }: ActionFunctionArgs) {
   const env = context.cloudflare.env;
-  const sessionStorage = getSessionStorage(env);
+  const sessionStorage = getOrCreateSessionStorage(env);
   const session = await sessionStorage.getSession(
     request.headers.get("Cookie")
   );
