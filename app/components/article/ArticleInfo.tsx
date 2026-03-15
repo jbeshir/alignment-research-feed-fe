@@ -11,7 +11,7 @@ import {
   ThumbsDownFilledIcon,
   ExternalLinkIcon,
   CheckCircleIcon,
-} from "./Icons";
+} from "../layout/Icons";
 import { ThumbnailPlaceholder } from "./ThumbnailPlaceholder";
 
 type ArticleInfoProps = {

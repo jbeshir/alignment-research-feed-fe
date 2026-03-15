@@ -1,6 +1,5 @@
 import { useNavigate } from "@remix-run/react";
-import { useCallback, useState } from "react";
-import { useAuth } from "~/root";
+import { useState } from "react";
 import { type Article, formatPublishedDate } from "~/schemas/article";
 import {
   ThumbsUpIcon,
@@ -9,13 +8,14 @@ import {
   ThumbsDownFilledIcon,
   PlayIcon,
   CheckCircleIcon,
-} from "./Icons";
+} from "../layout/Icons";
 import { ThumbnailPlaceholder } from "./ThumbnailPlaceholder";
 import {
   getCategoryHeaderColor,
   getSourceDisplayName,
 } from "~/constants/sources";
 import { isVideoSource } from "~/constants/sourceIcons";
+import { useArticleInteractions } from "~/hooks/useArticleInteractions";
 
 interface ArticleCardProps {
   article: Article;
@@ -35,84 +35,32 @@ export function ArticleCard({
   onThumbsDown,
   onMarkAsRead,
 }: ArticleCardProps) {
-  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
-  const [isUpdating, setIsUpdating] = useState(false);
   const [imageError, setImageError] = useState(false);
 
-  // Read state directly from props (single source of truth)
   const thumbsUp = article.thumbs_up ?? false;
   const thumbsDown = article.thumbs_down ?? false;
   const haveRead = article.have_read ?? false;
 
-  // Mark as read when card is clicked (if authenticated)
-  const handleCardClick = useCallback(() => {
-    if (!isAuthenticated || !onMarkAsRead || haveRead) return;
-
-    // Fire and forget - parent handles state update
-    onMarkAsRead(article.hash_id).catch(error => {
-      console.error("Failed to mark as read:", error);
-    });
-  }, [isAuthenticated, onMarkAsRead, haveRead, article.hash_id]);
-
-  const handleThumbsUp = useCallback(
-    async (e: React.MouseEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-
-      if (!isAuthenticated) {
-        // Redirect to login
-        window.location.href = "/auth/login";
-        return;
-      }
-
-      if (isUpdating || !onThumbsUp) return;
-
-      setIsUpdating(true);
-      try {
-        // Parent handles optimistic update and rollback
-        await onThumbsUp(article.hash_id, !thumbsUp);
-      } catch (error) {
-        console.error("Failed to update thumbs up:", error);
-      } finally {
-        setIsUpdating(false);
-      }
-    },
-    [isAuthenticated, isUpdating, onThumbsUp, thumbsUp, article.hash_id]
-  );
-
-  const handleThumbsDown = useCallback(
-    async (e: React.MouseEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-
-      if (!isAuthenticated) {
-        // Redirect to login
-        window.location.href = "/auth/login";
-        return;
-      }
-
-      if (isUpdating || !onThumbsDown) return;
-
-      setIsUpdating(true);
-      try {
-        // Parent handles optimistic update and rollback
-        await onThumbsDown(article.hash_id, !thumbsDown);
-      } catch (error) {
-        console.error("Failed to update thumbs down:", error);
-      } finally {
-        setIsUpdating(false);
-      }
-    },
-    [isAuthenticated, isUpdating, onThumbsDown, thumbsDown, article.hash_id]
-  );
+  const {
+    handleThumbsUp,
+    handleThumbsDown,
+    handleMarkAsRead,
+    isUpdating,
+    feedbackError,
+  } = useArticleInteractions({
+    article,
+    ...(onThumbsUp ? { onThumbsUp } : {}),
+    ...(onThumbsDown ? { onThumbsDown } : {}),
+    ...(onMarkAsRead ? { onMarkAsRead } : {}),
+  });
 
   return (
     <a
       href={article.link}
       target="_blank"
       rel="noopener noreferrer"
-      onClick={handleCardClick}
+      onClick={handleMarkAsRead}
       className="flex flex-col bg-white dark:bg-slate-800 rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden group h-full"
     >
       {/* Source header strip */}
@@ -209,6 +157,11 @@ export function ArticleCard({
               <ThumbsDownIcon className="w-4 h-4" />
             )}
           </button>
+          {feedbackError && (
+            <span className="text-xs text-red-600 dark:text-red-400">
+              {feedbackError}
+            </span>
+          )}
           <button
             type="button"
             onClick={e => {

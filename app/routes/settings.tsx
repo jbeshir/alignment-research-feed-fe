@@ -3,15 +3,15 @@ import { Link } from "@remix-run/react";
 import { z } from "zod";
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "~/root";
-import { TopBar } from "~/components/TopBar";
-import { HeroHeader } from "~/components/HeroHeader";
+import { TopBar } from "~/components/layout/TopBar";
+import { HeroHeader } from "~/components/layout/HeroHeader";
 import { Button } from "~/components/ui/Button";
 import {
   TrashIcon,
   ClipboardIcon,
   DownloadIcon,
   ArrowRightIcon,
-} from "~/components/Icons";
+} from "~/components/layout/Icons";
 import { formatPublishedDate } from "~/utils/formatting";
 
 export const meta: MetaFunction = () => {

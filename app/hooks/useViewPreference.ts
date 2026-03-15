@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import type { ViewMode } from "~/components/ViewToggle";
+import type { ViewMode } from "~/components/layout/ViewToggle";
 
 const STORAGE_KEY = "viewPreference";
 

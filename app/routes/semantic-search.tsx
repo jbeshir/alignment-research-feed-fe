@@ -1,9 +1,9 @@
 import { useState, useCallback } from "react";
 import type { MetaFunction } from "@remix-run/cloudflare";
-import { TopBar } from "~/components/TopBar";
-import { HeroHeader } from "~/components/HeroHeader";
-import { ArticleFeed } from "~/components/ArticleFeed";
-import { ViewToggle } from "~/components/ViewToggle";
+import { TopBar } from "~/components/layout/TopBar";
+import { HeroHeader } from "~/components/layout/HeroHeader";
+import { ArticleFeed } from "~/components/article/ArticleFeed";
+import { ViewToggle } from "~/components/layout/ViewToggle";
 import { Tabs } from "~/components/ui/Tabs";
 import { Button } from "~/components/ui/Button";
 import { MAIN_TABS } from "~/constants/navigation";

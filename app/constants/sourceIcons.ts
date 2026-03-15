@@ -5,7 +5,7 @@ import {
   AcademicCapIcon,
   MicrophoneIcon,
   DocumentIcon,
-} from "~/components/Icons";
+} from "~/components/layout/Icons";
 
 type IconComponent = React.FC<React.SVGProps<SVGSVGElement>>;
 
