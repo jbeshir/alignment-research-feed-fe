@@ -188,7 +188,7 @@ export function createChatTools(ctx: ToolContext) {
 
     get_recommendations: tool({
       description:
-        "Get personalized article recommendations based on rating history. Requires authentication.",
+        "Get personalized article recommendations based on rating history.",
       inputSchema: z.object({
         limit: z
           .number()
@@ -212,19 +212,19 @@ export function createChatTools(ctx: ToolContext) {
 
     list_liked: paginatedListTool(
       ctx,
-      "List articles marked as liked (thumbs up). Requires authentication.",
+      "List articles marked as liked (thumbs up).",
       "liked"
     ),
 
     list_disliked: paginatedListTool(
       ctx,
-      "List articles marked as disliked (thumbs down). Requires authentication.",
+      "List articles marked as disliked (thumbs down).",
       "disliked"
     ),
 
     list_unreviewed: paginatedListTool(
       ctx,
-      "List articles not yet reviewed. Requires authentication.",
+      "List articles not yet reviewed.",
       "unreviewed"
     ),
   };
