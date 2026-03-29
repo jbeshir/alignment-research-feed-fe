@@ -2,14 +2,21 @@ import { type Article, formatPublishedDate } from "~/schemas/article";
 
 interface ChatArticleCardProps {
   article: Article;
+  onArticleClick?: ((hashId: string) => void) | undefined;
 }
 
-export function ChatArticleCard({ article }: ChatArticleCardProps) {
+export function ChatArticleCard({
+  article,
+  onArticleClick,
+}: ChatArticleCardProps) {
   return (
     <a
       href={article.link}
       target="_blank"
       rel="noopener noreferrer"
+      onClick={
+        onArticleClick ? () => onArticleClick(article.hash_id) : undefined
+      }
       className="block rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 p-3 hover:border-brand-dark dark:hover:border-brand-dark transition-colors"
     >
       <h4 className="text-sm font-medium text-slate-900 dark:text-slate-100 line-clamp-2">

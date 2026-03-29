@@ -8,6 +8,7 @@ import { ArticleSchema } from "~/schemas/article";
 interface ChatMessageProps {
   message: UIMessage;
   isStreaming?: boolean;
+  onArticleClick?: ((hashId: string) => void) | undefined;
 }
 
 const TOOL_LABELS: Record<string, string> = {
@@ -24,9 +25,13 @@ const TOOL_LABELS: Record<string, string> = {
 function StreamingText({
   text,
   isStreaming,
+  articleLinks,
+  onArticleClick,
 }: {
   text: string;
   isStreaming: boolean;
+  articleLinks?: Map<string, string> | undefined;
+  onArticleClick?: ((hashId: string) => void) | undefined;
 }) {
   const [visibleCount, setVisibleCount] = useState(0);
   const prevTextRef = useRef(text);
@@ -51,13 +56,23 @@ function StreamingText({
   }, [isStreaming, visibleCount, words.length, text]);
 
   if (!isStreaming) {
-    return <ChatMarkdown text={text} />;
+    return (
+      <ChatMarkdown
+        text={text}
+        articleLinks={articleLinks}
+        onArticleClick={onArticleClick}
+      />
+    );
   }
 
   const visible = words.slice(0, visibleCount).join("");
   return (
     <>
-      <ChatMarkdown text={visible} />
+      <ChatMarkdown
+        text={visible}
+        articleLinks={articleLinks}
+        onArticleClick={onArticleClick}
+      />
       {visibleCount < words.length && (
         <span className="inline-block w-1.5 h-4 ml-0.5 -mb-0.5 bg-current animate-pulse" />
       )}
@@ -65,21 +80,37 @@ function StreamingText({
   );
 }
 
-function ChatMarkdown({ text }: { text: string }) {
+function ChatMarkdown({
+  text,
+  articleLinks,
+  onArticleClick,
+}: {
+  text: string;
+  articleLinks?: Map<string, string> | undefined;
+  onArticleClick?: ((hashId: string) => void) | undefined;
+}) {
   return (
     <Markdown
       remarkPlugins={[remarkGfm]}
       components={{
-        a: ({ href, children }) => (
-          <a
-            href={href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300"
-          >
-            {children}
-          </a>
-        ),
+        a: ({ href, children }) => {
+          const hashId = href ? articleLinks?.get(href) : undefined;
+          return (
+            <a
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={
+                hashId && onArticleClick
+                  ? () => onArticleClick(hashId)
+                  : undefined
+              }
+              className="text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300"
+            >
+              {children}
+            </a>
+          );
+        },
         ul: ({ children }) => (
           <ul className="list-disc pl-5 my-1">{children}</ul>
         ),
@@ -161,7 +192,8 @@ function formatToolInput(input: unknown): string {
 function renderToolPart(
   part: { state: string; input?: unknown; output?: unknown },
   toolName: string,
-  key: React.Key
+  key: React.Key,
+  onArticleClick?: (hashId: string) => void
 ) {
   const label = TOOL_LABELS[toolName] ?? toolName;
   const isLoading =
@@ -197,7 +229,11 @@ function renderToolPart(
       {articles.length > 0 ? (
         <div className="space-y-2">
           {articles.map(article => (
-            <ChatArticleCard key={article.hash_id} article={article} />
+            <ChatArticleCard
+              key={article.hash_id}
+              article={article}
+              onArticleClick={onArticleClick}
+            />
           ))}
         </div>
       ) : (
@@ -217,8 +253,14 @@ function extractArticles(output: unknown) {
     .map(r => r.data);
 }
 
-function renderParts(message: UIMessage, isStreaming: boolean) {
+function renderParts(
+  message: UIMessage,
+  isStreaming: boolean,
+  onArticleClick?: (hashId: string) => void
+) {
   const elements: React.ReactNode[] = [];
+  // Accumulate article URL → hash_id as we encounter tool outputs
+  const articleLinks = new Map<string, string>();
 
   let lastTextIndex = -1;
   for (let i = message.parts.length - 1; i >= 0; i--) {
@@ -231,13 +273,24 @@ function renderParts(message: UIMessage, isStreaming: boolean) {
   for (let i = 0; i < message.parts.length; i++) {
     const part = message.parts[i]!;
 
+    if (isToolUIPart(part) && part.state === "output-available") {
+      for (const article of extractArticles(part.output)) {
+        articleLinks.set(article.link, article.hash_id);
+      }
+    }
+
     if (part.type === "text" && part.text) {
       const isLastText = i === lastTextIndex;
+      // Snapshot the current map so this text part's links resolve correctly
+      const linksSnapshot =
+        articleLinks.size > 0 ? new Map(articleLinks) : undefined;
       elements.push(
         <div key={i} className="text-sm">
           <StreamingText
             text={part.text}
             isStreaming={isStreaming && isLastText}
+            articleLinks={linksSnapshot}
+            onArticleClick={onArticleClick}
           />
         </div>
       );
@@ -257,7 +310,7 @@ function renderParts(message: UIMessage, isStreaming: boolean) {
       }
     } else if (isToolUIPart(part)) {
       const name = getToolName(part);
-      const element = renderToolPart(part, name, i);
+      const element = renderToolPart(part, name, i, onArticleClick);
       if (element) elements.push(element);
     }
   }
@@ -268,6 +321,7 @@ function renderParts(message: UIMessage, isStreaming: boolean) {
 export function ChatMessage({
   message,
   isStreaming = false,
+  onArticleClick,
 }: ChatMessageProps) {
   const isUser = message.role === "user";
 
@@ -290,7 +344,7 @@ export function ChatMessage({
               .join("")}
           </div>
         ) : (
-          renderParts(message, isStreaming)
+          renderParts(message, isStreaming, onArticleClick)
         )}
       </div>
     </div>

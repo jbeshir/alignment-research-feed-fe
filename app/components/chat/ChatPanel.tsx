@@ -5,6 +5,7 @@ import { ChatMessage } from "./ChatMessage";
 import { ChatInput, type ChatInputHandle } from "./ChatInput";
 import { ChatConversationList } from "./ChatConversationList";
 import { type Conversation } from "~/server/chat.server";
+import { useFeedback } from "~/hooks/useFeedback";
 
 interface ChatPanelProps {
   initialConversations: Conversation[];
@@ -22,6 +23,13 @@ export function ChatPanel({ initialConversations }: ChatPanelProps) {
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const conversationIdRef = useRef<string | null>(null);
   const chatInputRef = useRef<ChatInputHandle>(null);
+  const { sendFeedback } = useFeedback();
+  const handleArticleClick = useCallback(
+    (hashId: string) => {
+      sendFeedback(hashId, "read", true).catch(() => {});
+    },
+    [sendFeedback]
+  );
 
   // Keep the ref in sync with state
   conversationIdRef.current = activeConversationId;
@@ -217,6 +225,7 @@ export function ChatPanel({ initialConversations }: ChatPanelProps) {
               key={message.id}
               message={message}
               isStreaming={isLoading && i === messages.length - 1}
+              onArticleClick={handleArticleClick}
             />
           ))}
 
