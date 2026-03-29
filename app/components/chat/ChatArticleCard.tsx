@@ -17,7 +17,7 @@ export function ChatArticleCard({
       onClick={
         onArticleClick ? () => onArticleClick(article.hash_id) : undefined
       }
-      className="block rounded-lg border border-stone-200 dark:border-slate-600 bg-stone-50 dark:bg-slate-700 p-3 hover:border-accent dark:hover:border-brand-dark transition-colors"
+      className="block rounded-lg border border-stone-200 dark:border-slate-600 bg-stone-50 dark:bg-slate-700 p-3 hover:border-accent dark:hover:border-teal-400 transition-colors"
     >
       <h4 className="text-sm font-medium text-slate-900 dark:text-slate-100 line-clamp-2">
         {article.title}

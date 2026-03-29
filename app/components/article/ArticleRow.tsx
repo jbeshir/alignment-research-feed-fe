@@ -234,7 +234,7 @@ export function ArticleRow({
             onClick={() => handleSectionToggle("summary")}
             className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
               expandedSection === "summary"
-                ? "bg-accent text-white dark:bg-brand-light dark:text-slate-900"
+                ? "bg-accent text-white dark:bg-teal-400 dark:text-slate-900"
                 : "text-slate-600 dark:text-slate-400 hover:bg-stone-100 dark:hover:bg-slate-700"
             }`}
           >
@@ -247,7 +247,7 @@ export function ArticleRow({
             onClick={() => handleSectionToggle("key_points")}
             className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
               expandedSection === "key_points"
-                ? "bg-accent text-white dark:bg-brand-light dark:text-slate-900"
+                ? "bg-accent text-white dark:bg-teal-400 dark:text-slate-900"
                 : "text-slate-600 dark:text-slate-400 hover:bg-stone-100 dark:hover:bg-slate-700"
             }`}
           >
@@ -260,7 +260,7 @@ export function ArticleRow({
             onClick={() => handleSectionToggle("implication")}
             className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
               expandedSection === "implication"
-                ? "bg-accent text-white dark:bg-brand-light dark:text-slate-900"
+                ? "bg-accent text-white dark:bg-teal-400 dark:text-slate-900"
                 : "text-slate-600 dark:text-slate-400 hover:bg-stone-100 dark:hover:bg-slate-700"
             }`}
           >
@@ -272,7 +272,7 @@ export function ArticleRow({
           onClick={() => handleSectionToggle("similar")}
           className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
             expandedSection === "similar"
-              ? "bg-accent text-white dark:bg-brand-light dark:text-slate-900"
+              ? "bg-accent text-white dark:bg-teal-400 dark:text-slate-900"
               : "text-slate-600 dark:text-slate-400 hover:bg-stone-100 dark:hover:bg-slate-700"
           }`}
         >

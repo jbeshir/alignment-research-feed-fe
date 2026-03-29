@@ -94,7 +94,7 @@ export function ArticleInfo({
             href={article.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-accent dark:bg-slate-100 text-white dark:text-slate-900 rounded-lg font-medium hover:bg-accent-hover dark:hover:bg-slate-200 transition-colors"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-accent dark:bg-teal-400 text-white dark:text-slate-900 rounded-lg font-medium hover:bg-accent-hover dark:hover:bg-teal-300 transition-colors"
           >
             Read Article
             <ExternalLinkIcon className="w-4 h-4" />

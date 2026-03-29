@@ -60,7 +60,7 @@ export function SearchBar({
         onChange={e => setLocalValue(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
-        className="w-full px-6 py-4 pr-14 text-base text-slate-900 dark:text-slate-100 bg-stone-50 dark:bg-slate-800 border border-stone-200 dark:border-slate-600 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-accent dark:focus:ring-brand-light focus:border-transparent placeholder:text-stone-400 dark:placeholder:text-slate-500"
+        className="w-full px-6 py-4 pr-14 text-base text-slate-900 dark:text-slate-100 bg-stone-50 dark:bg-slate-800 border border-stone-200 dark:border-slate-600 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-accent dark:focus:ring-teal-400 focus:border-transparent placeholder:text-stone-400 dark:placeholder:text-slate-500"
         aria-label="Search articles"
       />
       <button

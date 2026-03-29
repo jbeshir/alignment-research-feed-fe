@@ -226,7 +226,7 @@ export function ErrorBoundary() {
           )}
           <Link
             to="/"
-            className="mt-8 px-6 py-2 bg-accent dark:bg-slate-100 text-white dark:text-slate-900 rounded-md hover:bg-accent-hover dark:hover:bg-slate-200 transition-colors"
+            className="mt-8 px-6 py-2 bg-accent dark:bg-teal-400 text-white dark:text-slate-900 rounded-md hover:bg-accent-hover dark:hover:bg-teal-300 transition-colors"
           >
             Return to home
           </Link>
