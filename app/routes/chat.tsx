@@ -16,13 +16,13 @@ import {
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "Chat With AI - Alignment Feed" },
+    { title: "AI Assistant - Alignment Feed" },
     {
       name: "description",
       content:
         "Chat with an AI assistant about AI alignment research articles.",
     },
-    { property: "og:title", content: "Chat With AI - Alignment Feed" },
+    { property: "og:title", content: "AI Assistant - Alignment Feed" },
     {
       property: "og:description",
       content:

@@ -11,5 +11,5 @@ export const MAIN_TABS: Tab[] = [
     label: "Find Related Research",
     to: "/semantic-search",
   },
-  { id: "chat", label: "Chat With AI", to: "/chat" },
+  { id: "chat", label: "AI Assistant (Alpha)", to: "/chat" },
 ];

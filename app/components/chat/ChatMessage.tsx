@@ -119,7 +119,7 @@ function ChatMarkdown({
         ),
         li: ({ children }) => <li className="my-0.5">{children}</li>,
         p: ({ children }) => (
-          <p className="my-1 first:mt-0 last:mb-0">{children}</p>
+          <p className="my-2 first:mt-0 last:mb-0">{children}</p>
         ),
         strong: ({ children }) => (
           <strong className="font-semibold">{children}</strong>
@@ -169,7 +169,7 @@ function ExpandableSection({
 }) {
   return (
     <details
-      className="my-2 rounded border border-slate-200 dark:border-slate-600 overflow-hidden"
+      className="my-3 rounded border border-slate-200 dark:border-slate-600 overflow-hidden"
       open={defaultOpen}
     >
       <summary className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800 cursor-pointer select-none hover:bg-slate-100 dark:hover:bg-slate-700">

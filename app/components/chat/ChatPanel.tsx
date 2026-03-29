@@ -204,10 +204,10 @@ export function ChatPanel({ initialConversations }: ChatPanelProps) {
         {/* Messages */}
         <div
           ref={messagesContainerRef}
-          className="flex-1 overflow-y-auto p-4 space-y-4"
+          className="flex flex-col flex-1 overflow-y-auto p-4 space-y-4"
         >
           {messages.length === 0 && !error && (
-            <div className="flex h-full items-center justify-center">
+            <div className="flex flex-1 items-center justify-center">
               <div className="text-center">
                 <h3 className="text-lg font-medium text-slate-700 dark:text-slate-300">
                   Alignment Feed AI Assistant
