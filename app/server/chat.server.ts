@@ -59,6 +59,7 @@ export interface ChatStorage {
 }
 
 import { D1ChatStorage } from "./chat-d1.server";
+import { MemoryChatStorage } from "./chat-memory.server";
 import { NullChatStorage } from "./chat-null.server";
 
 type ChatEnv = {
@@ -81,6 +82,8 @@ export function setupChatStorage(env: ChatEnv): ChatStorage {
       }
       return new D1ChatStorage(env.CHAT_DB);
     }
+    case "memory":
+      return new MemoryChatStorage();
     case "null":
       return new NullChatStorage();
     default:
