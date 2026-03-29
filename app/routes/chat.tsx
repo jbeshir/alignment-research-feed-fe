@@ -60,10 +60,10 @@ export default function Chat() {
   const { isAuthenticated, conversations } = useLoaderData<typeof loader>();
 
   return (
-    <div className="min-h-screen bg-brand-bg dark:bg-brand-bg-dark">
+    <div className="flex flex-col h-screen bg-brand-bg dark:bg-brand-bg-dark">
       <TopBar />
 
-      <main>
+      <main className="flex flex-col flex-1 min-h-0">
         <HeroHeader showSearch={false} />
 
         {/* Tabs */}
@@ -86,8 +86,10 @@ export default function Chat() {
             </div>
           </div>
         ) : (
-          <div className="max-w-7xl mx-auto mt-4 rounded-lg border border-stone-200 dark:border-slate-700 overflow-hidden">
-            <ChatPanel initialConversations={conversations} />
+          <div className="max-w-7xl w-full mx-auto px-6 mt-4 mb-4 flex-1 min-h-0">
+            <div className="h-full rounded-lg border border-stone-200 dark:border-slate-700 overflow-hidden">
+              <ChatPanel initialConversations={conversations} />
+            </div>
           </div>
         )}
       </main>
