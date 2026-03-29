@@ -26,8 +26,8 @@ function NavigationProgressBar() {
   if (!isNavigating) return null;
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 h-1 bg-slate-200 dark:bg-slate-700 overflow-hidden">
-      <div className="h-full bg-brand-dark dark:bg-brand-light animate-progress-bar" />
+    <div className="fixed top-0 left-0 right-0 z-50 h-1 bg-stone-200 dark:bg-slate-700 overflow-hidden">
+      <div className="h-full bg-accent dark:bg-brand-light animate-progress-bar" />
     </div>
   );
 }
@@ -69,7 +69,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body className="bg-slate-100 dark:bg-slate-800">
+      <body className="bg-stone-100 dark:bg-slate-800">
         <NavigationProgressBar />
         {children}
         <ScrollRestoration />
@@ -172,10 +172,10 @@ export function ErrorBoundary() {
         <Meta />
         <Links />
       </head>
-      <body className="bg-slate-100 dark:bg-slate-800 min-h-screen flex items-center justify-center">
+      <body className="bg-stone-100 dark:bg-slate-800 min-h-screen flex items-center justify-center">
         <div className="max-w-md mx-auto px-6 py-12 text-center">
           {statusCode && (
-            <p className="text-6xl font-bold text-slate-300 dark:text-slate-600 mb-4">
+            <p className="text-6xl font-bold text-stone-300 dark:text-slate-600 mb-4">
               {statusCode}
             </p>
           )}
@@ -185,7 +185,7 @@ export function ErrorBoundary() {
           <p className="text-slate-600 dark:text-slate-400 mb-8">{message}</p>
           <Link
             to="/"
-            className="inline-block px-6 py-3 bg-brand-dark dark:bg-brand-light text-white dark:text-slate-900 rounded-lg font-medium hover:opacity-90 transition-opacity"
+            className="inline-block px-6 py-3 bg-accent dark:bg-brand-light text-white dark:text-slate-900 rounded-lg font-medium hover:opacity-90 transition-opacity"
           >
             Back to Home
           </Link>

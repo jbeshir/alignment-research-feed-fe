@@ -70,7 +70,7 @@ function TokenCard({
   const displayName = token.name || `Token ${token.prefix}...`;
 
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-4">
+    <div className="bg-stone-50 dark:bg-slate-800 rounded-lg border border-stone-200 dark:border-slate-700 p-4">
       <div className="flex items-start justify-between">
         <div className="flex-1 min-w-0">
           <h3 className="text-sm font-medium text-brand-dark dark:text-brand-light truncate">
@@ -109,7 +109,7 @@ function TokenCard({
           ) : (
             <button
               onClick={() => setShowConfirm(true)}
-              className="p-1.5 text-slate-400 hover:text-red-500 dark:hover:text-red-400 transition-colors"
+              className="p-1.5 text-stone-500 hover:text-red-500 dark:hover:text-red-400 transition-colors"
               aria-label="Delete token"
             >
               <TrashIcon className="w-4 h-4" />
@@ -196,12 +196,12 @@ function CodeBlock({ code }: { code: string }) {
 
   return (
     <div className="relative">
-      <pre className="bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-4 pr-12 text-sm font-mono text-slate-700 dark:text-slate-300 overflow-x-auto">
+      <pre className="bg-stone-100 dark:bg-slate-900 border border-stone-200 dark:border-slate-700 rounded-lg p-4 pr-12 text-sm font-mono text-slate-700 dark:text-slate-300 overflow-x-auto">
         {code}
       </pre>
       <button
         onClick={handleCopy}
-        className="absolute top-3 right-3 p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 rounded transition-colors"
+        className="absolute top-3 right-3 p-1.5 text-stone-400 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-stone-200 dark:hover:bg-slate-700 rounded transition-colors"
         aria-label={copied ? "Copied" : "Copy code"}
       >
         {copied ? (
@@ -261,7 +261,7 @@ function CreateTokenForm({
           value={name}
           onChange={e => setName(e.target.value)}
           placeholder="Token name (optional)"
-          className="flex-1 px-3 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-800 text-brand-dark dark:text-brand-light placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-dark dark:focus:ring-brand-light"
+          className="flex-1 px-3 py-2 text-sm border border-stone-300 dark:border-slate-600 rounded-md bg-stone-50 dark:bg-slate-800 text-brand-dark dark:text-brand-light placeholder-stone-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-accent dark:focus:ring-brand-light"
         />
         <Button type="submit" variant="primary" disabled={isCreating}>
           {isCreating ? "Creating..." : "Create Token"}
@@ -433,7 +433,7 @@ export default function Settings() {
                   <a
                     key={platform.file}
                     href={`${GITHUB_RELEASES_BASE}/${platform.file}`}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-brand-dark dark:text-brand-light bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-md hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-brand-dark dark:text-brand-light bg-stone-50 dark:bg-slate-800 border border-stone-300 dark:border-slate-600 rounded-md hover:bg-stone-100 dark:hover:bg-slate-700 transition-colors"
                   >
                     <DownloadIcon className="w-4 h-4" />
                     {platform.name}
@@ -469,7 +469,7 @@ export default function Settings() {
               href="/docs/api.html"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-brand-dark dark:bg-brand-light dark:text-brand-dark rounded-md hover:opacity-90 transition-opacity"
+              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-accent dark:bg-brand-light dark:text-brand-dark rounded-md hover:opacity-90 transition-opacity"
             >
               View API Documentation
               <ArrowRightIcon className="w-4 h-4" />

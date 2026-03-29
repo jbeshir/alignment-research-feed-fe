@@ -102,7 +102,7 @@ export function ArticleRow({
   }, []);
 
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm overflow-hidden">
+    <div className="bg-stone-50 dark:bg-slate-800 rounded-lg shadow-sm overflow-hidden">
       {/* Source header strip */}
       <div
         className={`h-10 px-4 flex items-center justify-between ${getCategoryHeaderColor(article.category)}`}
@@ -112,14 +112,14 @@ export function ArticleRow({
         </span>
         <div className="flex items-center gap-2">
           {article.category && (
-            <span className="text-xs px-1.5 py-0.5 rounded bg-white/20 dark:bg-black/20">
+            <span className="text-xs px-1.5 py-0.5 rounded bg-black/10 dark:bg-black/20">
               {article.category}
             </span>
           )}
           {isVideoSource(article.source) && <PlayIcon className="w-5 h-5" />}
           {haveRead && (
             <span title="Read">
-              <CheckCircleIcon className="w-4 h-4 text-green-300" />
+              <CheckCircleIcon className="w-4 h-4 text-green-600 dark:text-green-300" />
             </span>
           )}
         </div>
@@ -162,7 +162,7 @@ export function ArticleRow({
                 {article.authors}
                 {article.published_at && (
                   <>
-                    <span className="mx-1.5 text-slate-300 dark:text-slate-600">
+                    <span className="mx-1.5 text-stone-300 dark:text-slate-600">
                       &middot;
                     </span>
                     {formatPublishedDate(article.published_at)}
@@ -187,13 +187,13 @@ export function ArticleRow({
       </div>
 
       {/* Action bar */}
-      <div className="px-4 py-2 border-t border-slate-100 dark:border-slate-700 flex items-center gap-2 flex-wrap">
+      <div className="px-4 py-2 border-t border-stone-100 dark:border-slate-700 flex items-center gap-2 flex-wrap">
         {/* Thumbs up/down */}
         <button
           type="button"
           onClick={handleThumbsUp}
           disabled={isUpdating}
-          className={`flex items-center gap-1 px-2 py-1 rounded text-sm hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors ${
+          className={`flex items-center gap-1 px-2 py-1 rounded text-sm hover:bg-stone-100 dark:hover:bg-slate-700 transition-colors ${
             thumbsUp
               ? "text-green-600 dark:text-green-400"
               : "text-slate-500 dark:text-slate-400"
@@ -210,7 +210,7 @@ export function ArticleRow({
           type="button"
           onClick={handleThumbsDown}
           disabled={isUpdating}
-          className={`flex items-center gap-1 px-2 py-1 rounded text-sm hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors ${
+          className={`flex items-center gap-1 px-2 py-1 rounded text-sm hover:bg-stone-100 dark:hover:bg-slate-700 transition-colors ${
             thumbsDown
               ? "text-red-600 dark:text-red-400"
               : "text-slate-500 dark:text-slate-400"
@@ -225,7 +225,7 @@ export function ArticleRow({
         </button>
 
         {/* Divider */}
-        <div className="w-px h-5 bg-slate-200 dark:bg-slate-600 mx-1" />
+        <div className="w-px h-5 bg-stone-200 dark:bg-slate-600 mx-1" />
 
         {/* Expand buttons - only shown when data exists */}
         {isSummaryTruncated && (
@@ -234,8 +234,8 @@ export function ArticleRow({
             onClick={() => handleSectionToggle("summary")}
             className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
               expandedSection === "summary"
-                ? "bg-brand-dark text-white dark:bg-brand-light dark:text-slate-900"
-                : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700"
+                ? "bg-accent text-white dark:bg-brand-light dark:text-slate-900"
+                : "text-slate-600 dark:text-slate-400 hover:bg-stone-100 dark:hover:bg-slate-700"
             }`}
           >
             Summary
@@ -247,8 +247,8 @@ export function ArticleRow({
             onClick={() => handleSectionToggle("key_points")}
             className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
               expandedSection === "key_points"
-                ? "bg-brand-dark text-white dark:bg-brand-light dark:text-slate-900"
-                : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700"
+                ? "bg-accent text-white dark:bg-brand-light dark:text-slate-900"
+                : "text-slate-600 dark:text-slate-400 hover:bg-stone-100 dark:hover:bg-slate-700"
             }`}
           >
             Key Points
@@ -260,8 +260,8 @@ export function ArticleRow({
             onClick={() => handleSectionToggle("implication")}
             className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
               expandedSection === "implication"
-                ? "bg-brand-dark text-white dark:bg-brand-light dark:text-slate-900"
-                : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700"
+                ? "bg-accent text-white dark:bg-brand-light dark:text-slate-900"
+                : "text-slate-600 dark:text-slate-400 hover:bg-stone-100 dark:hover:bg-slate-700"
             }`}
           >
             Implication
@@ -272,8 +272,8 @@ export function ArticleRow({
           onClick={() => handleSectionToggle("similar")}
           className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
             expandedSection === "similar"
-              ? "bg-brand-dark text-white dark:bg-brand-light dark:text-slate-900"
-              : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700"
+              ? "bg-accent text-white dark:bg-brand-light dark:text-slate-900"
+              : "text-slate-600 dark:text-slate-400 hover:bg-stone-100 dark:hover:bg-slate-700"
           }`}
         >
           Similar
@@ -285,7 +285,7 @@ export function ArticleRow({
           target="_blank"
           rel="noopener noreferrer"
           onClick={handleMarkAsRead}
-          className="ml-auto flex items-center gap-1 px-2.5 py-1 rounded text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+          className="ml-auto flex items-center gap-1 px-2.5 py-1 rounded text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-stone-100 dark:hover:bg-slate-700 transition-colors"
         >
           Read
           <ExternalLinkIcon className="w-3.5 h-3.5" />
@@ -294,7 +294,7 @@ export function ArticleRow({
 
       {/* Expanded section */}
       {expandedSection && (
-        <div className="px-4 py-3 border-t border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
+        <div className="px-4 py-3 border-t border-stone-100 dark:border-slate-700 bg-stone-100 dark:bg-slate-800/50">
           {expandedSection === "summary" && article.summary && (
             <div>
               <h4 className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2">
@@ -339,7 +339,7 @@ export function ArticleRow({
               </h4>
               {isFetchingSimilar ? (
                 <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 py-2">
-                  <div className="w-4 h-4 border-2 border-slate-300 dark:border-slate-600 border-t-slate-600 dark:border-t-slate-300 rounded-full animate-spin" />
+                  <div className="w-4 h-4 border-2 border-stone-300 dark:border-slate-600 border-t-stone-600 dark:border-t-slate-300 rounded-full animate-spin" />
                   Loading similar articles...
                 </div>
               ) : similarArticles && similarArticles.length > 0 ? (
@@ -349,7 +349,7 @@ export function ArticleRow({
                       key={similar.hash_id}
                       type="button"
                       onClick={() => navigate(`/articles/${similar.hash_id}`)}
-                      className="flex-shrink-0 w-64 rounded-md border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 p-3 text-left hover:border-slate-300 dark:hover:border-slate-500 transition-colors"
+                      className="flex-shrink-0 w-64 rounded-md border border-stone-200 dark:border-slate-600 bg-stone-50 dark:bg-slate-700 p-3 text-left hover:border-stone-300 dark:hover:border-slate-500 transition-colors"
                     >
                       <p className="text-xs text-slate-500 dark:text-slate-400 mb-1 truncate">
                         {getSourceDisplayName(similar.source, similar.authors)}

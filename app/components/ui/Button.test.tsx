@@ -19,7 +19,7 @@ describe("Button", () => {
   it('variant="primary" applies primary classes', () => {
     render(<Button variant="primary">Primary</Button>);
     const btn = screen.getByRole("button");
-    expect(btn.className).toContain("bg-brand-dark");
+    expect(btn.className).toContain("bg-accent");
   });
 
   it("merges custom className", () => {

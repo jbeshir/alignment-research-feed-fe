@@ -63,12 +63,12 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
             placeholder="Ask about alignment research..."
             disabled={isLoading}
             rows={1}
-            className="flex-1 resize-none rounded-lg border border-stone-300 dark:border-slate-600 bg-stone-50 dark:bg-slate-700 px-4 py-3 text-sm text-slate-900 dark:text-slate-100 placeholder:text-stone-500 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-dark disabled:opacity-50"
+            className="flex-1 resize-none rounded-lg border border-stone-300 dark:border-slate-600 bg-stone-50 dark:bg-slate-700 px-4 py-3 text-sm text-slate-900 dark:text-slate-100 placeholder:text-stone-500 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-accent disabled:opacity-50"
           />
           <button
             type="submit"
             disabled={isLoading || !value.trim()}
-            className="rounded-lg bg-brand-dark px-4 py-3 text-sm font-medium text-white hover:bg-brand-dark/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="rounded-lg bg-accent px-4 py-3 text-sm font-medium text-white hover:bg-accent-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {isLoading ? "..." : "Send"}
           </button>

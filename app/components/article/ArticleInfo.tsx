@@ -33,7 +33,7 @@ export function ArticleInfo({
   const haveRead = article.have_read ?? false;
 
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm overflow-hidden">
+    <div className="bg-stone-50 dark:bg-slate-800 rounded-lg shadow-sm overflow-hidden">
       {/* Source header strip - like the card */}
       <div
         className={`h-14 px-6 flex items-center justify-between ${getCategoryHeaderColor(article.category)}`}
@@ -81,20 +81,20 @@ export function ArticleInfo({
           <span>{article.authors}</span>
           {article.published_at && (
             <>
-              <span className="text-slate-400 dark:text-slate-500">•</span>
+              <span className="text-stone-400 dark:text-slate-500">•</span>
               <span>{formatPublishedDate(article.published_at)}</span>
             </>
           )}
         </div>
 
         {/* Actions row */}
-        <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-slate-100 dark:border-slate-700">
+        <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-stone-100 dark:border-slate-700">
           {/* Read article button */}
           <a
             href={article.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-lg font-medium hover:bg-slate-800 dark:hover:bg-slate-200 transition-colors"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-accent dark:bg-slate-100 text-white dark:text-slate-900 rounded-lg font-medium hover:bg-accent-hover dark:hover:bg-slate-200 transition-colors"
           >
             Read Article
             <ExternalLinkIcon className="w-4 h-4" />
@@ -109,7 +109,7 @@ export function ArticleInfo({
               className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors ${
                 thumbsUp
                   ? "border-green-500 bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400"
-                  : "border-slate-200 dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:border-green-300 dark:hover:border-green-700 hover:text-green-600 dark:hover:text-green-400"
+                  : "border-stone-200 dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:border-green-300 dark:hover:border-green-700 hover:text-green-600 dark:hover:text-green-400"
               }`}
               aria-label={thumbsUp ? "Remove thumbs up" : "Thumbs up"}
             >
@@ -127,7 +127,7 @@ export function ArticleInfo({
               className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors ${
                 thumbsDown
                   ? "border-red-500 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400"
-                  : "border-slate-200 dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:border-red-300 dark:hover:border-red-700 hover:text-red-600 dark:hover:text-red-400"
+                  : "border-stone-200 dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:border-red-300 dark:hover:border-red-700 hover:text-red-600 dark:hover:text-red-400"
               }`}
               aria-label={thumbsDown ? "Remove thumbs down" : "Thumbs down"}
             >

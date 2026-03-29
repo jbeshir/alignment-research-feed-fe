@@ -12,7 +12,7 @@ const sizeClasses = {
 export function Spinner({ size = "md", className = "" }: SpinnerProps) {
   return (
     <svg
-      className={`animate-spin text-slate-600 dark:text-slate-300 ${sizeClasses[size]} ${className}`}
+      className={`animate-spin text-stone-500 dark:text-slate-300 ${sizeClasses[size]} ${className}`}
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"

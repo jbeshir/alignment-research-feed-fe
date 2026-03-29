@@ -1,19 +1,30 @@
 // Category-based header colors for card/row header backgrounds
 // Dark backgrounds with white text; slightly lighter in dark mode for contrast
 const CATEGORY_HEADER_COLORS: Record<string, string> = {
-  Interpretability: "bg-teal-800 dark:bg-teal-700 text-white",
-  "Safety Techniques": "bg-blue-800 dark:bg-blue-700 text-white",
-  "Governance & Policy": "bg-indigo-800 dark:bg-indigo-700 text-white",
-  "Deception & Misalignment": "bg-red-800 dark:bg-red-700 text-white",
-  "AI Capabilities & Behavior": "bg-amber-800 dark:bg-amber-700 text-white",
-  "Risks & Strategy": "bg-rose-800 dark:bg-rose-700 text-white",
-  Forecasting: "bg-cyan-800 dark:bg-cyan-700 text-white",
-  "AI & Society": "bg-purple-800 dark:bg-purple-700 text-white",
-  "Field Building": "bg-green-800 dark:bg-green-700 text-white",
-  Other: "bg-slate-700 dark:bg-slate-600 text-white",
+  Interpretability:
+    "bg-teal-50 border-l-4 border-l-teal-600 text-teal-900 dark:bg-teal-700 dark:border-l-0 dark:text-white",
+  "Safety Techniques":
+    "bg-blue-50 border-l-4 border-l-blue-600 text-blue-900 dark:bg-blue-700 dark:border-l-0 dark:text-white",
+  "Governance & Policy":
+    "bg-indigo-50 border-l-4 border-l-indigo-600 text-indigo-900 dark:bg-indigo-700 dark:border-l-0 dark:text-white",
+  "Deception & Misalignment":
+    "bg-red-50 border-l-4 border-l-red-600 text-red-900 dark:bg-red-700 dark:border-l-0 dark:text-white",
+  "AI Capabilities & Behavior":
+    "bg-amber-50 border-l-4 border-l-amber-600 text-amber-900 dark:bg-amber-700 dark:border-l-0 dark:text-white",
+  "Risks & Strategy":
+    "bg-rose-50 border-l-4 border-l-rose-600 text-rose-900 dark:bg-rose-700 dark:border-l-0 dark:text-white",
+  Forecasting:
+    "bg-cyan-50 border-l-4 border-l-cyan-600 text-cyan-900 dark:bg-cyan-700 dark:border-l-0 dark:text-white",
+  "AI & Society":
+    "bg-purple-50 border-l-4 border-l-purple-600 text-purple-900 dark:bg-purple-700 dark:border-l-0 dark:text-white",
+  "Field Building":
+    "bg-green-50 border-l-4 border-l-green-600 text-green-900 dark:bg-green-700 dark:border-l-0 dark:text-white",
+  Other:
+    "bg-stone-100 border-l-4 border-l-stone-500 text-stone-800 dark:bg-slate-600 dark:border-l-0 dark:text-white",
 };
 
-const DEFAULT_HEADER_COLOR = "bg-slate-700 dark:bg-slate-600 text-white";
+const DEFAULT_HEADER_COLOR =
+  "bg-stone-100 border-l-4 border-l-stone-500 text-stone-800 dark:bg-slate-600 dark:border-l-0 dark:text-white";
 
 export function getCategoryHeaderColor(
   category: string | null | undefined
