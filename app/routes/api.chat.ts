@@ -2,7 +2,6 @@ import type { ActionFunctionArgs } from "@remix-run/cloudflare";
 import { json } from "@remix-run/cloudflare";
 import {
   streamText,
-  stepCountIs,
   convertToModelMessages,
   type UIMessage,
 } from "ai";
@@ -18,6 +17,34 @@ import {
   type UserId,
   type ConversationId,
 } from "~/server/chat.server";
+
+/**
+ * Stops generation after `maxToolSteps` tool-calling steps, but only once
+ * the model produces a step without tool calls (the text summary).
+ * This ensures the model always gets a chance to respond with text after
+ * its tool calls, rather than being cut off mid-tool-use.
+ */
+function stopAfterToolSteps(maxToolSteps: number) {
+  return ({ steps }: { steps: Array<{ toolCalls: unknown[] }> }) => {
+    const lastStep = steps[steps.length - 1];
+    const hasToolCallsInLastStep =
+      lastStep != null && lastStep.toolCalls.length > 0;
+    const toolSteps = steps.filter(s => s.toolCalls.length > 0).length;
+    // Stop if we've hit the tool limit AND the last step was text-only,
+    // OR if we've exceeded the limit (hard cap safety)
+    return (
+      (toolSteps >= maxToolSteps && !hasToolCallsInLastStep) ||
+      steps.length >= maxToolSteps + 2
+    );
+  };
+}
+
+function extractTextFromMessage(message: UIMessage): string {
+  return message.parts
+    .filter((p): p is { type: "text"; text: string } => p.type === "text")
+    .map(p => p.text)
+    .join("");
+}
 
 /**
  * Streaming chat endpoint.
@@ -101,67 +128,48 @@ export async function action({ request, context }: ActionFunctionArgs) {
     system: SYSTEM_PROMPT,
     messages: modelMessages,
     tools,
-    stopWhen: stepCountIs(5),
+    stopWhen: stopAfterToolSteps(5),
     maxOutputTokens: 2048,
-    onFinish: async ({ text, steps }) => {
+  });
+
+  const response = result.toUIMessageStreamResponse({
+    originalMessages: uiMessages,
+    onFinish: async ({ messages }) => {
       try {
+        // Find the new messages (user + assistant) added since the previous state
+        // The SDK gives us the complete updated message list
         const lastUserMsg = uiMessages[uiMessages.length - 1];
-        const userText =
-          lastUserMsg?.role === "user"
-            ? lastUserMsg.parts
-                .filter(
-                  (p): p is { type: "text"; text: string } => p.type === "text"
-                )
-                .map(p => p.text)
-                .join("")
-            : null;
+        const responseMsg = messages[messages.length - 1];
+        if (!lastUserMsg || !responseMsg) return;
 
-        if (userText) {
-          // Build UI-reconstructable parts from the step results
-          const assistantParts: unknown[] = [];
-          for (const step of steps) {
-            for (const part of step.content) {
-              if (part.type === "text") {
-                assistantParts.push({ type: "text", text: part.text });
-              } else if (part.type === "tool-call") {
-                const result = step.toolResults.find(
-                  r => "toolCallId" in r && r.toolCallId === part.toolCallId
-                );
-                assistantParts.push({
-                  type: `tool-${part.toolName}`,
-                  toolCallId: part.toolCallId,
-                  state: "output-available",
-                  input: "input" in part ? part.input : null,
-                  output: result && "output" in result ? result.output : null,
-                });
-              }
-            }
-          }
+        const userText = extractTextFromMessage(lastUserMsg);
+        const assistantText = extractTextFromMessage(responseMsg);
 
-          await storage.saveMessages(userId, conversationId, [
-            { role: "user", content: userText },
-            {
-              role: "assistant",
-              content: text,
-              partsJson: JSON.stringify(assistantParts),
-            },
-          ]);
+        await storage.saveMessages(userId, conversationId, [
+          {
+            role: "user",
+            content: userText,
+            partsJson: JSON.stringify(lastUserMsg.parts),
+          },
+          {
+            role: "assistant",
+            content: assistantText,
+            partsJson: JSON.stringify(responseMsg.parts),
+          },
+        ]);
 
-          if (uiMessages.length <= 1) {
-            await storage.updateConversationTitle(
-              userId,
-              conversationId,
-              userText.slice(0, 100)
-            );
-          }
+        if (uiMessages.length <= 1) {
+          await storage.updateConversationTitle(
+            userId,
+            conversationId,
+            userText.slice(0, 100)
+          );
         }
       } catch (error) {
         console.error("Failed to persist chat messages:", error);
       }
     },
   });
-
-  const response = result.toUIMessageStreamResponse();
 
   if (conversationId) {
     const headers = new Headers(response.headers);

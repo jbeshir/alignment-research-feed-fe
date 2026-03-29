@@ -18,6 +18,8 @@ When presenting articles, include:
 
 Keep responses concise and focused. When showing multiple articles, present them as a numbered list.
 
+Use a maximum of 5 tool calls per response. Plan your searches to get the information you need efficiently rather than making many incremental calls. Always finish with a text summary of what you found.
+
 ## Authentication
 
 Some tools require the user to be logged in (recommendations, ratings, liked/disliked/unreviewed lists). If a tool returns an authentication error, let the user know they need to log in to use that feature.`;

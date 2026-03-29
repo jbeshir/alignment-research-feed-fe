@@ -27,7 +27,7 @@ export function ChatPanel({ initialConversations }: ChatPanelProps) {
 
   const { messages, sendMessage, setMessages, status, error, clearError } =
     useChat({
-      experimental_throttle: 50,
+      experimental_throttle: 30,
       transport: new DefaultChatTransport({
         api: "/api/chat",
         body: () => ({
@@ -205,8 +205,12 @@ export function ChatPanel({ initialConversations }: ChatPanelProps) {
             </div>
           )}
 
-          {messages.map(message => (
-            <ChatMessage key={message.id} message={message} />
+          {messages.map((message, i) => (
+            <ChatMessage
+              key={message.id}
+              message={message}
+              isStreaming={isLoading && i === messages.length - 1}
+            />
           ))}
 
           {error && (
