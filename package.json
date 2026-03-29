@@ -29,6 +29,8 @@
     "isbot": "^4.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1",
     "remix-auth": "^4.2.0",
     "remix-auth-auth0": "^2.2.0",
     "vercel-minimax-ai-provider": "^0.0.2",

@@ -79,6 +79,43 @@ describe("ChatMessage", () => {
     expect(screen.getByText("Test Article")).toBeInTheDocument();
   });
 
+  it("renders markdown in assistant messages", () => {
+    const message = makeMessage({
+      role: "assistant",
+      parts: [
+        {
+          type: "text",
+          text: "Here is a **bold** word and a [link](https://example.com)",
+        },
+      ],
+    });
+    render(<ChatMessage message={message} />);
+    expect(screen.getByText("bold").tagName).toBe("STRONG");
+    const link = screen.getByRole("link", { name: "link" });
+    expect(link).toHaveAttribute("href", "https://example.com");
+    expect(link).toHaveAttribute("target", "_blank");
+  });
+
+  it("renders user messages as plain text without markdown", () => {
+    const message = makeMessage({
+      role: "user",
+      parts: [{ type: "text", text: "This has **asterisks**" }],
+    });
+    render(<ChatMessage message={message} />);
+    expect(screen.getByText("This has **asterisks**")).toBeInTheDocument();
+  });
+
+  it("renders markdown lists in assistant messages", () => {
+    const message = makeMessage({
+      role: "assistant",
+      parts: [{ type: "text", text: "- Item one\n- Item two" }],
+    });
+    render(<ChatMessage message={message} />);
+    expect(screen.getByText("Item one")).toBeInTheDocument();
+    expect(screen.getByText("Item two")).toBeInTheDocument();
+    expect(screen.getByRole("list")).toBeInTheDocument();
+  });
+
   it("ignores malformed articles in tool results", () => {
     const message = makeMessage({
       role: "assistant",
