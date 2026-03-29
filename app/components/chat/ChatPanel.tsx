@@ -2,7 +2,7 @@ import { useRef, useEffect, useState, useCallback } from "react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, type UIMessage } from "ai";
 import { ChatMessage } from "./ChatMessage";
-import { ChatInput } from "./ChatInput";
+import { ChatInput, type ChatInputHandle } from "./ChatInput";
 import { ChatConversationList } from "./ChatConversationList";
 import { type Conversation } from "~/server/chat.server";
 
@@ -21,6 +21,7 @@ export function ChatPanel({ initialConversations }: ChatPanelProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const conversationIdRef = useRef<string | null>(null);
+  const chatInputRef = useRef<ChatInputHandle>(null);
 
   // Keep the ref in sync with state
   conversationIdRef.current = activeConversationId;
@@ -57,6 +58,11 @@ export function ChatPanel({ initialConversations }: ChatPanelProps) {
     } catch {
       // Silently fail — conversation list is non-critical
     }
+  }, []);
+
+  // Focus input on mount
+  useEffect(() => {
+    chatInputRef.current?.focus();
   }, []);
 
   // Only auto-scroll when the user is already near the bottom
@@ -117,6 +123,7 @@ export function ChatPanel({ initialConversations }: ChatPanelProps) {
     setMessages([]);
     setSidebarOpen(false);
     clearError();
+    chatInputRef.current?.focus();
   };
 
   const handleDeleteConversation = async (id: string) => {
@@ -226,6 +233,7 @@ export function ChatPanel({ initialConversations }: ChatPanelProps) {
 
         {/* Input */}
         <ChatInput
+          ref={chatInputRef}
           value={input}
           onChange={setInput}
           onSubmit={handleSend}

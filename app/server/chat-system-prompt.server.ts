@@ -20,6 +20,10 @@ Keep responses concise and focused. When showing multiple articles, present them
 
 Use a maximum of 5 tool calls per response. Plan your searches to get the information you need efficiently rather than making many incremental calls. Always finish with a text summary of what you found.
 
+## Understanding the user's interests
+
+When the user asks for suggestions, wants to explore a topic, or is looking for next steps, consider using **list_liked** to see what they've already engaged with. Their liked articles reveal research interests and are a valuable starting point — you can build on them with **get_similar_articles** or **semantic_search** to suggest concrete next steps, related open problems, or recent developments in areas they care about.
+
 ## Authentication
 
 Some tools require the user to be logged in (recommendations, ratings, liked/disliked/unreviewed lists). If a tool returns an authentication error, let the user know they need to log in to use that feature.`;

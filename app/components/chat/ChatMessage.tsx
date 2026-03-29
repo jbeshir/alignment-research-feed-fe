@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { type UIMessage, isToolUIPart } from "ai";
+import { type UIMessage, isToolUIPart, getToolName } from "ai";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { ChatArticleCard } from "./ChatArticleCard";
@@ -10,10 +10,17 @@ interface ChatMessageProps {
   isStreaming?: boolean;
 }
 
-/**
- * Reveals text word-by-word during streaming for a smoother feel.
- * Once streaming ends, shows the full text immediately.
- */
+const TOOL_LABELS: Record<string, string> = {
+  search_articles: "Search Articles",
+  semantic_search: "Semantic Search",
+  get_article: "Get Article",
+  get_similar_articles: "Similar Articles",
+  get_recommendations: "Recommendations",
+  list_liked: "Liked Articles",
+  list_disliked: "Disliked Articles",
+  list_unreviewed: "Unreviewed Articles",
+};
+
 function StreamingText({
   text,
   isStreaming,
@@ -118,6 +125,98 @@ function ChatMarkdown({ text }: { text: string }) {
   );
 }
 
+function ExpandableSection({
+  label,
+  icon,
+  children,
+  defaultOpen = false,
+}: {
+  label: string;
+  icon: string;
+  children: React.ReactNode;
+  defaultOpen?: boolean;
+}) {
+  return (
+    <details
+      className="my-2 rounded border border-slate-200 dark:border-slate-600 overflow-hidden"
+      open={defaultOpen}
+    >
+      <summary className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800 cursor-pointer select-none hover:bg-slate-100 dark:hover:bg-slate-700">
+        <span>{icon}</span>
+        {label}
+      </summary>
+      <div className="px-3 py-2 text-sm">{children}</div>
+    </details>
+  );
+}
+
+function formatToolInput(input: unknown): string {
+  if (!input || typeof input !== "object") return "";
+  return Object.entries(input as Record<string, unknown>)
+    .filter(([, v]) => v != null && v !== "")
+    .map(([k, v]) => `${k}: ${typeof v === "string" ? v : JSON.stringify(v)}`)
+    .join(", ");
+}
+
+function renderToolPart(
+  part: { state: string; input?: unknown; output?: unknown },
+  toolName: string,
+  key: React.Key
+) {
+  const label = TOOL_LABELS[toolName] ?? toolName;
+  const isLoading =
+    part.state === "input-streaming" || part.state === "input-available";
+
+  if (isLoading) {
+    return (
+      <ExpandableSection key={key} label={label} icon="🔧" defaultOpen>
+        <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+          <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-current border-t-transparent" />
+          Searching...
+        </div>
+        {part.input != null && (
+          <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">
+            {formatToolInput(part.input)}
+          </p>
+        )}
+      </ExpandableSection>
+    );
+  }
+
+  if (part.state !== "output-available") return null;
+
+  const articles = extractArticles(part.output);
+
+  return (
+    <ExpandableSection key={key} label={label} icon="🔧">
+      {part.input != null && (
+        <p className="mb-2 text-xs text-slate-400 dark:text-slate-500">
+          {formatToolInput(part.input)}
+        </p>
+      )}
+      {articles.length > 0 ? (
+        <div className="space-y-2">
+          {articles.map(article => (
+            <ChatArticleCard key={article.hash_id} article={article} />
+          ))}
+        </div>
+      ) : (
+        <p className="text-xs text-slate-400 dark:text-slate-500">No results</p>
+      )}
+    </ExpandableSection>
+  );
+}
+
+function extractArticles(output: unknown) {
+  if (!output || typeof output !== "object") return [];
+  const data = (output as { data?: unknown[] }).data;
+  if (!Array.isArray(data)) return [];
+  return data
+    .map(item => ArticleSchema.safeParse(item))
+    .filter(r => r.success)
+    .map(r => r.data);
+}
+
 function renderParts(message: UIMessage, isStreaming: boolean) {
   const elements: React.ReactNode[] = [];
 
@@ -142,42 +241,24 @@ function renderParts(message: UIMessage, isStreaming: boolean) {
           />
         </div>
       );
-    } else if (isToolUIPart(part)) {
-      if (
-        part.state === "input-streaming" ||
-        part.state === "input-available"
-      ) {
+    } else if (part.type === "reasoning") {
+      const reasoningPart = part as { text: string; state?: string };
+      if (reasoningPart.text) {
         elements.push(
-          <div
-            key={i}
-            className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 my-2"
-          >
-            <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-current border-t-transparent" />
-            Searching...
-          </div>
+          <ExpandableSection key={i} label="Thinking" icon="💭">
+            <p className="whitespace-pre-wrap text-xs text-slate-500 dark:text-slate-400">
+              {reasoningPart.text}
+            </p>
+            {reasoningPart.state === "streaming" && (
+              <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-current border-t-transparent" />
+            )}
+          </ExpandableSection>
         );
-      } else if (part.state === "output-available") {
-        const result = part.output;
-        if (result && typeof result === "object") {
-          const data = (result as { data?: unknown[] }).data;
-          if (Array.isArray(data)) {
-            const articles = data
-              .map(item => ArticleSchema.safeParse(item))
-              .filter(r => r.success)
-              .map(r => r.data);
-
-            if (articles.length > 0) {
-              elements.push(
-                <div key={i} className="my-2 space-y-2">
-                  {articles.map(article => (
-                    <ChatArticleCard key={article.hash_id} article={article} />
-                  ))}
-                </div>
-              );
-            }
-          }
-        }
       }
+    } else if (isToolUIPart(part)) {
+      const name = getToolName(part);
+      const element = renderToolPart(part, name, i);
+      if (element) elements.push(element);
     }
   }
 
