@@ -25,10 +25,10 @@ pages_build_output_dir = "./build/client"
 
 # Bind a D1 database. D1 is Cloudflare’s native serverless SQL database.
 # Docs: https://developers.cloudflare.com/pages/functions/bindings/#d1-databases
-# [[d1_databases]]
-# binding = "MY_DB"
-# database_name = "my-database"
-# database_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+[[d1_databases]]
+binding = "CHAT_DB"
+database_name = "alignment-feed-chat"
+database_id = "ca283ecf-ba0c-4bda-a61e-f41d142c98a2"
 
 # Bind a Durable Object. Durable objects are a scale-to-zero compute primitive based on the actor model.
 # Durable Objects can live for as long as needed. Use these when you need a long-running "server", such as in realtime apps.
@@ -74,6 +74,13 @@ AUTH0_DOMAIN = "alignment-feed.us.auth0.com"
 AUTH0_CLIENT_ID = "aGMS20BZTfNKdXPXAkojqZzPxWqUqbhK"
 AUTH0_DEFAULT_REDIRECT_URI = "https://www.alignmentfeed.org"
 AUTH0_AUDIENCE = "alignment-feed-api"
+MINIMAX_MODEL = "MiniMax-M2.7"
+CHAT_STORAGE_DRIVER = "d1"
+
+[[env.preview.d1_databases]]
+binding = "CHAT_DB"
+database_name = "alignment-feed-chat-preview"
+database_id = "ab05be01-4984-4519-af0c-057ae7f820db"
 
 # [[env.preview.kv_namespaces]]
 # binding = "MY_KV_NAMESPACE"
@@ -87,6 +94,13 @@ AUTH0_DOMAIN = "alignment-feed.us.auth0.com"
 AUTH0_CLIENT_ID = "aGMS20BZTfNKdXPXAkojqZzPxWqUqbhK"
 AUTH0_DEFAULT_REDIRECT_URI = "https://www.alignmentfeed.org"
 AUTH0_AUDIENCE = "alignment-feed-api"
+MINIMAX_MODEL = "MiniMax-M2.7"
+CHAT_STORAGE_DRIVER = "d1"
+
+[[env.production.d1_databases]]
+binding = "CHAT_DB"
+database_name = "alignment-feed-chat"
+database_id = "ca283ecf-ba0c-4bda-a61e-f41d142c98a2"
 
 # [[env.production.kv_namespaces]]
 # binding = "MY_KV_NAMESPACE"

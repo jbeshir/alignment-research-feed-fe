@@ -10,4 +10,8 @@ export interface Env {
   AUTH0_DEFAULT_REDIRECT_URI: string;
   AUTH0_AUDIENCE: string;
   SENTRY_DSN?: string; // Optional Sentry DSN for error tracking
+  MINIMAX_API_KEY: string;
+  MINIMAX_MODEL: string;
+  CHAT_STORAGE_DRIVER: string; // "d1" or "null"
+  CHAT_DB?: D1Database; // Required when CHAT_STORAGE_DRIVER=d1
 }
