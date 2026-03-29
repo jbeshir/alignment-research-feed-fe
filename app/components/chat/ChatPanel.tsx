@@ -1,0 +1,185 @@
+import { useRef, useEffect, useState, useCallback } from "react";
+import { useChat } from "@ai-sdk/react";
+import { type UIMessage } from "ai";
+import { ChatMessage } from "./ChatMessage";
+import { ChatInput } from "./ChatInput";
+import { ChatConversationList } from "./ChatConversationList";
+import { type Conversation } from "~/server/chat.server";
+
+interface ChatPanelProps {
+  initialConversations: Conversation[];
+}
+
+export function ChatPanel({ initialConversations }: ChatPanelProps) {
+  const [conversations, setConversations] =
+    useState<Conversation[]>(initialConversations);
+  const [activeConversationId, setActiveConversationId] = useState<
+    string | null
+  >(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [input, setInput] = useState("");
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const chatOptions = activeConversationId ? { id: activeConversationId } : {};
+  const { messages, sendMessage, setMessages, status } = useChat({
+    ...chatOptions,
+    onFinish: () => {
+      refreshConversations();
+    },
+  });
+
+  const refreshConversations = useCallback(async () => {
+    try {
+      const resp = await fetch("/api/chat/conversations");
+      if (resp.ok) {
+        const data = (await resp.json()) as { conversations: Conversation[] };
+        setConversations(data.conversations);
+      }
+    } catch {
+      // Silently fail — conversation list is non-critical
+    }
+  }, []);
+
+  // Scroll to bottom on new messages
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  const handleSend = () => {
+    if (!input.trim()) return;
+    const text = input;
+    setInput("");
+    sendMessage({ text });
+  };
+
+  const handleSelectConversation = async (id: string) => {
+    setActiveConversationId(id);
+    setSidebarOpen(false);
+
+    try {
+      const resp = await fetch(`/api/chat/conversations/${id}`);
+      if (resp.ok) {
+        const data = (await resp.json()) as {
+          messages: Array<{
+            id: string;
+            role: string;
+            content: string;
+          }>;
+        };
+        const uiMessages: UIMessage[] = data.messages
+          .filter(m => m.role === "user" || m.role === "assistant")
+          .map(m => ({
+            id: m.id,
+            role: m.role as "user" | "assistant",
+            parts: [{ type: "text" as const, text: m.content }],
+          }));
+        setMessages(uiMessages);
+      }
+    } catch {
+      // Failed to load conversation
+    }
+  };
+
+  const handleNewChat = () => {
+    setActiveConversationId(null);
+    setMessages([]);
+    setSidebarOpen(false);
+  };
+
+  const handleDeleteConversation = async (id: string) => {
+    try {
+      await fetch(`/api/chat/conversations/${id}`, { method: "DELETE" });
+      setConversations(prev => prev.filter(c => c.id !== id));
+      if (activeConversationId === id) {
+        handleNewChat();
+      }
+    } catch {
+      // Failed to delete
+    }
+  };
+
+  const isLoading = status === "streaming" || status === "submitted";
+
+  return (
+    <div className="flex h-[calc(100vh-280px)] min-h-[400px]">
+      {/* Sidebar — conversations (desktop) */}
+      <div className="hidden md:block w-64 border-r border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
+        <ChatConversationList
+          conversations={conversations}
+          activeId={activeConversationId}
+          onSelect={handleSelectConversation}
+          onNew={handleNewChat}
+          onDelete={handleDeleteConversation}
+        />
+      </div>
+
+      {/* Mobile sidebar overlay */}
+      {sidebarOpen && (
+        <div className="fixed inset-0 z-40 md:hidden">
+          <button
+            type="button"
+            className="absolute inset-0 bg-black/30"
+            onClick={() => setSidebarOpen(false)}
+            aria-label="Close sidebar"
+          />
+          {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
+          <div
+            className="absolute left-0 top-0 bottom-0 w-64 bg-slate-50 dark:bg-slate-800 shadow-lg"
+            onClick={e => e.stopPropagation()}
+          >
+            <ChatConversationList
+              conversations={conversations}
+              activeId={activeConversationId}
+              onSelect={handleSelectConversation}
+              onNew={handleNewChat}
+              onDelete={handleDeleteConversation}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Main chat area */}
+      <div className="flex flex-1 flex-col min-w-0">
+        {/* Mobile sidebar toggle */}
+        <div className="md:hidden border-b border-slate-200 dark:border-slate-700 px-4 py-2">
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100"
+          >
+            ☰ Conversations
+          </button>
+        </div>
+
+        {/* Messages */}
+        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          {messages.length === 0 && (
+            <div className="flex h-full items-center justify-center">
+              <div className="text-center">
+                <h3 className="text-lg font-medium text-slate-700 dark:text-slate-300">
+                  Alignment Feed AI Assistant
+                </h3>
+                <p className="mt-2 text-sm text-slate-500 dark:text-slate-400 max-w-md">
+                  Ask me about AI alignment research. I can search articles,
+                  find related papers, check your recommendations, and more.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {messages.map(message => (
+            <ChatMessage key={message.id} message={message} />
+          ))}
+          <div ref={messagesEndRef} />
+        </div>
+
+        {/* Input */}
+        <ChatInput
+          value={input}
+          onChange={setInput}
+          onSubmit={handleSend}
+          isLoading={isLoading}
+        />
+      </div>
+    </div>
+  );
+}
