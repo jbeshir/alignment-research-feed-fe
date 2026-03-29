@@ -86,7 +86,7 @@ export default function Chat() {
             </div>
           </div>
         ) : (
-          <div className="max-w-7xl mx-auto mt-4 rounded-lg border border-slate-200 dark:border-slate-700 overflow-hidden">
+          <div className="max-w-7xl mx-auto mt-4 rounded-lg border border-stone-200 dark:border-slate-700 overflow-hidden">
             <ChatPanel initialConversations={conversations} />
           </div>
         )}

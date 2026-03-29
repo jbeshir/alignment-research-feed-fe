@@ -169,10 +169,10 @@ function ExpandableSection({
 }) {
   return (
     <details
-      className="my-3 rounded border border-slate-200 dark:border-slate-600 overflow-hidden"
+      className="my-3 rounded border border-stone-200 dark:border-slate-600 overflow-hidden"
       open={defaultOpen}
     >
-      <summary className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800 cursor-pointer select-none hover:bg-slate-100 dark:hover:bg-slate-700">
+      <summary className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-stone-600 dark:text-slate-400 bg-stone-50 dark:bg-slate-800 cursor-pointer select-none hover:bg-stone-100 dark:hover:bg-slate-700">
         <span>{icon}</span>
         {label}
       </summary>
@@ -202,12 +202,12 @@ function renderToolPart(
   if (isLoading) {
     return (
       <ExpandableSection key={key} label={label} icon="🔧" defaultOpen>
-        <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+        <div className="flex items-center gap-2 text-xs text-stone-600 dark:text-slate-400">
           <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-current border-t-transparent" />
           Searching...
         </div>
         {part.input != null && (
-          <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">
+          <p className="mt-1 text-xs text-stone-500 dark:text-slate-500">
             {formatToolInput(part.input)}
           </p>
         )}
@@ -222,7 +222,7 @@ function renderToolPart(
   return (
     <ExpandableSection key={key} label={label} icon="🔧">
       {part.input != null && (
-        <p className="mb-2 text-xs text-slate-400 dark:text-slate-500">
+        <p className="mb-2 text-xs text-stone-500 dark:text-slate-500">
           {formatToolInput(part.input)}
         </p>
       )}
@@ -237,7 +237,7 @@ function renderToolPart(
           ))}
         </div>
       ) : (
-        <p className="text-xs text-slate-400 dark:text-slate-500">No results</p>
+        <p className="text-xs text-stone-500 dark:text-slate-500">No results</p>
       )}
     </ExpandableSection>
   );
@@ -299,7 +299,7 @@ function renderParts(
       if (reasoningPart.text) {
         elements.push(
           <ExpandableSection key={i} label="Thinking" icon="💭">
-            <p className="whitespace-pre-wrap text-xs text-slate-500 dark:text-slate-400">
+            <p className="whitespace-pre-wrap text-xs text-stone-600 dark:text-slate-400">
               {reasoningPart.text}
             </p>
             {reasoningPart.state === "streaming" && (
@@ -330,8 +330,8 @@ export function ChatMessage({
       <div
         className={`max-w-[85%] rounded-lg px-4 py-3 ${
           isUser
-            ? "bg-brand-dark text-white"
-            : "bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-600"
+            ? "bg-amber-800 text-white dark:bg-brand-dark"
+            : "bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 border border-stone-200 dark:border-slate-600"
         }`}
       >
         {isUser ? (

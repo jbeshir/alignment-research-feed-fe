@@ -154,7 +154,7 @@ export function ChatPanel({ initialConversations }: ChatPanelProps) {
   return (
     <div className="flex h-[calc(100vh-280px)] min-h-[400px]">
       {/* Sidebar — conversations (desktop) */}
-      <div className="hidden md:block w-64 border-r border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
+      <div className="hidden md:block w-64 border-r border-stone-200 dark:border-slate-700 bg-stone-100 dark:bg-slate-800/50">
         <ChatConversationList
           conversations={conversations}
           activeId={activeConversationId}
@@ -175,7 +175,7 @@ export function ChatPanel({ initialConversations }: ChatPanelProps) {
           />
           {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
           <div
-            className="absolute left-0 top-0 bottom-0 w-64 bg-slate-50 dark:bg-slate-800 shadow-lg"
+            className="absolute left-0 top-0 bottom-0 w-64 bg-stone-100 dark:bg-slate-800 shadow-lg"
             onClick={e => e.stopPropagation()}
           >
             <ChatConversationList
@@ -192,7 +192,7 @@ export function ChatPanel({ initialConversations }: ChatPanelProps) {
       {/* Main chat area */}
       <div className="flex flex-1 flex-col min-w-0">
         {/* Mobile sidebar toggle */}
-        <div className="md:hidden border-b border-slate-200 dark:border-slate-700 px-4 py-2">
+        <div className="md:hidden border-b border-stone-200 dark:border-slate-700 px-4 py-2">
           <button
             onClick={() => setSidebarOpen(true)}
             className="text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100"
@@ -204,7 +204,7 @@ export function ChatPanel({ initialConversations }: ChatPanelProps) {
         {/* Messages */}
         <div
           ref={messagesContainerRef}
-          className="flex flex-col flex-1 overflow-y-auto p-4 space-y-4"
+          className="flex flex-col flex-1 overflow-y-auto p-4 space-y-4 bg-stone-50 dark:bg-transparent"
         >
           {messages.length === 0 && !error && (
             <div className="flex flex-1 items-center justify-center">
@@ -212,7 +212,7 @@ export function ChatPanel({ initialConversations }: ChatPanelProps) {
                 <h3 className="text-lg font-medium text-slate-700 dark:text-slate-300">
                   Alignment Feed AI Assistant
                 </h3>
-                <p className="mt-2 text-sm text-slate-500 dark:text-slate-400 max-w-md">
+                <p className="mt-2 text-sm text-stone-600 dark:text-slate-400 max-w-md">
                   Ask me about AI alignment research. I can search articles,
                   find related papers, check your recommendations, and more.
                 </p>

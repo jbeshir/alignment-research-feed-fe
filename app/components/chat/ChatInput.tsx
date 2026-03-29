@@ -50,7 +50,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
     };
 
     return (
-      <div className="border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4">
+      <div className="border-t border-stone-200 dark:border-slate-700 bg-stone-100 dark:bg-slate-800 p-4">
         <form onSubmit={handleSubmit} className="flex gap-3 items-end">
           <textarea
             ref={textareaRef}
@@ -63,7 +63,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
             placeholder="Ask about alignment research..."
             disabled={isLoading}
             rows={1}
-            className="flex-1 resize-none rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-4 py-3 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-dark disabled:opacity-50"
+            className="flex-1 resize-none rounded-lg border border-stone-300 dark:border-slate-600 bg-stone-50 dark:bg-slate-700 px-4 py-3 text-sm text-slate-900 dark:text-slate-100 placeholder:text-stone-500 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-dark disabled:opacity-50"
           />
           <button
             type="submit"
@@ -73,7 +73,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
             {isLoading ? "..." : "Send"}
           </button>
         </form>
-        <p className="mt-2 text-center text-xs text-slate-400 dark:text-slate-500">
+        <p className="mt-2 text-center text-xs text-stone-500 dark:text-slate-500">
           Powered by MiniMax
         </p>
       </div>
