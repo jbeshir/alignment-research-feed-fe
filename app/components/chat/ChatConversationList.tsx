@@ -9,7 +9,7 @@ interface ChatConversationListProps {
 }
 
 function formatRelativeTime(dateStr: string): string {
-  const date = new Date(dateStr + "Z"); // D1 stores UTC without Z suffix
+  const date = new Date(dateStr);
   const now = Date.now();
   const diffMs = now - date.getTime();
   const diffMin = Math.floor(diffMs / 60000);

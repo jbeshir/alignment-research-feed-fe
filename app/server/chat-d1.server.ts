@@ -7,6 +7,20 @@ import type {
   UserId,
 } from "./chat.server";
 
+/** D1's datetime('now') returns "YYYY-MM-DD HH:MM:SS" — normalize to ISO 8601. */
+function normalizeTimestamp(d1Date: string): string {
+  if (d1Date.includes("T")) return d1Date;
+  return d1Date.replace(" ", "T") + "Z";
+}
+
+function normalizeConversation(row: Conversation): Conversation {
+  return {
+    ...row,
+    created_at: normalizeTimestamp(row.created_at),
+    updated_at: normalizeTimestamp(row.updated_at),
+  };
+}
+
 export class D1ChatStorage implements ChatStorage {
   constructor(private db: D1Database) {}
 
@@ -29,7 +43,7 @@ export class D1ChatStorage implements ChatStorage {
       )
       .bind(userId, limit)
       .all<Conversation>();
-    return result.results;
+    return result.results.map(normalizeConversation);
   }
 
   async getConversation(
@@ -42,6 +56,7 @@ export class D1ChatStorage implements ChatStorage {
       .first<Conversation>();
 
     if (!conversation) return null;
+    const normalized = normalizeConversation(conversation);
 
     const messagesResult = await this.db
       .prepare(
@@ -50,7 +65,7 @@ export class D1ChatStorage implements ChatStorage {
       .bind(userId, conversationId)
       .all<Message>();
 
-    return { conversation, messages: messagesResult.results };
+    return { conversation: normalized, messages: messagesResult.results };
   }
 
   async saveMessages(
@@ -61,7 +76,7 @@ export class D1ChatStorage implements ChatStorage {
     const batch = messages.map(msg =>
       this.db
         .prepare(
-          "INSERT INTO messages (id, user_id, conversation_id, role, content, tool_calls, tool_results) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)"
+          "INSERT INTO messages (id, user_id, conversation_id, role, content, parts_json) VALUES (?1, ?2, ?3, ?4, ?5, ?6)"
         )
         .bind(
           crypto.randomUUID(),
@@ -69,8 +84,7 @@ export class D1ChatStorage implements ChatStorage {
           conversationId,
           msg.role,
           msg.content,
-          msg.toolCalls ?? null,
-          msg.toolResults ?? null
+          msg.partsJson ?? null
         )
     );
 

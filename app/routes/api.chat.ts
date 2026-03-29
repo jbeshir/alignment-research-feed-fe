@@ -14,7 +14,7 @@ import {
 import { createChatTools } from "~/server/chat-tools.server";
 import { SYSTEM_PROMPT } from "~/server/chat-system-prompt.server";
 import {
-  setupChatStorage,
+  createChatStorage,
   type UserId,
   type ConversationId,
 } from "~/server/chat.server";
@@ -51,17 +51,30 @@ export async function action({ request, context }: ActionFunctionArgs) {
   }
 
   const userId = rawUserId as UserId;
-  const storage = setupChatStorage(env);
+
+  let storage;
+  try {
+    storage = createChatStorage(env);
+  } catch (error) {
+    console.error("Failed to create chat storage:", error);
+    return json({ error: "Chat service is not configured" }, { status: 503 });
+  }
+
   let conversationId = (requestedConversationId ??
     null) as ConversationId | null;
 
-  if (conversationId) {
-    const existing = await storage.getConversation(userId, conversationId);
-    if (!existing) {
-      return json({ error: "Conversation not found" }, { status: 404 });
+  try {
+    if (conversationId) {
+      const existing = await storage.getConversation(userId, conversationId);
+      if (!existing) {
+        return json({ error: "Conversation not found" }, { status: 404 });
+      }
+    } else {
+      conversationId = await storage.createConversation(userId);
     }
-  } else {
-    conversationId = await storage.createConversation(userId);
+  } catch (error) {
+    console.error("Chat storage error:", error);
+    return json({ error: "Failed to load conversation" }, { status: 500 });
   }
 
   const minimax = createMinimax({ apiKey: env.MINIMAX_API_KEY });
@@ -72,11 +85,16 @@ export async function action({ request, context }: ActionFunctionArgs) {
     isAuthenticated,
   });
 
-  // Convert UI messages to model messages for streamText
-  const modelMessages = await convertToModelMessages(uiMessages, {
-    tools,
-    ignoreIncompleteToolCalls: true,
-  });
+  let modelMessages;
+  try {
+    modelMessages = await convertToModelMessages(uiMessages, {
+      tools,
+      ignoreIncompleteToolCalls: true,
+    });
+  } catch (error) {
+    console.error("Failed to convert messages:", error);
+    return json({ error: "Failed to process messages" }, { status: 400 });
+  }
 
   const result = streamText({
     model: minimax(env.MINIMAX_MODEL),
@@ -85,9 +103,8 @@ export async function action({ request, context }: ActionFunctionArgs) {
     tools,
     stopWhen: stepCountIs(5),
     maxOutputTokens: 2048,
-    onFinish: async ({ text }) => {
+    onFinish: async ({ text, steps }) => {
       try {
-        // Find the last user message text
         const lastUserMsg = uiMessages[uiMessages.length - 1];
         const userText =
           lastUserMsg?.role === "user"
@@ -100,12 +117,36 @@ export async function action({ request, context }: ActionFunctionArgs) {
             : null;
 
         if (userText) {
+          // Build UI-reconstructable parts from the step results
+          const assistantParts: unknown[] = [];
+          for (const step of steps) {
+            for (const part of step.content) {
+              if (part.type === "text") {
+                assistantParts.push({ type: "text", text: part.text });
+              } else if (part.type === "tool-call") {
+                const result = step.toolResults.find(
+                  r => "toolCallId" in r && r.toolCallId === part.toolCallId
+                );
+                assistantParts.push({
+                  type: `tool-${part.toolName}`,
+                  toolCallId: part.toolCallId,
+                  state: "output-available",
+                  input: "input" in part ? part.input : null,
+                  output: result && "output" in result ? result.output : null,
+                });
+              }
+            }
+          }
+
           await storage.saveMessages(userId, conversationId, [
             { role: "user", content: userText },
-            { role: "assistant", content: text },
+            {
+              role: "assistant",
+              content: text,
+              partsJson: JSON.stringify(assistantParts),
+            },
           ]);
 
-          // Set conversation title from first user message
           if (uiMessages.length <= 1) {
             await storage.updateConversationTitle(
               userId,

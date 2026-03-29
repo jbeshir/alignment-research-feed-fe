@@ -9,7 +9,7 @@ import { MAIN_TABS } from "~/constants/navigation";
 import { ChatPanel } from "~/components/chat/ChatPanel";
 import { getServerAuthContext } from "~/server/auth.server";
 import {
-  setupChatStorage,
+  createChatStorage,
   type Conversation,
   type UserId,
 } from "~/server/chat.server";
@@ -39,10 +39,15 @@ export const loader = async ({ request, context }: LoaderFunctionArgs) => {
 
   let conversations: Conversation[] = [];
   if (authContext.isAuthenticated && authContext.user) {
-    const storage = setupChatStorage(context.cloudflare.env);
-    conversations = await storage.listConversations(
-      authContext.user.id as UserId
-    );
+    try {
+      const storage = createChatStorage(context.cloudflare.env);
+      conversations = await storage.listConversations(
+        authContext.user.id as UserId
+      );
+    } catch (error) {
+      console.error("Failed to load chat conversations:", error);
+      // Page still renders — just with empty conversation list
+    }
   }
 
   return json({

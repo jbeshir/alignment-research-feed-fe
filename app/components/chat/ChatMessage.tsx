@@ -1,34 +1,58 @@
-import { type UIMessage } from "ai";
+import { type UIMessage, isToolUIPart } from "ai";
 import { ChatArticleCard } from "./ChatArticleCard";
-import { type Article } from "~/schemas/article";
+import { ArticleSchema } from "~/schemas/article";
 
 interface ChatMessageProps {
   message: UIMessage;
 }
 
-type ToolPart = {
-  type: string;
-  state: string;
-  output?: unknown;
-  toolCallId: string;
-};
+function renderParts(message: UIMessage) {
+  const elements: React.ReactNode[] = [];
 
-function isToolPart(part: { type: string }): part is ToolPart {
-  return part.type.startsWith("tool-") || part.type === "dynamic-tool";
-}
+  for (let i = 0; i < message.parts.length; i++) {
+    const part = message.parts[i]!;
 
-function extractArticlesFromParts(message: UIMessage): Article[] {
-  const articles: Article[] = [];
+    if (part.type === "text" && part.text) {
+      elements.push(
+        <div key={i} className="whitespace-pre-wrap text-sm">
+          {part.text}
+        </div>
+      );
+    } else if (isToolUIPart(part)) {
+      if (
+        part.state === "input-streaming" ||
+        part.state === "input-available"
+      ) {
+        elements.push(
+          <div
+            key={i}
+            className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 my-2"
+          >
+            <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-current border-t-transparent" />
+            Searching...
+          </div>
+        );
+      } else if (part.state === "output-available") {
+        const result = part.output;
+        if (result && typeof result === "object") {
+          const data = (result as { data?: unknown[] }).data;
+          if (Array.isArray(data)) {
+            const articles = data
+              .map(item => ArticleSchema.safeParse(item))
+              .filter(r => r.success)
+              .map(r => r.data);
 
-  for (const part of message.parts) {
-    if (isToolPart(part) && part.state === "output-available") {
-      const result = part.output as unknown;
-      if (result && typeof result === "object") {
-        const data = result as { data?: unknown[] };
-        if (Array.isArray(data.data)) {
-          for (const item of data.data) {
-            if (item && typeof item === "object" && "hash_id" in item) {
-              articles.push(item as Article);
+            if (articles.length > 0) {
+              elements.push(
+                <div key={i} className="my-2 space-y-2">
+                  {articles.map(article => (
+                    <ChatArticleCard
+                      key={article.hash_id}
+                      article={article}
+                    />
+                  ))}
+                </div>
+              );
             }
           }
         }
@@ -36,59 +60,22 @@ function extractArticlesFromParts(message: UIMessage): Article[] {
     }
   }
 
-  return articles;
-}
-
-function getTextContent(message: UIMessage): string {
-  return message.parts
-    .filter(
-      (part): part is { type: "text"; text: string } => part.type === "text"
-    )
-    .map(part => part.text)
-    .join("");
-}
-
-function hasActiveToolCalls(message: UIMessage): boolean {
-  return message.parts.some(
-    part =>
-      isToolPart(part) &&
-      (part.state === "input-streaming" || part.state === "input-available")
-  );
+  return elements;
 }
 
 export function ChatMessage({ message }: ChatMessageProps) {
   const isUser = message.role === "user";
-  const textContent = getTextContent(message);
-  const articles = isUser ? [] : extractArticlesFromParts(message);
-  const isToolLoading = !isUser && hasActiveToolCalls(message);
 
   return (
     <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
       <div
         className={`max-w-[85%] rounded-lg px-4 py-3 ${
           isUser
-            ? "bg-brand-primary text-white"
+            ? "bg-brand-dark text-white"
             : "bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-600"
         }`}
       >
-        {textContent && (
-          <div className="whitespace-pre-wrap text-sm">{textContent}</div>
-        )}
-
-        {isToolLoading && (
-          <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mt-1">
-            <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-current border-t-transparent" />
-            Searching...
-          </div>
-        )}
-
-        {articles.length > 0 && (
-          <div className="mt-3 space-y-2">
-            {articles.map(article => (
-              <ChatArticleCard key={article.hash_id} article={article} />
-            ))}
-          </div>
-        )}
+        {renderParts(message)}
       </div>
     </div>
   );

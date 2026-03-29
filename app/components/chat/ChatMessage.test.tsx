@@ -78,4 +78,36 @@ describe("ChatMessage", () => {
     render(<ChatMessage message={message} />);
     expect(screen.getByText("Test Article")).toBeInTheDocument();
   });
+
+  it("ignores malformed articles in tool results", () => {
+    const message = makeMessage({
+      role: "assistant",
+      parts: [
+        {
+          type: "tool-search_articles" as "text",
+          toolCallId: "call-1",
+          state: "output-available",
+          input: { query: "test" },
+          output: {
+            data: [
+              { hash_id: "abc123" }, // missing required fields
+              {
+                hash_id: "def456",
+                title: "Valid Article",
+                link: "https://example.com",
+                text_start: "Text",
+                authors: "Author",
+                source: "arxiv",
+                published_at: "2024-01-01",
+              },
+            ],
+          },
+        } as unknown as { type: "text"; text: string },
+      ],
+    });
+    render(<ChatMessage message={message} />);
+    // Only the valid article should render
+    expect(screen.getByText("Valid Article")).toBeInTheDocument();
+    expect(screen.queryAllByRole("link")).toHaveLength(1);
+  });
 });

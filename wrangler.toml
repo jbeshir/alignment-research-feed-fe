@@ -94,6 +94,7 @@ AUTH0_DOMAIN = "alignment-feed.us.auth0.com"
 AUTH0_CLIENT_ID = "aGMS20BZTfNKdXPXAkojqZzPxWqUqbhK"
 AUTH0_DEFAULT_REDIRECT_URI = "https://www.alignmentfeed.org"
 AUTH0_AUDIENCE = "alignment-feed-api"
+MINIMAX_MODEL = "MiniMax-M2.7"
 CHAT_STORAGE_DRIVER = "d1"
 
 [[env.production.d1_databases]]

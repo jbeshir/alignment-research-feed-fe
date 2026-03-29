@@ -1,7 +1,7 @@
 import type { LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { json } from "@remix-run/cloudflare";
 import { getServerAuthContext } from "~/server/auth.server";
-import { setupChatStorage, type UserId } from "~/server/chat.server";
+import { createChatStorage, type UserId } from "~/server/chat.server";
 
 /**
  * GET /api/chat/conversations
@@ -14,7 +14,7 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
     return json({ conversations: [] });
   }
 
-  const storage = setupChatStorage(context.cloudflare.env);
+  const storage = createChatStorage(context.cloudflare.env);
   const conversations = await storage.listConversations(
     authContext.user.id as UserId
   );

@@ -21,18 +21,16 @@ export type Message = {
   id: string;
   user_id: UserId;
   conversation_id: ConversationId;
-  role: "user" | "assistant" | "tool";
+  role: "user" | "assistant";
   content: string;
-  tool_calls: string | null;
-  tool_results: string | null;
+  parts_json: string | null;
   created_at: string;
 };
 
 export type SaveMessageInput = {
-  role: "user" | "assistant" | "tool";
+  role: "user" | "assistant";
   content: string;
-  toolCalls?: string;
-  toolResults?: string;
+  partsJson?: string;
 };
 
 export interface ChatStorage {
@@ -62,18 +60,15 @@ import { D1ChatStorage } from "./chat-d1.server";
 import { MemoryChatStorage } from "./chat-memory.server";
 import { NullChatStorage } from "./chat-null.server";
 
+const memoryChatStorageSingleton = new MemoryChatStorage();
+
 type ChatEnv = {
-  CHAT_STORAGE_DRIVER?: string;
+  CHAT_STORAGE_DRIVER: string;
   CHAT_DB?: D1Database;
 };
 
-export function setupChatStorage(env: ChatEnv): ChatStorage {
-  const driver = env.CHAT_STORAGE_DRIVER;
-  if (!driver) {
-    throw new Error("CHAT_STORAGE_DRIVER env var is required");
-  }
-
-  switch (driver) {
+export function createChatStorage(env: ChatEnv): ChatStorage {
+  switch (env.CHAT_STORAGE_DRIVER) {
     case "d1": {
       if (!env.CHAT_DB) {
         throw new Error(
@@ -83,10 +78,12 @@ export function setupChatStorage(env: ChatEnv): ChatStorage {
       return new D1ChatStorage(env.CHAT_DB);
     }
     case "memory":
-      return new MemoryChatStorage();
+      return memoryChatStorageSingleton;
     case "null":
       return new NullChatStorage();
     default:
-      throw new Error(`Unknown chat storage driver: ${driver}`);
+      throw new Error(
+        `Unknown chat storage driver: ${env.CHAT_STORAGE_DRIVER}`
+      );
   }
 }

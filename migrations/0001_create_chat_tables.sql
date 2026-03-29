@@ -15,8 +15,7 @@ CREATE TABLE messages (
   conversation_id TEXT NOT NULL,
   role TEXT NOT NULL,
   content TEXT NOT NULL,
-  tool_calls TEXT,
-  tool_results TEXT,
+  parts_json TEXT,
   created_at TEXT NOT NULL DEFAULT (datetime('now')),
   FOREIGN KEY (conversation_id) REFERENCES conversations(id) ON DELETE CASCADE
 );

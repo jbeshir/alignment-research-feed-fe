@@ -210,90 +210,55 @@ export function createChatTools(ctx: ToolContext) {
       },
     }),
 
-    list_liked: tool({
-      description:
-        "List articles marked as liked (thumbs up). Requires authentication.",
-      inputSchema: z.object({
-        page: z
-          .number()
-          .optional()
-          .describe("Page number (1-indexed, default: 1)"),
-        page_size: z
-          .number()
-          .optional()
-          .describe("Number of articles per page (default: 50, max: 200)"),
-      }),
-      execute: async args => {
-        const authError = requireAuth(ctx);
-        if (authError) return { error: authError };
+    list_liked: paginatedListTool(
+      ctx,
+      "List articles marked as liked (thumbs up). Requires authentication.",
+      "liked"
+    ),
 
-        const params = new URLSearchParams();
-        if (args.page) params.set("page", String(args.page));
-        if (args.page_size)
-          params.set("page_size", String(Math.min(args.page_size, 200)));
-        const data = await fetchJSON(
-          ctx,
-          `${ctx.apiBaseURL}/v1/articles/liked?${params}`
-        );
-        return data;
-      },
-    }),
+    list_disliked: paginatedListTool(
+      ctx,
+      "List articles marked as disliked (thumbs down). Requires authentication.",
+      "disliked"
+    ),
 
-    list_disliked: tool({
-      description:
-        "List articles marked as disliked (thumbs down). Requires authentication.",
-      inputSchema: z.object({
-        page: z
-          .number()
-          .optional()
-          .describe("Page number (1-indexed, default: 1)"),
-        page_size: z
-          .number()
-          .optional()
-          .describe("Number of articles per page (default: 50, max: 200)"),
-      }),
-      execute: async args => {
-        const authError = requireAuth(ctx);
-        if (authError) return { error: authError };
-
-        const params = new URLSearchParams();
-        if (args.page) params.set("page", String(args.page));
-        if (args.page_size)
-          params.set("page_size", String(Math.min(args.page_size, 200)));
-        const data = await fetchJSON(
-          ctx,
-          `${ctx.apiBaseURL}/v1/articles/disliked?${params}`
-        );
-        return data;
-      },
-    }),
-
-    list_unreviewed: tool({
-      description: "List articles not yet reviewed. Requires authentication.",
-      inputSchema: z.object({
-        page: z
-          .number()
-          .optional()
-          .describe("Page number (1-indexed, default: 1)"),
-        page_size: z
-          .number()
-          .optional()
-          .describe("Number of articles per page (default: 50, max: 200)"),
-      }),
-      execute: async args => {
-        const authError = requireAuth(ctx);
-        if (authError) return { error: authError };
-
-        const params = new URLSearchParams();
-        if (args.page) params.set("page", String(args.page));
-        if (args.page_size)
-          params.set("page_size", String(Math.min(args.page_size, 200)));
-        const data = await fetchJSON(
-          ctx,
-          `${ctx.apiBaseURL}/v1/articles/unreviewed?${params}`
-        );
-        return data;
-      },
-    }),
+    list_unreviewed: paginatedListTool(
+      ctx,
+      "List articles not yet reviewed. Requires authentication.",
+      "unreviewed"
+    ),
   };
+}
+
+const paginatedListSchema = z.object({
+  page: z.number().optional().describe("Page number (1-indexed, default: 1)"),
+  page_size: z
+    .number()
+    .optional()
+    .describe("Number of articles per page (default: 50, max: 200)"),
+});
+
+function paginatedListTool(
+  ctx: ToolContext,
+  description: string,
+  path: string
+) {
+  return tool({
+    description,
+    inputSchema: paginatedListSchema,
+    execute: async (args: z.infer<typeof paginatedListSchema>) => {
+      const authError = requireAuth(ctx);
+      if (authError) return { error: authError };
+
+      const params = new URLSearchParams();
+      if (args.page) params.set("page", String(args.page));
+      if (args.page_size)
+        params.set("page_size", String(Math.min(args.page_size, 200)));
+      const data = await fetchJSON(
+        ctx,
+        `${ctx.apiBaseURL}/v1/articles/${path}?${params}`
+      );
+      return data;
+    },
+  });
 }

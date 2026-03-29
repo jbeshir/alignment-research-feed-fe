@@ -31,6 +31,9 @@ export default defineConfig({
       : []),
     tsconfigPaths(),
   ],
+  optimizeDeps: {
+    include: ["ai", "@ai-sdk/react"],
+  },
   test: {
     globals: true,
     environment: "jsdom",

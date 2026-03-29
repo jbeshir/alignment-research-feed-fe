@@ -61,8 +61,7 @@ export class MemoryChatStorage implements ChatStorage {
         conversation_id: conversationId,
         role: msg.role,
         content: msg.content,
-        tool_calls: msg.toolCalls ?? null,
-        tool_results: msg.toolResults ?? null,
+        parts_json: msg.partsJson ?? null,
         created_at: now,
       });
     }

@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import { useChat } from "@ai-sdk/react";
-import { type UIMessage } from "ai";
+import { DefaultChatTransport, type UIMessage } from "ai";
 import { ChatMessage } from "./ChatMessage";
 import { ChatInput } from "./ChatInput";
 import { ChatConversationList } from "./ChatConversationList";
@@ -19,14 +19,33 @@ export function ChatPanel({ initialConversations }: ChatPanelProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [input, setInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const conversationIdRef = useRef<string | null>(null);
 
-  const chatOptions = activeConversationId ? { id: activeConversationId } : {};
-  const { messages, sendMessage, setMessages, status } = useChat({
-    ...chatOptions,
-    onFinish: () => {
-      refreshConversations();
-    },
-  });
+  // Keep the ref in sync with state
+  conversationIdRef.current = activeConversationId;
+
+  const { messages, sendMessage, setMessages, status, error, clearError } =
+    useChat({
+      experimental_throttle: 50,
+      transport: new DefaultChatTransport({
+        api: "/api/chat",
+        body: () => ({
+          conversationId: conversationIdRef.current,
+        }),
+        fetch: async (url, init) => {
+          const response = await globalThis.fetch(url, init);
+          const serverId = response.headers.get("X-Conversation-Id");
+          if (serverId && !conversationIdRef.current) {
+            setActiveConversationId(serverId);
+          }
+          return response;
+        },
+      }),
+      onFinish: () => {
+        refreshConversations();
+      },
+    });
 
   const refreshConversations = useCallback(async () => {
     try {
@@ -40,13 +59,20 @@ export function ChatPanel({ initialConversations }: ChatPanelProps) {
     }
   }, []);
 
-  // Scroll to bottom on new messages
+  // Only auto-scroll when the user is already near the bottom
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    const container = messagesContainerRef.current;
+    if (!container) return;
+    const distanceFromBottom =
+      container.scrollHeight - container.scrollTop - container.clientHeight;
+    if (distanceFromBottom < 150) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
   }, [messages]);
 
   const handleSend = () => {
     if (!input.trim()) return;
+    clearError();
     const text = input;
     setInput("");
     sendMessage({ text });
@@ -55,28 +81,34 @@ export function ChatPanel({ initialConversations }: ChatPanelProps) {
   const handleSelectConversation = async (id: string) => {
     setActiveConversationId(id);
     setSidebarOpen(false);
+    clearError();
 
     try {
       const resp = await fetch(`/api/chat/conversations/${id}`);
-      if (resp.ok) {
-        const data = (await resp.json()) as {
-          messages: Array<{
-            id: string;
-            role: string;
-            content: string;
-          }>;
-        };
-        const uiMessages: UIMessage[] = data.messages
-          .filter(m => m.role === "user" || m.role === "assistant")
-          .map(m => ({
-            id: m.id,
-            role: m.role as "user" | "assistant",
-            parts: [{ type: "text" as const, text: m.content }],
-          }));
-        setMessages(uiMessages);
+      if (!resp.ok) {
+        setMessages([]);
+        return;
       }
+      const data = (await resp.json()) as {
+        messages: Array<{
+          id: string;
+          role: string;
+          content: string;
+          parts_json: string | null;
+        }>;
+      };
+      const uiMessages: UIMessage[] = data.messages
+        .filter(m => m.role === "user" || m.role === "assistant")
+        .map(m => ({
+          id: m.id,
+          role: m.role as "user" | "assistant",
+          parts: m.parts_json
+            ? (JSON.parse(m.parts_json) as UIMessage["parts"])
+            : [{ type: "text" as const, text: m.content }],
+        }));
+      setMessages(uiMessages);
     } catch {
-      // Failed to load conversation
+      setMessages([]);
     }
   };
 
@@ -84,17 +116,21 @@ export function ChatPanel({ initialConversations }: ChatPanelProps) {
     setActiveConversationId(null);
     setMessages([]);
     setSidebarOpen(false);
+    clearError();
   };
 
   const handleDeleteConversation = async (id: string) => {
     try {
-      await fetch(`/api/chat/conversations/${id}`, { method: "DELETE" });
+      const resp = await fetch(`/api/chat/conversations/${id}`, {
+        method: "DELETE",
+      });
+      if (!resp.ok) return;
       setConversations(prev => prev.filter(c => c.id !== id));
       if (activeConversationId === id) {
         handleNewChat();
       }
     } catch {
-      // Failed to delete
+      // Network failure — leave the conversation in the list
     }
   };
 
@@ -151,8 +187,11 @@ export function ChatPanel({ initialConversations }: ChatPanelProps) {
         </div>
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
-          {messages.length === 0 && (
+        <div
+          ref={messagesContainerRef}
+          className="flex-1 overflow-y-auto p-4 space-y-4"
+        >
+          {messages.length === 0 && !error && (
             <div className="flex h-full items-center justify-center">
               <div className="text-center">
                 <h3 className="text-lg font-medium text-slate-700 dark:text-slate-300">
@@ -169,6 +208,15 @@ export function ChatPanel({ initialConversations }: ChatPanelProps) {
           {messages.map(message => (
             <ChatMessage key={message.id} message={message} />
           ))}
+
+          {error && (
+            <div className="flex justify-start">
+              <div className="rounded-lg border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 px-4 py-3 text-sm text-red-700 dark:text-red-400 max-w-[85%]">
+                Something went wrong. Please try again.
+              </div>
+            </div>
+          )}
+
           <div ref={messagesEndRef} />
         </div>
 

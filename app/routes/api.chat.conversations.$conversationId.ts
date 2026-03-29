@@ -5,7 +5,7 @@ import type {
 import { json } from "@remix-run/cloudflare";
 import { getServerAuthContext } from "~/server/auth.server";
 import {
-  setupChatStorage,
+  createChatStorage,
   type UserId,
   type ConversationId,
 } from "~/server/chat.server";
@@ -26,7 +26,7 @@ export async function loader({ request, params, context }: LoaderFunctionArgs) {
     return json({ error: "Not authenticated" }, { status: 401 });
   }
 
-  const storage = setupChatStorage(context.cloudflare.env);
+  const storage = createChatStorage(context.cloudflare.env);
   const result = await storage.getConversation(
     authContext.user.id as UserId,
     conversationId as ConversationId
@@ -59,7 +59,7 @@ export async function action({ request, params, context }: ActionFunctionArgs) {
     return json({ error: "Not authenticated" }, { status: 401 });
   }
 
-  const storage = setupChatStorage(context.cloudflare.env);
+  const storage = createChatStorage(context.cloudflare.env);
   const deleted = await storage.deleteConversation(
     authContext.user.id as UserId,
     conversationId as ConversationId
