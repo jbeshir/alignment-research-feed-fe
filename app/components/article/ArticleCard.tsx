@@ -61,7 +61,7 @@ export function ArticleCard({
       target="_blank"
       rel="noopener noreferrer"
       onClick={handleMarkAsRead}
-      className="flex flex-col bg-white dark:bg-slate-800 rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden group h-full"
+      className="flex flex-col bg-stone-50 dark:bg-slate-800 rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden group h-full"
     >
       {/* Source header strip */}
       <div
@@ -72,14 +72,14 @@ export function ArticleCard({
         </span>
         <div className="flex items-center gap-2 flex-shrink-0">
           {article.category && (
-            <span className="text-xs px-1.5 py-0.5 rounded bg-white/20 dark:bg-black/20">
+            <span className="text-xs px-1.5 py-0.5 rounded bg-black/10 dark:bg-black/20">
               {article.category}
             </span>
           )}
           {isVideoSource(article.source) && <PlayIcon className="w-5 h-5" />}
           {haveRead && (
             <span title="Read">
-              <CheckCircleIcon className="w-4 h-4 text-green-300" />
+              <CheckCircleIcon className="w-4 h-4 text-green-600 dark:text-green-300" />
             </span>
           )}
         </div>
@@ -107,7 +107,7 @@ export function ArticleCard({
       <div className="p-4 flex flex-col flex-grow">
         {/* Date */}
         {article.published_at && (
-          <div className="text-xs text-slate-400 dark:text-slate-500 mb-2">
+          <div className="text-xs text-slate-500 dark:text-slate-500 mb-2">
             {formatPublishedDate(article.published_at)}
           </div>
         )}
@@ -126,7 +126,7 @@ export function ArticleCard({
         <div className="flex-grow" />
 
         {/* Engagement metrics - pinned to bottom */}
-        <div className="flex items-center gap-4 text-sm text-slate-500 dark:text-slate-400 mt-auto pt-2 border-t border-slate-100 dark:border-slate-700">
+        <div className="flex items-center gap-4 text-sm text-slate-500 dark:text-slate-400 mt-auto pt-2 border-t border-stone-100 dark:border-slate-700">
           <button
             type="button"
             onClick={handleThumbsUp}

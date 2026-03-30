@@ -152,7 +152,7 @@ export function ChatPanel({ initialConversations }: ChatPanelProps) {
   const isLoading = status === "streaming" || status === "submitted";
 
   return (
-    <div className="flex h-[calc(100vh-280px)] min-h-[400px]">
+    <div className="flex h-full min-h-[400px]">
       {/* Sidebar — conversations (desktop) */}
       <div className="hidden md:block w-64 border-r border-stone-200 dark:border-slate-700 bg-stone-100 dark:bg-slate-800/50">
         <ChatConversationList

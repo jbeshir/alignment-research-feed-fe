@@ -127,13 +127,13 @@ export default function ArticleDetails() {
         {/* Analysis Section */}
         {article.summary && (
           <div className="max-w-4xl mx-auto px-6 pb-8">
-            <div className="bg-white dark:bg-slate-800 rounded-lg p-6 shadow-sm">
+            <div className="bg-stone-50 dark:bg-slate-800 rounded-lg p-6 shadow-sm">
               <div className="flex items-center gap-3 mb-4">
                 <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100">
                   Analysis
                 </h2>
                 {article.category && (
-                  <span className="inline-block px-2.5 py-0.5 text-xs font-medium rounded-full bg-brand-light/20 text-brand-dark dark:bg-brand-dark/20 dark:text-brand-light">
+                  <span className="inline-block px-2.5 py-0.5 text-xs font-medium rounded-full bg-teal-50 text-accent dark:bg-brand-dark/20 dark:text-brand-light">
                     {article.category}
                   </span>
                 )}
@@ -226,7 +226,7 @@ export function ErrorBoundary() {
           )}
           <Link
             to="/"
-            className="mt-8 px-6 py-2 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-md hover:bg-slate-800 dark:hover:bg-slate-200 transition-colors"
+            className="mt-8 px-6 py-2 bg-accent dark:bg-teal-400 text-white dark:text-slate-900 rounded-md hover:bg-accent-hover dark:hover:bg-teal-300 transition-colors"
           >
             Return to home
           </Link>

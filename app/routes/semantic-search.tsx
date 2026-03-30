@@ -111,7 +111,7 @@ export default function SemanticSearch() {
               onChange={e => setText(e.target.value)}
               placeholder="Paste a snippet, abstract, or topic description to find related research..."
               rows={4}
-              className="w-full rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-brand-dark dark:text-brand-light px-4 py-3 text-sm placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-dark dark:focus:ring-brand-light resize-y"
+              className="w-full rounded-md border border-stone-300 dark:border-slate-600 bg-stone-50 dark:bg-slate-800 text-brand-dark dark:text-brand-light px-4 py-3 text-sm placeholder:text-stone-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-accent dark:focus:ring-teal-400 resize-y"
             />
             <Button
               variant="primary"

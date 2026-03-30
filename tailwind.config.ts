@@ -10,6 +10,9 @@ export default {
         "brand-bg-dark": "#1a1a1a",
         "brand-dark": "#2D2D2D",
         "brand-light": "#f5f5f5",
+        accent: "#0f766e",
+        "accent-hover": "#0d9488",
+        "accent-light": "#ccfbf1",
       },
       fontFamily: {
         serif: ["Georgia", "Times New Roman", "serif"],

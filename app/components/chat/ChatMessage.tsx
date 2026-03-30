@@ -105,7 +105,7 @@ function ChatMarkdown({
                   ? () => onArticleClick(hashId)
                   : undefined
               }
-              className="text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300"
+              className="text-teal-700 dark:text-teal-400 underline hover:text-teal-900 dark:hover:text-teal-300"
             >
               {children}
             </a>
@@ -137,13 +137,13 @@ function ChatMarkdown({
           const isBlock = className?.startsWith("language-");
           if (isBlock) {
             return (
-              <code className="block bg-slate-100 dark:bg-slate-800 rounded p-2 my-1 text-xs overflow-x-auto">
+              <code className="block bg-stone-100 dark:bg-slate-800 rounded p-2 my-1 text-xs overflow-x-auto">
                 {children}
               </code>
             );
           }
           return (
-            <code className="bg-slate-100 dark:bg-slate-800 rounded px-1 py-0.5 text-xs">
+            <code className="bg-stone-100 dark:bg-slate-800 rounded px-1 py-0.5 text-xs">
               {children}
             </code>
           );
@@ -330,8 +330,8 @@ export function ChatMessage({
       <div
         className={`max-w-[85%] rounded-lg px-4 py-3 ${
           isUser
-            ? "bg-amber-800 text-white dark:bg-brand-dark"
-            : "bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 border border-stone-200 dark:border-slate-600"
+            ? "bg-accent text-white dark:bg-teal-900"
+            : "bg-stone-50 dark:bg-slate-700 text-slate-900 dark:text-slate-100 border border-stone-200 dark:border-slate-600"
         }`}
       >
         {isUser ? (
