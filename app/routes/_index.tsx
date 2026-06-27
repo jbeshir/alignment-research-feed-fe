@@ -1,5 +1,9 @@
 import { useState, useCallback } from "react";
-import { useSearchParams, useLoaderData } from "@remix-run/react";
+import {
+  useSearchParams,
+  useLoaderData,
+  useRevalidator,
+} from "@remix-run/react";
 import type { MetaFunction, LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { json } from "@remix-run/cloudflare";
 import { TopBar } from "~/components/layout/TopBar";
@@ -14,6 +18,8 @@ import { useInfiniteScroll } from "~/hooks/useInfiniteScroll";
 import { useViewPreference } from "~/hooks/useViewPreference";
 import { createAuthenticatedFetch } from "~/server/auth.server";
 import { parseArticlesResponse, type Article } from "~/schemas/article";
+import { EmptyState, ErrorState } from "~/components/feedback";
+import { SearchIcon, InboxIcon } from "~/components/layout/Icons";
 
 export const meta: MetaFunction = () => {
   return [
@@ -119,11 +125,18 @@ export default function Index() {
     hasMore,
     loadMore,
     setArticles,
+    refetch,
     error: fetchError,
   } = useArticles(searchQuery, { initialArticles });
 
   // Combine loader and fetch errors
   const error = loaderError ?? fetchError?.message;
+
+  const revalidator = useRevalidator();
+  const handleRetry = useCallback(() => {
+    revalidator.revalidate();
+    refetch();
+  }, [revalidator, refetch]);
 
   // Shared feedback handlers with optimistic updates
   const { handleThumbsUp, handleThumbsDown, handleMarkAsRead } =
@@ -175,9 +188,7 @@ export default function Index() {
         {/* Content */}
         <div className="max-w-7xl mx-auto">
           {error && articles.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16 px-4">
-              <p className="text-red-600 dark:text-red-400 text-lg">{error}</p>
-            </div>
+            <ErrorState description={error} onRetry={handleRetry} />
           ) : (
             <>
               <ArticleFeed
@@ -191,6 +202,25 @@ export default function Index() {
                   searchQuery
                     ? `No articles found for "${searchQuery}"`
                     : "No articles found"
+                }
+                emptyState={
+                  searchQuery ? (
+                    <EmptyState
+                      icon={<SearchIcon />}
+                      title={`No results for "${searchQuery}"`}
+                      description="Try a different keyword, or clear the search to see the full feed."
+                      action={{
+                        label: "Clear search",
+                        onClick: () => handleSearch(""),
+                      }}
+                    />
+                  ) : (
+                    <EmptyState
+                      icon={<InboxIcon />}
+                      title="No articles yet"
+                      description="New AI-safety research will appear here as it's published."
+                    />
+                  )
                 }
               />
 

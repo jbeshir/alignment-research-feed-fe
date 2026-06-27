@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import type { MetaFunction } from "@remix-run/cloudflare";
 import { TopBar } from "~/components/layout/TopBar";
 import { HeroHeader } from "~/components/layout/HeroHeader";
@@ -10,6 +10,8 @@ import { MAIN_TABS } from "~/constants/navigation";
 import { useArticleFeedbackHandlers } from "~/hooks/useArticleFeedbackHandlers";
 import { useViewPreference } from "~/hooks/useViewPreference";
 import { parseArticlesResponse, type Article } from "~/schemas/article";
+import { EmptyState, ErrorState } from "~/components/feedback";
+import { SearchIcon, SparklesIcon } from "~/components/layout/Icons";
 
 export const meta: MetaFunction = () => {
   return [
@@ -40,53 +42,62 @@ export default function SemanticSearch() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hasSearched, setHasSearched] = useState(false);
+  const lastQueryRef = useRef("");
 
   const [viewMode, setViewMode] = useViewPreference();
 
   const { handleThumbsUp, handleThumbsDown, handleMarkAsRead } =
     useArticleFeedbackHandlers({ setArticles });
 
+  const runSearch = useCallback(async (query: string) => {
+    setIsLoading(true);
+    setError(null);
+    setHasSearched(true);
+
+    try {
+      const response = await fetch("/api/articles/semantic-search", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: query, limit: 20 }),
+      });
+
+      if (!response.ok) {
+        setError("Search failed. Please try again later.");
+        setArticles([]);
+        return;
+      }
+
+      const result = parseArticlesResponse(await response.json());
+
+      if (!result.success) {
+        setError("Failed to parse search results.");
+        setArticles([]);
+        return;
+      }
+
+      setArticles(result.data.data);
+    } catch {
+      setError("Search failed. Please check your connection and try again.");
+      setArticles([]);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
       const trimmed = text.trim();
       if (!trimmed) return;
-
-      setIsLoading(true);
-      setError(null);
-      setHasSearched(true);
-
-      try {
-        const response = await fetch("/api/articles/semantic-search", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text: trimmed, limit: 20 }),
-        });
-
-        if (!response.ok) {
-          setError("Search failed. Please try again later.");
-          setArticles([]);
-          return;
-        }
-
-        const result = parseArticlesResponse(await response.json());
-
-        if (!result.success) {
-          setError("Failed to parse search results.");
-          setArticles([]);
-          return;
-        }
-
-        setArticles(result.data.data);
-      } catch {
-        setError("Search failed. Please check your connection and try again.");
-        setArticles([]);
-      } finally {
-        setIsLoading(false);
-      }
+      lastQueryRef.current = trimmed;
+      runSearch(trimmed);
     },
-    [text]
+    [text, runSearch]
   );
+
+  const retry = useCallback(() => {
+    if (lastQueryRef.current) runSearch(lastQueryRef.current);
+  }, [runSearch]);
 
   return (
     <div className="min-h-screen bg-brand-bg dark:bg-brand-bg-dark">
@@ -126,9 +137,7 @@ export default function SemanticSearch() {
         {/* Content */}
         <div className="max-w-7xl mx-auto">
           {error ? (
-            <div className="flex flex-col items-center justify-center py-16 px-4">
-              <p className="text-red-600 dark:text-red-400 text-lg">{error}</p>
-            </div>
+            <ErrorState description={error} onRetry={retry} />
           ) : (
             <ArticleFeed
               viewMode={viewMode}
@@ -141,6 +150,21 @@ export default function SemanticSearch() {
                 hasSearched
                   ? "No related articles found for your text."
                   : "Paste text above to find similar research."
+              }
+              emptyState={
+                hasSearched ? (
+                  <EmptyState
+                    icon={<SearchIcon />}
+                    title="No related research found"
+                    description="No semantically similar articles turned up. Try rephrasing or adding more detail."
+                  />
+                ) : (
+                  <EmptyState
+                    icon={<SparklesIcon />}
+                    title="Find related research"
+                    description="Paste an abstract, snippet, or topic above to discover semantically similar papers."
+                  />
+                )
               }
             />
           )}

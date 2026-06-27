@@ -1,10 +1,9 @@
 import type { MetaFunction, LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { json } from "@remix-run/cloudflare";
-import { Link, useLoaderData } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
 import { TopBar } from "~/components/layout/TopBar";
 import { HeroHeader } from "~/components/layout/HeroHeader";
 import { Tabs } from "~/components/ui/Tabs";
-import { Button } from "~/components/ui/Button";
 import { MAIN_TABS } from "~/constants/navigation";
 import { ChatPanel } from "~/components/chat/ChatPanel";
 import { getServerAuthContext } from "~/server/auth.server";
@@ -13,6 +12,8 @@ import {
   type Conversation,
   type UserId,
 } from "~/server/chat.server";
+import { LoginGate } from "~/components/feedback";
+import { ChatBubbleIcon } from "~/components/layout/Icons";
 
 export const meta: MetaFunction = () => {
   return [
@@ -76,16 +77,11 @@ export default function Chat() {
         {/* Content */}
         {!isAuthenticated ? (
           <div className="max-w-7xl mx-auto">
-            <div className="flex flex-col items-center justify-center py-16 px-4">
-              <p className="text-slate-600 dark:text-slate-400 text-lg mb-4">
-                Log in to chat with the AI research assistant.
-              </p>
-              <Link to="/auth/login">
-                <Button variant="primary" type="button">
-                  Log In
-                </Button>
-              </Link>
-            </div>
+            <LoginGate
+              icon={<ChatBubbleIcon />}
+              title="Chat with the research assistant"
+              description="Log in to ask questions about alignment research and get cited answers."
+            />
           </div>
         ) : (
           <div className="max-w-7xl w-full mx-auto px-6 mt-4 mb-4 flex-1 min-h-0">

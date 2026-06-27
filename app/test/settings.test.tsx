@@ -30,9 +30,7 @@ describe("Settings route", () => {
   it("shows login prompt when not authenticated", async () => {
     mockUseAuth.mockReturnValue({ isAuthenticated: false });
     renderSettings();
-    expect(
-      await screen.findByText(/Log in to manage your settings/i)
-    ).toBeInTheDocument();
+    expect(await screen.findByText(/Manage your account/i)).toBeInTheDocument();
   });
 
   it("shows API Tokens section when authenticated", async () => {

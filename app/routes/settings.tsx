@@ -1,5 +1,4 @@
 import type { MetaFunction } from "@remix-run/cloudflare";
-import { Link } from "@remix-run/react";
 import { z } from "zod";
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "~/root";
@@ -11,7 +10,9 @@ import {
   ClipboardIcon,
   DownloadIcon,
   ArrowRightIcon,
+  SettingsIcon,
 } from "~/components/layout/Icons";
+import { LoginGate } from "~/components/feedback";
 import { formatPublishedDate } from "~/utils/formatting";
 
 export const meta: MetaFunction = () => {
@@ -357,16 +358,11 @@ export default function Settings() {
           </h1>
 
           {showLoginPrompt ? (
-            <div className="flex flex-col items-center justify-center py-16 px-4">
-              <p className="text-slate-600 dark:text-slate-400 text-lg mb-4">
-                Log in to manage your settings.
-              </p>
-              <Link to="/auth/login">
-                <Button variant="primary" type="button">
-                  Log In
-                </Button>
-              </Link>
-            </div>
+            <LoginGate
+              icon={<SettingsIcon />}
+              title="Manage your account"
+              description="Log in to create API tokens and configure the MCP integration."
+            />
           ) : (
             <section>
               <h2 className="text-lg font-medium text-brand-dark dark:text-brand-light mb-4">

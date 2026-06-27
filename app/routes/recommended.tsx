@@ -1,12 +1,12 @@
 import React, { Suspense } from "react";
+import type { ReactNode } from "react";
 import type { MetaFunction, LoaderFunctionArgs } from "@remix-run/cloudflare";
-import { Link, useLoaderData, Await } from "@remix-run/react";
+import { useLoaderData, Await, useRevalidator } from "@remix-run/react";
 import { TopBar } from "~/components/layout/TopBar";
 import { HeroHeader } from "~/components/layout/HeroHeader";
 import { ArticleFeed } from "~/components/article/ArticleFeed";
 import { ViewToggle, type ViewMode } from "~/components/layout/ViewToggle";
 import { Tabs } from "~/components/ui/Tabs";
-import { Button } from "~/components/ui/Button";
 import { MAIN_TABS } from "~/constants/navigation";
 import { useArticleFeedbackHandlers } from "~/hooks/useArticleFeedbackHandlers";
 import { useViewPreference } from "~/hooks/useViewPreference";
@@ -15,6 +15,8 @@ import {
   type FetchArticlesResult,
 } from "~/server/articles.server";
 import { RecommendationsLoading } from "~/components/article/RecommendationsLoading";
+import { EmptyState, ErrorState, LoginGate } from "~/components/feedback";
+import { SparklesIcon } from "~/components/layout/Icons";
 
 export const meta: MetaFunction = () => {
   return [
@@ -51,9 +53,11 @@ type LoaderData = {
 function RecommendedContent({
   articlesData,
   viewMode,
+  emptyState,
 }: {
   articlesData: FetchArticlesResult;
   viewMode: ViewMode;
+  emptyState?: ReactNode;
 }) {
   const { handleThumbsUp, handleThumbsDown, handleMarkAsRead } =
     useArticleFeedbackHandlers();
@@ -67,6 +71,7 @@ function RecommendedContent({
       onThumbsDown={handleThumbsDown}
       onMarkAsRead={handleMarkAsRead}
       emptyMessage="No recommendations yet. Like some articles to get personalized suggestions!"
+      emptyState={emptyState}
     />
   );
 }
@@ -74,7 +79,17 @@ function RecommendedContent({
 export default function Recommended() {
   const { isAuthenticated, articlesData } = useLoaderData<LoaderData>();
   const [viewMode, setViewMode] = useViewPreference();
+  const revalidator = useRevalidator();
   const showLoginPrompt = !isAuthenticated;
+
+  const emptyState = (
+    <EmptyState
+      icon={<SparklesIcon />}
+      title="No recommendations yet"
+      description="Like a few articles and we'll surface related research here."
+      action={{ label: "Browse the feed", to: "/" }}
+    />
+  );
 
   return (
     <div className="min-h-screen bg-brand-bg dark:bg-brand-bg-dark">
@@ -94,27 +109,21 @@ export default function Recommended() {
         {/* Content */}
         <div className="max-w-7xl mx-auto">
           {showLoginPrompt ? (
-            <div className="flex flex-col items-center justify-center py-16 px-4">
-              <p className="text-slate-600 dark:text-slate-400 text-lg mb-4">
-                Log in to see personalized recommendations based on your
-                interests.
-              </p>
-              <Link to="/auth/login">
-                <Button variant="primary" type="button">
-                  Log In to See Recommendations
-                </Button>
-              </Link>
-            </div>
+            <LoginGate
+              icon={<SparklesIcon />}
+              title="Personalised recommendations"
+              description="Log in and like a few articles to get research picked for your interests."
+            />
           ) : (
             <Suspense fallback={<RecommendationsLoading />}>
               <Await
                 resolve={articlesData}
                 errorElement={
-                  <div className="flex flex-col items-center justify-center py-16 px-4">
-                    <p className="text-red-600 dark:text-red-400 text-lg">
-                      Failed to load recommendations. Please try again later.
-                    </p>
-                  </div>
+                  <ErrorState
+                    title="Couldn't load recommendations"
+                    description="Something went wrong fetching your picks."
+                    onRetry={() => revalidator.revalidate()}
+                  />
                 }
               >
                 {/* Cast needed: Remix's Await type inference doesn't preserve deferred promise types */}
@@ -123,6 +132,7 @@ export default function Recommended() {
                     <RecommendedContent
                       articlesData={resolved}
                       viewMode={viewMode}
+                      emptyState={emptyState}
                     />
                   )) as (value: unknown) => React.ReactNode
                 }
