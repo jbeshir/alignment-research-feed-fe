@@ -47,7 +47,7 @@ export function ArticleCollection({
   if (!isLoading && articles.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 px-4">
-        <p className="text-slate-600 dark:text-slate-300 text-lg">
+        <p className="text-slate-600 dark:text-accent-dark-fg text-lg">
           {emptyMessage}
         </p>
       </div>

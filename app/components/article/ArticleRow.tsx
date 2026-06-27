@@ -193,10 +193,10 @@ export function ArticleRow({
           type="button"
           onClick={handleThumbsUp}
           disabled={isUpdating}
-          className={`flex items-center gap-1 px-2 py-1 rounded text-sm hover:bg-stone-100 dark:hover:bg-slate-700 transition-colors ${
+          className={`flex items-center gap-1 px-2 py-1 rounded-full text-sm transition-colors ${
             thumbsUp
-              ? "text-green-600 dark:text-green-400"
-              : "text-slate-500 dark:text-slate-400"
+              ? "text-green-600 dark:text-green-400 bg-green-600/15 dark:bg-green-500/20 ring-1 ring-green-600/50 dark:ring-green-400/50"
+              : "text-slate-500 dark:text-slate-400 hover:bg-stone-100 dark:hover:bg-slate-700"
           }`}
           aria-label={thumbsUp ? "Remove thumbs up" : "Thumbs up"}
         >
@@ -210,10 +210,10 @@ export function ArticleRow({
           type="button"
           onClick={handleThumbsDown}
           disabled={isUpdating}
-          className={`flex items-center gap-1 px-2 py-1 rounded text-sm hover:bg-stone-100 dark:hover:bg-slate-700 transition-colors ${
+          className={`flex items-center gap-1 px-2 py-1 rounded-full text-sm transition-colors ${
             thumbsDown
-              ? "text-red-600 dark:text-red-400"
-              : "text-slate-500 dark:text-slate-400"
+              ? "text-red-600 dark:text-red-400 bg-red-600/15 dark:bg-red-500/20 ring-1 ring-red-600/50 dark:ring-red-400/50"
+              : "text-slate-500 dark:text-slate-400 hover:bg-stone-100 dark:hover:bg-slate-700"
           }`}
           aria-label={thumbsDown ? "Remove thumbs down" : "Thumbs down"}
         >
@@ -234,7 +234,7 @@ export function ArticleRow({
             onClick={() => handleSectionToggle("summary")}
             className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
               expandedSection === "summary"
-                ? "bg-accent text-white dark:bg-teal-400 dark:text-slate-900"
+                ? "bg-accent text-white dark:bg-accent-dark"
                 : "text-slate-600 dark:text-slate-400 hover:bg-stone-100 dark:hover:bg-slate-700"
             }`}
           >
@@ -247,7 +247,7 @@ export function ArticleRow({
             onClick={() => handleSectionToggle("key_points")}
             className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
               expandedSection === "key_points"
-                ? "bg-accent text-white dark:bg-teal-400 dark:text-slate-900"
+                ? "bg-accent text-white dark:bg-accent-dark"
                 : "text-slate-600 dark:text-slate-400 hover:bg-stone-100 dark:hover:bg-slate-700"
             }`}
           >
@@ -260,7 +260,7 @@ export function ArticleRow({
             onClick={() => handleSectionToggle("implication")}
             className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
               expandedSection === "implication"
-                ? "bg-accent text-white dark:bg-teal-400 dark:text-slate-900"
+                ? "bg-accent text-white dark:bg-accent-dark"
                 : "text-slate-600 dark:text-slate-400 hover:bg-stone-100 dark:hover:bg-slate-700"
             }`}
           >
@@ -272,7 +272,7 @@ export function ArticleRow({
           onClick={() => handleSectionToggle("similar")}
           className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
             expandedSection === "similar"
-              ? "bg-accent text-white dark:bg-teal-400 dark:text-slate-900"
+              ? "bg-accent text-white dark:bg-accent-dark"
               : "text-slate-600 dark:text-slate-400 hover:bg-stone-100 dark:hover:bg-slate-700"
           }`}
         >

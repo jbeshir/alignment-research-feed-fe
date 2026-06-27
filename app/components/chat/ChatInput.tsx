@@ -68,7 +68,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
           <button
             type="submit"
             disabled={isLoading || !value.trim()}
-            className="rounded-lg bg-accent dark:bg-teal-400 px-4 py-3 text-sm font-medium text-white dark:text-slate-900 hover:bg-accent-hover dark:hover:bg-teal-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="rounded-lg bg-accent dark:bg-accent-dark px-4 py-3 text-sm font-medium text-white hover:bg-accent-hover dark:hover:bg-accent-dark-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {isLoading ? "..." : "Send"}
           </button>

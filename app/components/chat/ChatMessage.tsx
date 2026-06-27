@@ -105,7 +105,7 @@ function ChatMarkdown({
                   ? () => onArticleClick(hashId)
                   : undefined
               }
-              className="text-teal-700 dark:text-teal-400 underline hover:text-teal-900 dark:hover:text-teal-300"
+              className="text-teal-700 dark:text-accent-dark-fg underline hover:text-teal-900 dark:hover:text-accent-dark-fg-hover"
             >
               {children}
             </a>
@@ -330,7 +330,7 @@ export function ChatMessage({
       <div
         className={`max-w-[85%] rounded-lg px-4 py-3 ${
           isUser
-            ? "bg-accent text-white dark:bg-teal-900"
+            ? "bg-accent text-white dark:bg-accent-dark"
             : "bg-stone-50 dark:bg-slate-700 text-slate-900 dark:text-slate-100 border border-stone-200 dark:border-slate-600"
         }`}
       >

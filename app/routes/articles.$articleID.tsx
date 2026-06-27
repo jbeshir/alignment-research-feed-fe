@@ -173,7 +173,7 @@ export default function ArticleDetails() {
         {/* Similar Articles Section */}
         {similarArticles.length > 0 && (
           <div className="max-w-7xl mx-auto px-6 py-8">
-            <h2 className="text-2xl font-semibold text-slate-900 dark:text-slate-100 mb-6">
+            <h2 className="text-2xl font-semibold text-slate-900 dark:text-slate-200 mb-6">
               Similar Articles
             </h2>
             <ArticleGrid
@@ -202,7 +202,7 @@ export function ErrorBoundary() {
         <div className="flex flex-col items-center justify-center min-h-[50vh] px-6">
           {isRouteErrorResponse(error) ? (
             <>
-              <h2 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-4">
+              <h2 className="text-3xl font-bold text-slate-900 dark:text-slate-200 mb-4">
                 {error.status === 404
                   ? "Article Not Found"
                   : `Error ${error.status}`}
@@ -216,7 +216,7 @@ export function ErrorBoundary() {
             </>
           ) : (
             <>
-              <h2 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-4">
+              <h2 className="text-3xl font-bold text-slate-900 dark:text-slate-200 mb-4">
                 Something went wrong
               </h2>
               <p className="text-slate-600 dark:text-slate-400 text-center max-w-md">
@@ -226,7 +226,7 @@ export function ErrorBoundary() {
           )}
           <Link
             to="/"
-            className="mt-8 px-6 py-2 bg-accent dark:bg-teal-400 text-white dark:text-slate-900 rounded-md hover:bg-accent-hover dark:hover:bg-teal-300 transition-colors"
+            className="mt-8 px-6 py-2 bg-accent dark:bg-accent-dark text-white rounded-md hover:bg-accent-hover dark:hover:bg-accent-dark-hover transition-colors"
           >
             Return to home
           </Link>

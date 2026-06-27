@@ -15,7 +15,7 @@ export function ViewToggle({ viewMode, onChange }: ViewToggleProps) {
         onClick={() => onChange("list")}
         className={`rounded p-1.5 transition-colors ${
           viewMode === "list"
-            ? "bg-teal-50 text-accent dark:bg-teal-900 dark:text-teal-400"
+            ? "bg-teal-50 text-accent dark:bg-teal-900 dark:text-accent-dark-fg"
             : "text-stone-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300"
         }`}
         aria-label="List view"
@@ -28,7 +28,7 @@ export function ViewToggle({ viewMode, onChange }: ViewToggleProps) {
         onClick={() => onChange("grid")}
         className={`rounded p-1.5 transition-colors ${
           viewMode === "grid"
-            ? "bg-teal-50 text-accent dark:bg-teal-900 dark:text-teal-400"
+            ? "bg-teal-50 text-accent dark:bg-teal-900 dark:text-accent-dark-fg"
             : "text-stone-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300"
         }`}
         aria-label="Grid view"

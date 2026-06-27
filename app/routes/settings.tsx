@@ -261,7 +261,7 @@ function CreateTokenForm({
           value={name}
           onChange={e => setName(e.target.value)}
           placeholder="Token name (optional)"
-          className="flex-1 px-3 py-2 text-sm border border-stone-300 dark:border-slate-600 rounded-md bg-stone-50 dark:bg-slate-800 text-brand-dark dark:text-brand-light placeholder-stone-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-accent dark:focus:ring-teal-400"
+          className="flex-1 px-3 py-2 text-sm border border-stone-300 dark:border-slate-600 rounded-md bg-stone-50 dark:bg-slate-800 text-brand-dark dark:text-brand-light placeholder-stone-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-accent dark:focus:ring-accent-dark-fg"
         />
         <Button type="submit" variant="primary" disabled={isCreating}>
           {isCreating ? "Creating..." : "Create Token"}
@@ -469,7 +469,7 @@ export default function Settings() {
               href="/docs/api.html"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-accent dark:bg-teal-400 dark:text-slate-900 rounded-md hover:opacity-90 transition-opacity"
+              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-accent dark:bg-accent-dark rounded-md hover:opacity-90 transition-opacity"
             >
               View API Documentation
               <ArrowRightIcon className="w-4 h-4" />

@@ -13,6 +13,10 @@ export default {
         accent: "#0f766e",
         "accent-hover": "#0d9488",
         "accent-light": "#ccfbf1",
+        "accent-dark": "#0f766e",
+        "accent-dark-hover": "#115e59",
+        "accent-dark-fg": "#14b8a6",
+        "accent-dark-fg-hover": "#2dd4bf",
       },
       fontFamily: {
         serif: ["Georgia", "Times New Roman", "serif"],

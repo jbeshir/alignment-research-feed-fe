@@ -131,8 +131,10 @@ export function ArticleCard({
             type="button"
             onClick={handleThumbsUp}
             disabled={isUpdating}
-            className={`flex items-center gap-1 hover:text-green-600 dark:hover:text-green-400 transition-colors ${
-              thumbsUp ? "text-green-600 dark:text-green-400" : ""
+            className={`flex items-center gap-1 rounded-full px-2 py-1 transition-colors ${
+              thumbsUp
+                ? "text-green-600 dark:text-green-400 bg-green-600/15 dark:bg-green-500/20 ring-1 ring-green-600/50 dark:ring-green-400/50"
+                : "hover:text-green-600 dark:hover:text-green-400"
             }`}
             aria-label={thumbsUp ? "Remove thumbs up" : "Thumbs up"}
           >
@@ -146,8 +148,10 @@ export function ArticleCard({
             type="button"
             onClick={handleThumbsDown}
             disabled={isUpdating}
-            className={`flex items-center gap-1 hover:text-red-600 dark:hover:text-red-400 transition-colors ${
-              thumbsDown ? "text-red-600 dark:text-red-400" : ""
+            className={`flex items-center gap-1 rounded-full px-2 py-1 transition-colors ${
+              thumbsDown
+                ? "text-red-600 dark:text-red-400 bg-red-600/15 dark:bg-red-500/20 ring-1 ring-red-600/50 dark:ring-red-400/50"
+                : "hover:text-red-600 dark:hover:text-red-400"
             }`}
             aria-label={thumbsDown ? "Remove thumbs down" : "Thumbs down"}
           >
