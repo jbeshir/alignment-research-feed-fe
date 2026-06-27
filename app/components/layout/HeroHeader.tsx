@@ -32,7 +32,7 @@ export function HeroHeader({
           onSearch={onSearch}
         />
       )}
-      <div className="flex items-center justify-center gap-4 mt-4 text-xs text-stone-500 dark:text-slate-500">
+      <div className="flex items-center justify-center gap-4 mt-4 text-xs text-stone-600 dark:text-slate-300">
         {rootData?.rssUrl && (
           <a
             href={rootData.rssUrl}

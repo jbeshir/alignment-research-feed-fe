@@ -145,7 +145,7 @@ export default function ArticleDetails() {
 
               {article.key_points && article.key_points.length > 0 && (
                 <div className="mb-4">
-                  <h3 className="text-sm font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2">
+                  <h3 className="text-sm font-medium text-slate-600 dark:text-slate-300 uppercase tracking-wide mb-2">
                     Key Points
                   </h3>
                   <ul className="list-disc list-inside space-y-1 text-slate-700 dark:text-slate-300">
@@ -158,7 +158,7 @@ export default function ArticleDetails() {
 
               {article.implication && (
                 <div>
-                  <h3 className="text-sm font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2">
+                  <h3 className="text-sm font-medium text-slate-600 dark:text-slate-300 uppercase tracking-wide mb-2">
                     Implications for AI Alignment
                   </h3>
                   <p className="text-slate-700 dark:text-slate-300">
