@@ -116,7 +116,7 @@ export function ArticleRow({
               {article.category}
             </span>
           )}
-          {isVideoSource(article.source) && <PlayIcon className="w-5 h-5" />}
+          {isVideoSource(article.source) && <PlayIcon className="w-4 h-4" />}
           {haveRead && (
             <span title="Read">
               <CheckCircleIcon className="w-4 h-4 text-green-600 dark:text-green-300" />
@@ -143,6 +143,7 @@ export function ArticleRow({
                 <ThumbnailPlaceholder
                   source={article.source}
                   className="h-full w-full"
+                  iconClassName="w-7 h-7"
                 />
               )}
             </div>
@@ -154,7 +155,7 @@ export function ArticleRow({
                 onClick={handleMarkAsRead}
                 className="group block"
               >
-                <h3 className="font-medium text-slate-900 dark:text-slate-100 group-hover:text-brand-dark dark:group-hover:text-brand-light transition-colors">
+                <h3 className="font-medium text-slate-900 dark:text-slate-100 group-hover:text-brand-dark dark:group-hover:text-brand-light transition-colors line-clamp-3">
                   {article.title}
                 </h3>
               </a>
@@ -178,7 +179,7 @@ export function ArticleRow({
           <div className="min-w-0 md:col-span-3">
             <p
               ref={summaryRef}
-              className="text-sm text-slate-600 dark:text-slate-400 line-clamp-4"
+              className="text-sm text-slate-600 dark:text-slate-400 line-clamp-4 max-w-prose"
             >
               {article.summary}
             </p>

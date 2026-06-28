@@ -148,7 +148,7 @@ export function ErrorBoundary() {
     statusCode = error.status;
     if (error.status === 404) {
       title = "Page not found";
-      message = "The page you're looking for doesn't exist.";
+      message = "The page you’re looking for doesn’t exist.";
     } else if (error.status === 500) {
       title = "Server error";
       message = "Something went wrong on our end. Please try again later.";

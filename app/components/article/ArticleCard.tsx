@@ -1,6 +1,10 @@
 import { useNavigate } from "@remix-run/react";
 import { useState } from "react";
-import { type Article, formatPublishedDate } from "~/schemas/article";
+import {
+  type Article,
+  formatPublishedDate,
+  formatAuthorsByline,
+} from "~/schemas/article";
 import {
   ThumbsUpIcon,
   ThumbsUpFilledIcon,
@@ -67,18 +71,20 @@ export function ArticleCard({
       <div
         className={`h-12 px-4 flex items-center justify-between gap-2 flex-shrink-0 ${getCategoryHeaderColor(article.category)}`}
       >
-        <span className="font-medium text-sm truncate">
+        <span className="font-medium text-sm truncate min-w-0 flex-1">
           {getSourceDisplayName(article.source, article.authors)}
         </span>
-        <div className="flex items-center gap-2 flex-shrink-0">
+        <div className="flex items-center gap-2 flex-shrink-0 max-w-[45%]">
           {article.category && (
-            <span className="text-xs px-1.5 py-0.5 rounded bg-black/10 dark:bg-black/20">
+            <span className="text-xs px-1.5 py-0.5 rounded bg-black/10 dark:bg-black/20 min-w-0 truncate">
               {article.category}
             </span>
           )}
-          {isVideoSource(article.source) && <PlayIcon className="w-5 h-5" />}
+          {isVideoSource(article.source) && (
+            <PlayIcon className="w-4 h-4 flex-shrink-0" />
+          )}
           {haveRead && (
-            <span title="Read">
+            <span title="Read" className="flex-shrink-0">
               <CheckCircleIcon className="w-4 h-4 text-green-600 dark:text-green-300" />
             </span>
           )}
@@ -114,7 +120,7 @@ export function ArticleCard({
 
         {/* Author */}
         <p className="text-sm text-slate-600 dark:text-slate-300 mb-1 truncate">
-          {article.authors}
+          {formatAuthorsByline(article.authors)}
         </p>
 
         {/* Title */}

@@ -166,7 +166,7 @@ function NewTokenDisplay({
         </button>
       </div>
       <Button variant="outline" onClick={onDismiss} className="text-xs">
-        I&apos;ve copied the token
+        I’ve copied the token
       </Button>
     </div>
   );

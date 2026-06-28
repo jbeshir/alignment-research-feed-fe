@@ -1,8 +1,11 @@
 export function LoadingCard() {
   return (
     <div className="bg-stone-50 dark:bg-slate-800 rounded-lg shadow-sm overflow-hidden animate-pulse h-full flex flex-col">
-      {/* Header strip placeholder */}
-      <div className="h-12 bg-stone-300 dark:bg-slate-600 flex-shrink-0" />
+      {/* Header strip placeholder - mirrors the coloured category band */}
+      <div className="h-12 bg-stone-300 dark:bg-slate-700 border-l-4 border-stone-400 dark:border-slate-600 flex-shrink-0" />
+
+      {/* Thumbnail block - mirrors the aspect-video thumbnail */}
+      <div className="aspect-video w-full bg-stone-100 dark:bg-stone-800" />
 
       {/* Content */}
       <div className="p-4 flex flex-col flex-grow">

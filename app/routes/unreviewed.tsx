@@ -101,7 +101,7 @@ export default function Unreviewed() {
             <LoginGate
               icon={<CheckCircleIcon />}
               title="Pick up where you left off"
-              description="Log in to see the research you haven't reviewed yet."
+              description="Log in to see the research you haven’t reviewed yet."
             />
           ) : error ? (
             <ErrorState description={error} onRetry={handleRetry} backTo="/" />
@@ -114,12 +114,12 @@ export default function Unreviewed() {
                 onThumbsUp={handleThumbsUp}
                 onThumbsDown={handleThumbsDown}
                 onMarkAsRead={handleMarkAsRead}
-                emptyMessage="No unreviewed articles. You've reviewed everything!"
+                emptyMessage="No unreviewed articles. You’ve reviewed everything!"
                 emptyState={
                   <EmptyState
                     icon={<CheckCircleIcon />}
                     title="All caught up"
-                    description="You've reviewed everything. New articles will show up here."
+                    description="You’ve reviewed everything. New articles will show up here."
                     action={{ label: "Browse the feed", to: "/" }}
                   />
                 }
@@ -131,7 +131,7 @@ export default function Unreviewed() {
 
               {!hasMore && articles.length > 0 && (
                 <div className="text-center py-8 text-slate-600 dark:text-slate-300">
-                  You&apos;ve reached the end of the results.
+                  You’ve reached the end of the results.
                 </div>
               )}
             </>

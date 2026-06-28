@@ -47,5 +47,24 @@ export function parseArticlesResponse(
   return { success: true, data: result.data };
 }
 
+/**
+ * Format an author list into a compact byline for tight slots.
+ *
+ * Long lists are collapsed to "First Author +N others" so a truncated
+ * byline never falls mid-surname. Lists with `maxNames` or fewer authors
+ * are returned unchanged.
+ */
+export function formatAuthorsByline(authors: string, maxNames = 1): string {
+  if (!authors) return authors;
+  const names = authors
+    .split(/,|\band\b/)
+    .map(name => name.trim())
+    .filter(Boolean);
+  if (names.length <= maxNames) return authors;
+  const shown = names.slice(0, maxNames).join(", ");
+  const remaining = names.length - maxNames;
+  return `${shown} +${remaining} other${remaining === 1 ? "" : "s"}`;
+}
+
 // Re-export formatting utility for convenience
 export { formatPublishedDate } from "~/utils/formatting";
