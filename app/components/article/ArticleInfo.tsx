@@ -33,7 +33,7 @@ export function ArticleInfo({
   const haveRead = article.have_read ?? false;
 
   return (
-    <div className="bg-stone-50 dark:bg-slate-800 rounded-lg shadow-sm overflow-hidden">
+    <div className="bg-stone-50 dark:bg-slate-800 rounded-lg shadow-md shadow-stone-300/60 overflow-hidden dark:border dark:border-slate-700 dark:shadow-xl dark:shadow-black/40">
       {/* Source header strip - like the card */}
       <div
         className={`h-14 px-6 flex items-center justify-between ${getCategoryHeaderColor(article.category)}`}

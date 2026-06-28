@@ -127,7 +127,7 @@ export default function ArticleDetails() {
         {/* Analysis Section */}
         {article.summary && (
           <div className="max-w-4xl mx-auto px-6 pb-8">
-            <div className="bg-stone-50 dark:bg-slate-800 rounded-lg p-6 shadow-sm">
+            <div className="bg-stone-50 dark:bg-slate-800/60 rounded-lg p-6 shadow-sm dark:shadow-none dark:border dark:border-slate-700/50">
               <div className="flex items-center gap-3 mb-4">
                 <h2 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">
                   Analysis

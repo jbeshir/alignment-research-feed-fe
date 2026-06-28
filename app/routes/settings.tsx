@@ -353,7 +353,7 @@ export default function Settings() {
 
         {/* Content */}
         <div className="max-w-2xl mx-auto px-6 py-8">
-          <h1 className="text-2xl font-semibold text-brand-dark dark:text-brand-light mb-8">
+          <h1 className="text-2xl font-semibold text-brand-dark dark:text-brand-light mb-6">
             Settings
           </h1>
 

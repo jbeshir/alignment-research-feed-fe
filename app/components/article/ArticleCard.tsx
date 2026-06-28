@@ -65,7 +65,7 @@ export function ArticleCard({
       target="_blank"
       rel="noopener noreferrer"
       onClick={handleMarkAsRead}
-      className="flex flex-col bg-stone-50 dark:bg-slate-800 rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden group h-full"
+      className="flex flex-col bg-stone-50 dark:bg-slate-800 rounded-lg shadow shadow-stone-300/50 hover:shadow-md transition-shadow overflow-hidden group h-full dark:border dark:border-slate-700/70 dark:shadow-lg dark:shadow-black/30"
     >
       {/* Source header strip */}
       <div
@@ -113,7 +113,7 @@ export function ArticleCard({
       <div className="p-4 flex flex-col flex-grow">
         {/* Date */}
         {article.published_at && (
-          <div className="text-xs text-slate-600 dark:text-slate-300 mb-2">
+          <div className="text-[13px] text-slate-600 dark:text-slate-300 mb-2">
             {formatPublishedDate(article.published_at)}
           </div>
         )}

@@ -115,8 +115,8 @@ export default function SemanticSearch() {
         </div>
 
         {/* Search Input */}
-        <div className="max-w-7xl mx-auto px-6 pt-6">
-          <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="max-w-7xl mx-auto px-6 pt-4">
+          <form onSubmit={handleSubmit} className="max-w-3xl space-y-3">
             <textarea
               value={text}
               onChange={e => setText(e.target.value)}

@@ -1,30 +1,30 @@
 // Category-based header colors for card/row header backgrounds
-// Dark backgrounds with white text; slightly lighter in dark mode for contrast
+// Tint + left-border in both light and dark schemes; dark uses a deep tint with colored border and text
 const CATEGORY_HEADER_COLORS: Record<string, string> = {
   Interpretability:
-    "bg-teal-50 border-l-4 border-l-teal-600 text-teal-900 dark:bg-teal-700 dark:border-l-0 dark:text-white",
+    "bg-teal-50 border-l-4 border-l-teal-600 text-teal-900 dark:bg-teal-950/40 dark:border-l-teal-800 dark:text-teal-100",
   "Safety Techniques":
-    "bg-blue-50 border-l-4 border-l-blue-600 text-blue-900 dark:bg-blue-700 dark:border-l-0 dark:text-white",
+    "bg-blue-50 border-l-4 border-l-blue-600 text-blue-900 dark:bg-blue-950/40 dark:border-l-blue-800 dark:text-blue-100",
   "Governance & Policy":
-    "bg-indigo-50 border-l-4 border-l-indigo-600 text-indigo-900 dark:bg-indigo-700 dark:border-l-0 dark:text-white",
+    "bg-indigo-50 border-l-4 border-l-indigo-600 text-indigo-900 dark:bg-indigo-950/40 dark:border-l-indigo-800 dark:text-indigo-100",
   "Deception & Misalignment":
-    "bg-red-50 border-l-4 border-l-red-600 text-red-900 dark:bg-red-700 dark:border-l-0 dark:text-white",
+    "bg-red-50 border-l-4 border-l-red-600 text-red-900 dark:bg-red-950/40 dark:border-l-red-800 dark:text-red-100",
   "AI Capabilities & Behavior":
-    "bg-amber-50 border-l-4 border-l-amber-600 text-amber-900 dark:bg-amber-700 dark:border-l-0 dark:text-white",
+    "bg-amber-50 border-l-4 border-l-amber-600 text-amber-900 dark:bg-amber-950/40 dark:border-l-amber-800 dark:text-amber-100",
   "Risks & Strategy":
-    "bg-rose-50 border-l-4 border-l-rose-600 text-rose-900 dark:bg-rose-700 dark:border-l-0 dark:text-white",
+    "bg-rose-50 border-l-4 border-l-rose-600 text-rose-900 dark:bg-rose-950/40 dark:border-l-rose-800 dark:text-rose-100",
   Forecasting:
-    "bg-cyan-50 border-l-4 border-l-cyan-600 text-cyan-900 dark:bg-cyan-700 dark:border-l-0 dark:text-white",
+    "bg-cyan-50 border-l-4 border-l-cyan-600 text-cyan-900 dark:bg-cyan-950/40 dark:border-l-cyan-800 dark:text-cyan-100",
   "AI & Society":
-    "bg-purple-50 border-l-4 border-l-purple-600 text-purple-900 dark:bg-purple-700 dark:border-l-0 dark:text-white",
+    "bg-purple-50 border-l-4 border-l-purple-600 text-purple-900 dark:bg-purple-950/40 dark:border-l-purple-800 dark:text-purple-100",
   "Field Building":
-    "bg-green-50 border-l-4 border-l-green-600 text-green-900 dark:bg-green-700 dark:border-l-0 dark:text-white",
+    "bg-green-50 border-l-4 border-l-green-600 text-green-900 dark:bg-green-950/40 dark:border-l-green-800 dark:text-green-100",
   Other:
-    "bg-stone-100 border-l-4 border-l-stone-500 text-stone-800 dark:bg-slate-600 dark:border-l-0 dark:text-white",
+    "bg-stone-100 border-l-4 border-l-stone-500 text-stone-800 dark:bg-slate-800/60 dark:border-l-slate-600 dark:text-slate-200",
 };
 
 const DEFAULT_HEADER_COLOR =
-  "bg-stone-100 border-l-4 border-l-stone-500 text-stone-800 dark:bg-slate-600 dark:border-l-0 dark:text-white";
+  "bg-stone-100 border-l-4 border-l-stone-500 text-stone-800 dark:bg-slate-800/60 dark:border-l-slate-600 dark:text-slate-200";
 
 export function getCategoryHeaderColor(
   category: string | null | undefined

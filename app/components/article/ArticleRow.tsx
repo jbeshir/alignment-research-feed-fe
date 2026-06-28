@@ -102,7 +102,7 @@ export function ArticleRow({
   }, []);
 
   return (
-    <div className="bg-stone-50 dark:bg-slate-800 rounded-lg shadow-sm overflow-hidden">
+    <div className="bg-stone-50 dark:bg-slate-800 rounded-lg shadow shadow-stone-300/50 overflow-hidden dark:border dark:border-slate-700/70 dark:shadow-lg dark:shadow-black/30">
       {/* Source header strip */}
       <div
         className={`h-10 px-4 flex items-center justify-between ${getCategoryHeaderColor(article.category)}`}
