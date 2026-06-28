@@ -107,13 +107,13 @@ export function ArticleCard({
       <div className="p-4 flex flex-col flex-grow">
         {/* Date */}
         {article.published_at && (
-          <div className="text-xs text-slate-500 dark:text-slate-500 mb-2">
+          <div className="text-xs text-slate-600 dark:text-slate-300 mb-2">
             {formatPublishedDate(article.published_at)}
           </div>
         )}
 
         {/* Author */}
-        <p className="text-sm text-slate-600 dark:text-slate-400 mb-1 truncate">
+        <p className="text-sm text-slate-600 dark:text-slate-300 mb-1 truncate">
           {article.authors}
         </p>
 

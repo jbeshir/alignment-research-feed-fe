@@ -9,7 +9,7 @@ interface ViewToggleProps {
 
 export function ViewToggle({ viewMode, onChange }: ViewToggleProps) {
   return (
-    <div className="flex items-center gap-1 rounded-md border border-stone-200 dark:border-slate-700 p-0.5">
+    <div className="flex flex-shrink-0 items-center gap-1 rounded-md border border-stone-200 dark:border-slate-700 p-0.5">
       <button
         type="button"
         onClick={() => onChange("list")}

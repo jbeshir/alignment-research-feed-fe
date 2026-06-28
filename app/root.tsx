@@ -163,35 +163,28 @@ export function ErrorBoundary() {
     }
   }
 
+  // Return only the inner content: the exported `Layout` wraps this with
+  // <html>/<head>/<Links> (tailwind.css) and the themed <body>, so the error
+  // page is styled and dark-mode correct instead of bare browser defaults.
   return (
-    <html lang="en">
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>{`${title} - Alignment Feed`}</title>
-        <Meta />
-        <Links />
-      </head>
-      <body className="bg-stone-100 dark:bg-slate-800 min-h-screen flex items-center justify-center">
-        <div className="max-w-md mx-auto px-6 py-12 text-center">
-          {statusCode && (
-            <p className="text-6xl font-bold text-stone-300 dark:text-slate-600 mb-4">
-              {statusCode}
-            </p>
-          )}
-          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4">
-            {title}
-          </h1>
-          <p className="text-slate-600 dark:text-slate-400 mb-8">{message}</p>
-          <Link
-            to="/"
-            className="inline-block px-6 py-3 bg-accent dark:bg-teal-400 text-white dark:text-slate-900 rounded-lg font-medium hover:opacity-90 transition-opacity"
-          >
-            Back to Home
-          </Link>
-        </div>
-        <Scripts />
-      </body>
-    </html>
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="max-w-md mx-auto px-6 py-12 text-center">
+        {statusCode && (
+          <p className="text-6xl font-bold text-stone-300 dark:text-slate-600 mb-4">
+            {statusCode}
+          </p>
+        )}
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4">
+          {title}
+        </h1>
+        <p className="text-slate-600 dark:text-slate-400 mb-8">{message}</p>
+        <Link
+          to="/"
+          className="inline-block px-6 py-3 bg-accent dark:bg-teal-400 text-white dark:text-slate-900 rounded-lg font-medium hover:opacity-90 transition-opacity"
+        >
+          Back to Home
+        </Link>
+      </div>
+    </div>
   );
 }

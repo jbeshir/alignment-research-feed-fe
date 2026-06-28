@@ -16,14 +16,14 @@ interface TabsProps {
 
 export function Tabs({ tabs, activeTab, onBeforeNavigate }: TabsProps) {
   return (
-    <nav className="flex gap-6 border-b border-stone-300 dark:border-slate-700">
+    <nav className="flex gap-6 overflow-x-auto min-w-0 border-b border-stone-300 dark:border-slate-700 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       {tabs.map(tab => {
         const isActive = activeTab === tab.id;
 
-        const baseClassName = `pb-3 text-sm font-medium transition-colors relative ${
+        const baseClassName = `pb-3 text-sm font-medium transition-colors relative whitespace-nowrap flex-shrink-0 ${
           isActive
             ? "text-slate-900 dark:text-slate-100"
-            : "text-stone-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
+            : "text-stone-600 dark:text-slate-300 hover:text-slate-700 dark:hover:text-slate-200"
         }`;
 
         return (

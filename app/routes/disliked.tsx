@@ -119,7 +119,7 @@ export default function Disliked() {
               )}
 
               {!hasMore && articles.length > 0 && (
-                <div className="text-center py-8 text-slate-500 dark:text-slate-400">
+                <div className="text-center py-8 text-slate-600 dark:text-slate-300">
                   You&apos;ve reached the end of the results.
                 </div>
               )}

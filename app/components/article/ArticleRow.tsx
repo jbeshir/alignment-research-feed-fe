@@ -158,7 +158,7 @@ export function ArticleRow({
                   {article.title}
                 </h3>
               </a>
-              <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+              <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">
                 {article.authors}
                 {article.published_at && (
                   <>

@@ -67,8 +67,10 @@ export default function Chat() {
         <HeroHeader showSearch={false} />
 
         {/* Tabs */}
-        <div className="max-w-7xl mx-auto px-6 pt-8">
-          <Tabs tabs={MAIN_TABS} activeTab="chat" />
+        <div className="max-w-7xl w-full mx-auto px-6 pt-8">
+          <div className="flex items-center">
+            <Tabs tabs={MAIN_TABS} activeTab="chat" />
+          </div>
         </div>
 
         {/* Content */}
