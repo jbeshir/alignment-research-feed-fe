@@ -3,6 +3,7 @@ import {
   ArticleSchema,
   ArticlesResponseSchema,
   parseArticlesResponse,
+  formatAuthorsByline,
 } from "./article";
 
 const validArticle = {
@@ -124,6 +125,34 @@ describe("ArticlesResponseSchema", () => {
     if (result.success) {
       expect(result.data.data).toHaveLength(0);
     }
+  });
+});
+
+describe("formatAuthorsByline", () => {
+  it("returns a single author unchanged", () => {
+    expect(formatAuthorsByline("Jane Doe")).toBe("Jane Doe");
+  });
+
+  it("collapses a comma-separated list to first author + others", () => {
+    expect(
+      formatAuthorsByline("Jane Doe, John Smith, Alex Lee, Sam Park")
+    ).toBe("Jane Doe +3 others");
+  });
+
+  it("handles 'and' separators and uses singular for one extra", () => {
+    expect(formatAuthorsByline("Jane Doe and John Smith")).toBe(
+      "Jane Doe +1 other"
+    );
+  });
+
+  it("respects a higher maxNames before collapsing", () => {
+    expect(formatAuthorsByline("Jane Doe, John Smith, Alex Lee", 2)).toBe(
+      "Jane Doe, John Smith +1 other"
+    );
+  });
+
+  it("returns an empty string unchanged", () => {
+    expect(formatAuthorsByline("")).toBe("");
   });
 });
 

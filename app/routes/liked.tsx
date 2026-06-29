@@ -1,11 +1,10 @@
 import type { MetaFunction, LoaderFunctionArgs } from "@remix-run/cloudflare";
-import { Link, useLoaderData } from "@remix-run/react";
+import { useLoaderData, useRevalidator } from "@remix-run/react";
 import { TopBar } from "~/components/layout/TopBar";
 import { HeroHeader } from "~/components/layout/HeroHeader";
 import { ArticleFeed } from "~/components/article/ArticleFeed";
 import { ViewToggle } from "~/components/layout/ViewToggle";
 import { Tabs } from "~/components/ui/Tabs";
-import { Button } from "~/components/ui/Button";
 import { MAIN_TABS } from "~/constants/navigation";
 import { useArticleFeedbackHandlers } from "~/hooks/useArticleFeedbackHandlers";
 import { useUserArticles } from "~/hooks/useUserArticles";
@@ -15,6 +14,8 @@ import {
   fetchArticlesFromApi,
   createPaginationParams,
 } from "~/server/articles.server";
+import { EmptyState, ErrorState, LoginGate } from "~/components/feedback";
+import { ThumbsUpIcon } from "~/components/layout/Icons";
 
 export const meta: MetaFunction = () => {
   return [
@@ -53,6 +54,7 @@ export default function Liked() {
     hasMore,
     loadMore,
     setArticles,
+    refetch,
     error: fetchError,
   } = useUserArticles("liked", { initialArticles });
 
@@ -66,9 +68,14 @@ export default function Liked() {
   });
 
   const [viewMode, setViewMode] = useViewPreference();
+  const revalidator = useRevalidator();
 
   const showLoginPrompt = !isAuthenticated;
   const error = loaderError ?? fetchError?.message;
+  const handleRetry = () => {
+    revalidator.revalidate();
+    refetch();
+  };
 
   return (
     <div className="min-h-screen bg-brand-bg dark:bg-brand-bg-dark">
@@ -88,20 +95,13 @@ export default function Liked() {
         {/* Content */}
         <div className="max-w-7xl mx-auto">
           {showLoginPrompt ? (
-            <div className="flex flex-col items-center justify-center py-16 px-4">
-              <p className="text-slate-600 dark:text-slate-400 text-lg mb-4">
-                Log in to see your liked articles.
-              </p>
-              <Link to="/auth/login">
-                <Button variant="primary" type="button">
-                  Log In to See Liked Articles
-                </Button>
-              </Link>
-            </div>
+            <LoginGate
+              icon={<ThumbsUpIcon />}
+              title="Your liked articles"
+              description="Log in to keep a personal library of the research you've liked."
+            />
           ) : error ? (
-            <div className="flex flex-col items-center justify-center py-16 px-4">
-              <p className="text-red-600 dark:text-red-400 text-lg">{error}</p>
-            </div>
+            <ErrorState description={error} onRetry={handleRetry} backTo="/" />
           ) : (
             <>
               <ArticleFeed
@@ -112,6 +112,14 @@ export default function Liked() {
                 onThumbsDown={handleThumbsDown}
                 onMarkAsRead={handleMarkAsRead}
                 emptyMessage="No liked articles yet. Like some articles to see them here!"
+                emptyState={
+                  <EmptyState
+                    icon={<ThumbsUpIcon />}
+                    title="No liked articles yet"
+                    description="Like an article and it'll collect here for easy reference."
+                    action={{ label: "Browse the feed", to: "/" }}
+                  />
+                }
               />
 
               {hasMore && (
@@ -120,7 +128,7 @@ export default function Liked() {
 
               {!hasMore && articles.length > 0 && (
                 <div className="text-center py-8 text-slate-600 dark:text-slate-300">
-                  You&apos;ve reached the end of the results.
+                  You’ve reached the end of the results.
                 </div>
               )}
             </>

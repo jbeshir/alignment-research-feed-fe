@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { type Article } from "~/schemas/article";
 import type { ViewMode } from "../layout/ViewToggle";
 import { ArticleList } from "./ArticleList";
@@ -11,6 +12,7 @@ interface ArticleFeedProps {
   onThumbsDown?: (articleId: string, value: boolean) => Promise<void>;
   onMarkAsRead?: (articleId: string) => Promise<void>;
   emptyMessage?: string;
+  emptyState?: ReactNode;
 }
 
 export function ArticleFeed({ viewMode, ...props }: ArticleFeedProps) {

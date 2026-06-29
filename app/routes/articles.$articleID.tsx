@@ -127,9 +127,9 @@ export default function ArticleDetails() {
         {/* Analysis Section */}
         {article.summary && (
           <div className="max-w-4xl mx-auto px-6 pb-8">
-            <div className="bg-stone-50 dark:bg-slate-800 rounded-lg p-6 shadow-sm">
+            <div className="bg-stone-50 dark:bg-slate-800/60 rounded-lg p-6 shadow-sm dark:shadow-none dark:border dark:border-slate-700/50">
               <div className="flex items-center gap-3 mb-4">
-                <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100">
+                <h2 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">
                   Analysis
                 </h2>
                 {article.category && (
@@ -139,16 +139,16 @@ export default function ArticleDetails() {
                 )}
               </div>
 
-              <p className="text-slate-700 dark:text-slate-300 mb-4">
+              <p className="text-slate-700 dark:text-slate-300 mb-4 max-w-prose">
                 {article.summary}
               </p>
 
               {article.key_points && article.key_points.length > 0 && (
                 <div className="mb-4">
-                  <h3 className="text-sm font-medium text-slate-600 dark:text-slate-300 uppercase tracking-wide mb-2">
+                  <h3 className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
                     Key Points
                   </h3>
-                  <ul className="list-disc list-inside space-y-1 text-slate-700 dark:text-slate-300">
+                  <ul className="list-disc list-inside space-y-1 text-slate-700 dark:text-slate-300 max-w-prose">
                     {article.key_points.map((point, i) => (
                       <li key={i}>{point}</li>
                     ))}
@@ -158,10 +158,10 @@ export default function ArticleDetails() {
 
               {article.implication && (
                 <div>
-                  <h3 className="text-sm font-medium text-slate-600 dark:text-slate-300 uppercase tracking-wide mb-2">
+                  <h3 className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
                     Implications for AI Alignment
                   </h3>
-                  <p className="text-slate-700 dark:text-slate-300">
+                  <p className="text-slate-700 dark:text-slate-300 max-w-prose">
                     {article.implication}
                   </p>
                 </div>
@@ -173,7 +173,7 @@ export default function ArticleDetails() {
         {/* Similar Articles Section */}
         {similarArticles.length > 0 && (
           <div className="max-w-7xl mx-auto px-6 py-8">
-            <h2 className="text-2xl font-semibold text-slate-900 dark:text-slate-100 mb-6">
+            <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-200 mb-6">
               Similar Articles
             </h2>
             <ArticleGrid
@@ -202,21 +202,21 @@ export function ErrorBoundary() {
         <div className="flex flex-col items-center justify-center min-h-[50vh] px-6">
           {isRouteErrorResponse(error) ? (
             <>
-              <h2 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-4">
+              <h2 className="text-3xl font-bold text-slate-900 dark:text-slate-200 mb-4">
                 {error.status === 404
                   ? "Article Not Found"
                   : `Error ${error.status}`}
               </h2>
               <p className="text-slate-600 dark:text-slate-400 text-center max-w-md">
                 {error.status === 404
-                  ? "The article you're looking for doesn't exist or may have been removed."
+                  ? "The article you’re looking for doesn’t exist or may have been removed."
                   : error.data ||
                     "Something went wrong while loading this article."}
               </p>
             </>
           ) : (
             <>
-              <h2 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-4">
+              <h2 className="text-3xl font-bold text-slate-900 dark:text-slate-200 mb-4">
                 Something went wrong
               </h2>
               <p className="text-slate-600 dark:text-slate-400 text-center max-w-md">
@@ -226,7 +226,7 @@ export function ErrorBoundary() {
           )}
           <Link
             to="/"
-            className="mt-8 px-6 py-2 bg-accent dark:bg-teal-400 text-white dark:text-slate-900 rounded-md hover:bg-accent-hover dark:hover:bg-teal-300 transition-colors"
+            className="mt-8 px-6 py-2 bg-accent dark:bg-accent-dark text-white rounded-md hover:bg-accent-hover dark:hover:bg-accent-dark-hover transition-colors"
           >
             Return to home
           </Link>

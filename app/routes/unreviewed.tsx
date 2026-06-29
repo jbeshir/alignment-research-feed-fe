@@ -1,11 +1,10 @@
 import type { MetaFunction, LoaderFunctionArgs } from "@remix-run/cloudflare";
-import { Link, useLoaderData } from "@remix-run/react";
+import { useLoaderData, useRevalidator } from "@remix-run/react";
 import { TopBar } from "~/components/layout/TopBar";
 import { HeroHeader } from "~/components/layout/HeroHeader";
 import { ArticleFeed } from "~/components/article/ArticleFeed";
 import { ViewToggle } from "~/components/layout/ViewToggle";
 import { Tabs } from "~/components/ui/Tabs";
-import { Button } from "~/components/ui/Button";
 import { MAIN_TABS } from "~/constants/navigation";
 import { useArticleFeedbackHandlers } from "~/hooks/useArticleFeedbackHandlers";
 import { useUserArticles } from "~/hooks/useUserArticles";
@@ -15,6 +14,8 @@ import {
   fetchArticlesFromApi,
   createPaginationParams,
 } from "~/server/articles.server";
+import { EmptyState, ErrorState, LoginGate } from "~/components/feedback";
+import { CheckCircleIcon } from "~/components/layout/Icons";
 
 export const meta: MetaFunction = () => {
   return [
@@ -56,6 +57,7 @@ export default function Unreviewed() {
     hasMore,
     loadMore,
     setArticles,
+    refetch,
     error: fetchError,
   } = useUserArticles("unreviewed", { initialArticles });
 
@@ -69,9 +71,14 @@ export default function Unreviewed() {
   });
 
   const [viewMode, setViewMode] = useViewPreference();
+  const revalidator = useRevalidator();
 
   const showLoginPrompt = !isAuthenticated;
   const error = loaderError ?? fetchError?.message;
+  const handleRetry = () => {
+    revalidator.revalidate();
+    refetch();
+  };
 
   return (
     <div className="min-h-screen bg-brand-bg dark:bg-brand-bg-dark">
@@ -91,20 +98,13 @@ export default function Unreviewed() {
         {/* Content */}
         <div className="max-w-7xl mx-auto">
           {showLoginPrompt ? (
-            <div className="flex flex-col items-center justify-center py-16 px-4">
-              <p className="text-slate-600 dark:text-slate-400 text-lg mb-4">
-                Log in to see your unreviewed articles.
-              </p>
-              <Link to="/auth/login">
-                <Button variant="primary" type="button">
-                  Log In to See Unreviewed Articles
-                </Button>
-              </Link>
-            </div>
+            <LoginGate
+              icon={<CheckCircleIcon />}
+              title="Pick up where you left off"
+              description="Log in to see the research you haven’t reviewed yet."
+            />
           ) : error ? (
-            <div className="flex flex-col items-center justify-center py-16 px-4">
-              <p className="text-red-600 dark:text-red-400 text-lg">{error}</p>
-            </div>
+            <ErrorState description={error} onRetry={handleRetry} backTo="/" />
           ) : (
             <>
               <ArticleFeed
@@ -114,7 +114,15 @@ export default function Unreviewed() {
                 onThumbsUp={handleThumbsUp}
                 onThumbsDown={handleThumbsDown}
                 onMarkAsRead={handleMarkAsRead}
-                emptyMessage="No unreviewed articles. You've reviewed everything!"
+                emptyMessage="No unreviewed articles. You’ve reviewed everything!"
+                emptyState={
+                  <EmptyState
+                    icon={<CheckCircleIcon />}
+                    title="All caught up"
+                    description="You’ve reviewed everything. New articles will show up here."
+                    action={{ label: "Browse the feed", to: "/" }}
+                  />
+                }
               />
 
               {hasMore && (
@@ -123,7 +131,7 @@ export default function Unreviewed() {
 
               {!hasMore && articles.length > 0 && (
                 <div className="text-center py-8 text-slate-600 dark:text-slate-300">
-                  You&apos;ve reached the end of the results.
+                  You’ve reached the end of the results.
                 </div>
               )}
             </>

@@ -1,4 +1,7 @@
+import type { ReactNode } from "react";
 import { type Article } from "~/schemas/article";
+import { EmptyState } from "~/components/feedback";
+import { InboxIcon } from "~/components/layout/Icons";
 
 interface ArticleItemProps {
   article: Article;
@@ -11,6 +14,7 @@ export interface ArticleCollectionProps {
   articles: Article[];
   isLoading: boolean;
   emptyMessage?: string;
+  emptyState?: ReactNode;
   onThumbsUp?: (articleId: string, value: boolean) => Promise<void>;
   onThumbsDown?: (articleId: string, value: boolean) => Promise<void>;
   onMarkAsRead?: (articleId: string) => Promise<void>;
@@ -25,6 +29,7 @@ export function ArticleCollection({
   articles,
   isLoading,
   emptyMessage = "No articles found",
+  emptyState,
   onThumbsUp,
   onThumbsDown,
   onMarkAsRead,
@@ -46,11 +51,15 @@ export function ArticleCollection({
 
   if (!isLoading && articles.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-16 px-4">
-        <p className="text-slate-600 dark:text-slate-300 text-lg">
-          {emptyMessage}
-        </p>
-      </div>
+      <>
+        {emptyState ?? (
+          <EmptyState
+            icon={<InboxIcon />}
+            title="No articles yet"
+            description={emptyMessage}
+          />
+        )}
+      </>
     );
   }
 

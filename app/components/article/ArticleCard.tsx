@@ -1,6 +1,10 @@
 import { useNavigate } from "@remix-run/react";
 import { useState } from "react";
-import { type Article, formatPublishedDate } from "~/schemas/article";
+import {
+  type Article,
+  formatPublishedDate,
+  formatAuthorsByline,
+} from "~/schemas/article";
 import {
   ThumbsUpIcon,
   ThumbsUpFilledIcon,
@@ -61,24 +65,26 @@ export function ArticleCard({
       target="_blank"
       rel="noopener noreferrer"
       onClick={handleMarkAsRead}
-      className="flex flex-col bg-stone-50 dark:bg-slate-800 rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden group h-full"
+      className="flex flex-col bg-stone-50 dark:bg-slate-800 rounded-lg shadow shadow-stone-300/50 hover:shadow-md transition-shadow overflow-hidden group h-full dark:border dark:border-slate-700/70 dark:shadow-lg dark:shadow-black/30"
     >
       {/* Source header strip */}
       <div
         className={`h-12 px-4 flex items-center justify-between gap-2 flex-shrink-0 ${getCategoryHeaderColor(article.category)}`}
       >
-        <span className="font-medium text-sm truncate">
+        <span className="font-medium text-sm truncate min-w-0 flex-1">
           {getSourceDisplayName(article.source, article.authors)}
         </span>
-        <div className="flex items-center gap-2 flex-shrink-0">
+        <div className="flex items-center gap-2 flex-shrink-0 max-w-[45%]">
           {article.category && (
-            <span className="text-xs px-1.5 py-0.5 rounded bg-black/10 dark:bg-black/20">
+            <span className="text-xs px-1.5 py-0.5 rounded bg-black/10 dark:bg-black/20 min-w-0 truncate">
               {article.category}
             </span>
           )}
-          {isVideoSource(article.source) && <PlayIcon className="w-5 h-5" />}
+          {isVideoSource(article.source) && (
+            <PlayIcon className="w-4 h-4 flex-shrink-0" />
+          )}
           {haveRead && (
-            <span title="Read">
+            <span title="Read" className="flex-shrink-0">
               <CheckCircleIcon className="w-4 h-4 text-green-600 dark:text-green-300" />
             </span>
           )}
@@ -107,14 +113,14 @@ export function ArticleCard({
       <div className="p-4 flex flex-col flex-grow">
         {/* Date */}
         {article.published_at && (
-          <div className="text-xs text-slate-600 dark:text-slate-300 mb-2">
+          <div className="text-[13px] text-slate-600 dark:text-slate-300 mb-2">
             {formatPublishedDate(article.published_at)}
           </div>
         )}
 
         {/* Author */}
         <p className="text-sm text-slate-600 dark:text-slate-300 mb-1 truncate">
-          {article.authors}
+          {formatAuthorsByline(article.authors)}
         </p>
 
         {/* Title */}
@@ -131,8 +137,10 @@ export function ArticleCard({
             type="button"
             onClick={handleThumbsUp}
             disabled={isUpdating}
-            className={`flex items-center gap-1 hover:text-green-600 dark:hover:text-green-400 transition-colors ${
-              thumbsUp ? "text-green-600 dark:text-green-400" : ""
+            className={`flex items-center gap-1 rounded-full px-2 py-1 transition-colors ${
+              thumbsUp
+                ? "text-green-600 dark:text-green-400 bg-green-600/15 dark:bg-green-500/20 ring-1 ring-green-600/50 dark:ring-green-400/50"
+                : "hover:text-green-600 dark:hover:text-green-400"
             }`}
             aria-label={thumbsUp ? "Remove thumbs up" : "Thumbs up"}
           >
@@ -146,8 +154,10 @@ export function ArticleCard({
             type="button"
             onClick={handleThumbsDown}
             disabled={isUpdating}
-            className={`flex items-center gap-1 hover:text-red-600 dark:hover:text-red-400 transition-colors ${
-              thumbsDown ? "text-red-600 dark:text-red-400" : ""
+            className={`flex items-center gap-1 rounded-full px-2 py-1 transition-colors ${
+              thumbsDown
+                ? "text-red-600 dark:text-red-400 bg-red-600/15 dark:bg-red-500/20 ring-1 ring-red-600/50 dark:ring-red-400/50"
+                : "hover:text-red-600 dark:hover:text-red-400"
             }`}
             aria-label={thumbsDown ? "Remove thumbs down" : "Thumbs down"}
           >

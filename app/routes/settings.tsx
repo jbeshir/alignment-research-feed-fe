@@ -1,5 +1,4 @@
 import type { MetaFunction } from "@remix-run/cloudflare";
-import { Link } from "@remix-run/react";
 import { z } from "zod";
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "~/root";
@@ -11,7 +10,9 @@ import {
   ClipboardIcon,
   DownloadIcon,
   ArrowRightIcon,
+  SettingsIcon,
 } from "~/components/layout/Icons";
+import { LoginGate } from "~/components/feedback";
 import { formatPublishedDate } from "~/utils/formatting";
 
 export const meta: MetaFunction = () => {
@@ -165,7 +166,7 @@ function NewTokenDisplay({
         </button>
       </div>
       <Button variant="outline" onClick={onDismiss} className="text-xs">
-        I&apos;ve copied the token
+        I’ve copied the token
       </Button>
     </div>
   );
@@ -261,7 +262,7 @@ function CreateTokenForm({
           value={name}
           onChange={e => setName(e.target.value)}
           placeholder="Token name (optional)"
-          className="flex-1 px-3 py-2 text-sm border border-stone-300 dark:border-slate-600 rounded-md bg-stone-50 dark:bg-slate-800 text-brand-dark dark:text-brand-light placeholder-stone-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-accent dark:focus:ring-teal-400"
+          className="flex-1 px-3 py-2 text-sm border border-stone-300 dark:border-slate-600 rounded-md bg-stone-50 dark:bg-slate-800 text-brand-dark dark:text-brand-light placeholder-stone-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-accent dark:focus:ring-accent-dark-fg"
         />
         <Button type="submit" variant="primary" disabled={isCreating}>
           {isCreating ? "Creating..." : "Create Token"}
@@ -352,21 +353,16 @@ export default function Settings() {
 
         {/* Content */}
         <div className="max-w-2xl mx-auto px-6 py-8">
-          <h1 className="text-2xl font-semibold text-brand-dark dark:text-brand-light mb-8">
+          <h1 className="text-2xl font-semibold text-brand-dark dark:text-brand-light mb-6">
             Settings
           </h1>
 
           {showLoginPrompt ? (
-            <div className="flex flex-col items-center justify-center py-16 px-4">
-              <p className="text-slate-600 dark:text-slate-400 text-lg mb-4">
-                Log in to manage your settings.
-              </p>
-              <Link to="/auth/login">
-                <Button variant="primary" type="button">
-                  Log In
-                </Button>
-              </Link>
-            </div>
+            <LoginGate
+              icon={<SettingsIcon />}
+              title="Manage your account"
+              description="Log in to create API tokens and configure the MCP integration."
+            />
           ) : (
             <section>
               <h2 className="text-lg font-medium text-brand-dark dark:text-brand-light mb-4">
@@ -469,7 +465,7 @@ export default function Settings() {
               href="/docs/api.html"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-accent dark:bg-teal-400 dark:text-slate-900 rounded-md hover:opacity-90 transition-opacity"
+              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-accent dark:bg-accent-dark rounded-md hover:opacity-90 transition-opacity"
             >
               View API Documentation
               <ArrowRightIcon className="w-4 h-4" />

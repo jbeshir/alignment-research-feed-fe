@@ -41,7 +41,7 @@ export function Tabs({ tabs, activeTab, onBeforeNavigate }: TabsProps) {
           >
             {tab.label}
             {isActive && (
-              <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent dark:bg-teal-400" />
+              <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent dark:bg-accent-dark-fg" />
             )}
           </Link>
         );

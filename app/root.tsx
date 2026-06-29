@@ -27,7 +27,7 @@ function NavigationProgressBar() {
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50 h-1 bg-stone-200 dark:bg-slate-700 overflow-hidden">
-      <div className="h-full bg-accent dark:bg-teal-400 animate-progress-bar" />
+      <div className="h-full bg-accent dark:bg-accent-dark animate-progress-bar" />
     </div>
   );
 }
@@ -148,7 +148,7 @@ export function ErrorBoundary() {
     statusCode = error.status;
     if (error.status === 404) {
       title = "Page not found";
-      message = "The page you're looking for doesn't exist.";
+      message = "The page you’re looking for doesn’t exist.";
     } else if (error.status === 500) {
       title = "Server error";
       message = "Something went wrong on our end. Please try again later.";
@@ -174,13 +174,13 @@ export function ErrorBoundary() {
             {statusCode}
           </p>
         )}
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4">
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-200 mb-4">
           {title}
         </h1>
         <p className="text-slate-600 dark:text-slate-400 mb-8">{message}</p>
         <Link
           to="/"
-          className="inline-block px-6 py-3 bg-accent dark:bg-teal-400 text-white dark:text-slate-900 rounded-lg font-medium hover:opacity-90 transition-opacity"
+          className="inline-block px-6 py-3 bg-accent dark:bg-accent-dark text-white rounded-lg font-medium hover:opacity-90 transition-opacity"
         >
           Back to Home
         </Link>

@@ -1,11 +1,10 @@
 import type { MetaFunction, LoaderFunctionArgs } from "@remix-run/cloudflare";
-import { Link, useLoaderData } from "@remix-run/react";
+import { useLoaderData, useRevalidator } from "@remix-run/react";
 import { TopBar } from "~/components/layout/TopBar";
 import { HeroHeader } from "~/components/layout/HeroHeader";
 import { ArticleFeed } from "~/components/article/ArticleFeed";
 import { ViewToggle } from "~/components/layout/ViewToggle";
 import { Tabs } from "~/components/ui/Tabs";
-import { Button } from "~/components/ui/Button";
 import { MAIN_TABS } from "~/constants/navigation";
 import { useArticleFeedbackHandlers } from "~/hooks/useArticleFeedbackHandlers";
 import { useUserArticles } from "~/hooks/useUserArticles";
@@ -15,6 +14,8 @@ import {
   fetchArticlesFromApi,
   createPaginationParams,
 } from "~/server/articles.server";
+import { EmptyState, ErrorState, LoginGate } from "~/components/feedback";
+import { ThumbsDownIcon } from "~/components/layout/Icons";
 
 export const meta: MetaFunction = () => {
   return [
@@ -53,6 +54,7 @@ export default function Disliked() {
     hasMore,
     loadMore,
     setArticles,
+    refetch,
     error: fetchError,
   } = useUserArticles("disliked", { initialArticles });
 
@@ -66,9 +68,14 @@ export default function Disliked() {
   });
 
   const [viewMode, setViewMode] = useViewPreference();
+  const revalidator = useRevalidator();
 
   const showLoginPrompt = !isAuthenticated;
   const error = loaderError ?? fetchError?.message;
+  const handleRetry = () => {
+    revalidator.revalidate();
+    refetch();
+  };
 
   return (
     <div className="min-h-screen bg-brand-bg dark:bg-brand-bg-dark">
@@ -88,20 +95,13 @@ export default function Disliked() {
         {/* Content */}
         <div className="max-w-7xl mx-auto">
           {showLoginPrompt ? (
-            <div className="flex flex-col items-center justify-center py-16 px-4">
-              <p className="text-slate-600 dark:text-slate-400 text-lg mb-4">
-                Log in to see your disliked articles.
-              </p>
-              <Link to="/auth/login">
-                <Button variant="primary" type="button">
-                  Log In to See Disliked Articles
-                </Button>
-              </Link>
-            </div>
+            <LoginGate
+              icon={<ThumbsDownIcon />}
+              title="Your disliked articles"
+              description="Log in to track what you've set aside and tune your feed."
+            />
           ) : error ? (
-            <div className="flex flex-col items-center justify-center py-16 px-4">
-              <p className="text-red-600 dark:text-red-400 text-lg">{error}</p>
-            </div>
+            <ErrorState description={error} onRetry={handleRetry} backTo="/" />
           ) : (
             <>
               <ArticleFeed
@@ -111,7 +111,15 @@ export default function Disliked() {
                 onThumbsUp={handleThumbsUp}
                 onThumbsDown={handleThumbsDown}
                 onMarkAsRead={handleMarkAsRead}
-                emptyMessage="No disliked articles. You haven't disliked anything yet."
+                emptyMessage="No disliked articles. You haven’t disliked anything yet."
+                emptyState={
+                  <EmptyState
+                    icon={<ThumbsDownIcon />}
+                    title="Nothing disliked"
+                    description="Articles you dislike are hidden from your feed and listed here."
+                    action={{ label: "Browse the feed", to: "/" }}
+                  />
+                }
               />
 
               {hasMore && (
@@ -120,7 +128,7 @@ export default function Disliked() {
 
               {!hasMore && articles.length > 0 && (
                 <div className="text-center py-8 text-slate-600 dark:text-slate-300">
-                  You&apos;ve reached the end of the results.
+                  You’ve reached the end of the results.
                 </div>
               )}
             </>

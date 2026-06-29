@@ -102,7 +102,7 @@ export function ArticleRow({
   }, []);
 
   return (
-    <div className="bg-stone-50 dark:bg-slate-800 rounded-lg shadow-sm overflow-hidden">
+    <div className="bg-stone-50 dark:bg-slate-800 rounded-lg shadow shadow-stone-300/50 overflow-hidden dark:border dark:border-slate-700/70 dark:shadow-lg dark:shadow-black/30">
       {/* Source header strip */}
       <div
         className={`h-10 px-4 flex items-center justify-between ${getCategoryHeaderColor(article.category)}`}
@@ -116,7 +116,7 @@ export function ArticleRow({
               {article.category}
             </span>
           )}
-          {isVideoSource(article.source) && <PlayIcon className="w-5 h-5" />}
+          {isVideoSource(article.source) && <PlayIcon className="w-4 h-4" />}
           {haveRead && (
             <span title="Read">
               <CheckCircleIcon className="w-4 h-4 text-green-600 dark:text-green-300" />
@@ -143,6 +143,7 @@ export function ArticleRow({
                 <ThumbnailPlaceholder
                   source={article.source}
                   className="h-full w-full"
+                  iconClassName="w-7 h-7"
                 />
               )}
             </div>
@@ -154,7 +155,7 @@ export function ArticleRow({
                 onClick={handleMarkAsRead}
                 className="group block"
               >
-                <h3 className="font-medium text-slate-900 dark:text-slate-100 group-hover:text-brand-dark dark:group-hover:text-brand-light transition-colors">
+                <h3 className="font-medium text-slate-900 dark:text-slate-100 group-hover:text-brand-dark dark:group-hover:text-brand-light transition-colors line-clamp-3">
                   {article.title}
                 </h3>
               </a>
@@ -178,7 +179,7 @@ export function ArticleRow({
           <div className="min-w-0 md:col-span-3">
             <p
               ref={summaryRef}
-              className="text-sm text-slate-600 dark:text-slate-400 line-clamp-4"
+              className="text-sm text-slate-600 dark:text-slate-400 line-clamp-4 max-w-prose"
             >
               {article.summary}
             </p>
@@ -193,10 +194,10 @@ export function ArticleRow({
           type="button"
           onClick={handleThumbsUp}
           disabled={isUpdating}
-          className={`flex items-center gap-1 px-2 py-1 rounded text-sm hover:bg-stone-100 dark:hover:bg-slate-700 transition-colors ${
+          className={`flex items-center gap-1 px-2 py-1 rounded-full text-sm transition-colors ${
             thumbsUp
-              ? "text-green-600 dark:text-green-400"
-              : "text-slate-500 dark:text-slate-400"
+              ? "text-green-600 dark:text-green-400 bg-green-600/15 dark:bg-green-500/20 ring-1 ring-green-600/50 dark:ring-green-400/50"
+              : "text-slate-500 dark:text-slate-400 hover:bg-stone-100 dark:hover:bg-slate-700"
           }`}
           aria-label={thumbsUp ? "Remove thumbs up" : "Thumbs up"}
         >
@@ -210,10 +211,10 @@ export function ArticleRow({
           type="button"
           onClick={handleThumbsDown}
           disabled={isUpdating}
-          className={`flex items-center gap-1 px-2 py-1 rounded text-sm hover:bg-stone-100 dark:hover:bg-slate-700 transition-colors ${
+          className={`flex items-center gap-1 px-2 py-1 rounded-full text-sm transition-colors ${
             thumbsDown
-              ? "text-red-600 dark:text-red-400"
-              : "text-slate-500 dark:text-slate-400"
+              ? "text-red-600 dark:text-red-400 bg-red-600/15 dark:bg-red-500/20 ring-1 ring-red-600/50 dark:ring-red-400/50"
+              : "text-slate-500 dark:text-slate-400 hover:bg-stone-100 dark:hover:bg-slate-700"
           }`}
           aria-label={thumbsDown ? "Remove thumbs down" : "Thumbs down"}
         >
@@ -234,7 +235,7 @@ export function ArticleRow({
             onClick={() => handleSectionToggle("summary")}
             className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
               expandedSection === "summary"
-                ? "bg-accent text-white dark:bg-teal-400 dark:text-slate-900"
+                ? "bg-accent text-white dark:bg-accent-dark"
                 : "text-slate-600 dark:text-slate-400 hover:bg-stone-100 dark:hover:bg-slate-700"
             }`}
           >
@@ -247,7 +248,7 @@ export function ArticleRow({
             onClick={() => handleSectionToggle("key_points")}
             className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
               expandedSection === "key_points"
-                ? "bg-accent text-white dark:bg-teal-400 dark:text-slate-900"
+                ? "bg-accent text-white dark:bg-accent-dark"
                 : "text-slate-600 dark:text-slate-400 hover:bg-stone-100 dark:hover:bg-slate-700"
             }`}
           >
@@ -260,7 +261,7 @@ export function ArticleRow({
             onClick={() => handleSectionToggle("implication")}
             className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
               expandedSection === "implication"
-                ? "bg-accent text-white dark:bg-teal-400 dark:text-slate-900"
+                ? "bg-accent text-white dark:bg-accent-dark"
                 : "text-slate-600 dark:text-slate-400 hover:bg-stone-100 dark:hover:bg-slate-700"
             }`}
           >
@@ -272,7 +273,7 @@ export function ArticleRow({
           onClick={() => handleSectionToggle("similar")}
           className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
             expandedSection === "similar"
-              ? "bg-accent text-white dark:bg-teal-400 dark:text-slate-900"
+              ? "bg-accent text-white dark:bg-accent-dark"
               : "text-slate-600 dark:text-slate-400 hover:bg-stone-100 dark:hover:bg-slate-700"
           }`}
         >
