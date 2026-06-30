@@ -5,9 +5,10 @@ import {
   AcademicCapIcon,
   MicrophoneIcon,
   DocumentIcon,
+  type IconProps,
 } from "~/components/layout/Icons";
 
-type IconComponent = React.FC<React.SVGProps<SVGSVGElement>>;
+type IconComponent = React.FC<IconProps>;
 
 const VIDEO_SOURCES = new Set(["youtube"]);
 
