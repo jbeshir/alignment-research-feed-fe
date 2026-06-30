@@ -179,9 +179,11 @@ export default function Index() {
 
         {/* Tabs */}
         <div className="max-w-7xl mx-auto px-6 pt-8">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
             <Tabs tabs={MAIN_TABS} activeTab="all" />
-            <ViewToggle viewMode={viewMode} onChange={setViewMode} />
+            <div className="flex flex-shrink-0 justify-end">
+              <ViewToggle viewMode={viewMode} onChange={setViewMode} />
+            </div>
           </div>
         </div>
 
