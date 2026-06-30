@@ -12,6 +12,7 @@ import {
   ThumbsDownFilledIcon,
   PlayIcon,
   CheckCircleIcon,
+  ArrowRightIcon,
 } from "../layout/Icons";
 import { ThumbnailPlaceholder } from "./ThumbnailPlaceholder";
 import {
@@ -132,39 +133,39 @@ export function ArticleCard({
         <div className="flex-grow" />
 
         {/* Engagement metrics - pinned to bottom */}
-        <div className="flex items-center gap-4 text-sm text-slate-500 dark:text-slate-400 mt-auto pt-2 border-t border-stone-100 dark:border-slate-700">
+        <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mt-auto pt-2 border-t border-stone-100 dark:border-slate-700">
           <button
             type="button"
             onClick={handleThumbsUp}
             disabled={isUpdating}
-            className={`flex items-center gap-1 rounded-full px-2 py-1 transition-colors ${
+            className={`inline-flex items-center justify-center min-w-[44px] min-h-[44px] rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-slate-800 ${
               thumbsUp
-                ? "text-green-600 dark:text-green-400 bg-green-600/15 dark:bg-green-500/20 ring-1 ring-green-600/50 dark:ring-green-400/50"
-                : "hover:text-green-600 dark:hover:text-green-400"
+                ? "text-green-600 dark:text-green-400 bg-green-600/15 dark:bg-green-500/20 ring-1 ring-green-600/60 dark:ring-green-400/60 focus-visible:ring-green-600 dark:focus-visible:ring-green-400"
+                : "text-slate-500 dark:text-slate-400 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-600/10 dark:hover:bg-green-500/10 focus-visible:ring-green-600 dark:focus-visible:ring-green-400"
             }`}
             aria-label={thumbsUp ? "Remove thumbs up" : "Thumbs up"}
           >
             {thumbsUp ? (
-              <ThumbsUpFilledIcon className="w-4 h-4" />
+              <ThumbsUpFilledIcon className="w-5 h-5" />
             ) : (
-              <ThumbsUpIcon className="w-4 h-4" />
+              <ThumbsUpIcon className="w-5 h-5" />
             )}
           </button>
           <button
             type="button"
             onClick={handleThumbsDown}
             disabled={isUpdating}
-            className={`flex items-center gap-1 rounded-full px-2 py-1 transition-colors ${
+            className={`inline-flex items-center justify-center min-w-[44px] min-h-[44px] rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-slate-800 ${
               thumbsDown
-                ? "text-red-600 dark:text-red-400 bg-red-600/15 dark:bg-red-500/20 ring-1 ring-red-600/50 dark:ring-red-400/50"
-                : "hover:text-red-600 dark:hover:text-red-400"
+                ? "text-red-600 dark:text-red-400 bg-red-600/15 dark:bg-red-500/20 ring-1 ring-red-600/60 dark:ring-red-400/60 focus-visible:ring-red-600 dark:focus-visible:ring-red-400"
+                : "text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-600/10 dark:hover:bg-red-500/10 focus-visible:ring-red-600 dark:focus-visible:ring-red-400"
             }`}
             aria-label={thumbsDown ? "Remove thumbs down" : "Thumbs down"}
           >
             {thumbsDown ? (
-              <ThumbsDownFilledIcon className="w-4 h-4" />
+              <ThumbsDownFilledIcon className="w-5 h-5" />
             ) : (
-              <ThumbsDownIcon className="w-4 h-4" />
+              <ThumbsDownIcon className="w-5 h-5" />
             )}
           </button>
           {feedbackError && (
@@ -179,10 +180,11 @@ export function ArticleCard({
               e.stopPropagation();
               navigate(`/articles/${article.hash_id}`);
             }}
-            className="flex items-center gap-1 text-xs hover:text-slate-700 dark:hover:text-slate-300 transition-colors ml-auto"
+            className="ml-auto inline-flex items-center gap-1.5 rounded-md border border-stone-200 dark:border-slate-600 px-3 min-h-[44px] text-xs font-medium text-slate-600 dark:text-slate-300 hover:border-accent hover:text-accent hover:bg-accent/5 dark:hover:text-accent-dark-fg dark:hover:border-accent-dark-fg dark:hover:bg-accent-dark-fg/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent dark:focus-visible:ring-accent-dark-fg focus-visible:ring-offset-1 dark:focus-visible:ring-offset-slate-800 transition-colors"
             aria-label="View article details"
           >
-            Details
+            View details
+            <ArrowRightIcon className="w-3.5 h-3.5" />
           </button>
         </div>
       </div>
