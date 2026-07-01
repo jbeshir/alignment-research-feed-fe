@@ -78,7 +78,7 @@ export function ArticleInfo({
 
         {/* Meta row */}
         <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-slate-600 dark:text-slate-200">
-          <span>{article.authors}</span>
+          <span className="min-w-0 break-words">{article.authors}</span>
           {article.published_at && (
             <>
               <span className="text-stone-400 dark:text-slate-500">•</span>
@@ -106,7 +106,7 @@ export function ArticleInfo({
               type="button"
               onClick={() => onThumbsUp?.(article.hash_id, !thumbsUp)}
               disabled={isUpdating}
-              className={`flex items-center gap-2 px-4 py-2 min-h-[44px] rounded-lg border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-surface-2 ${
+              className={`flex items-center gap-2 px-4 py-2 min-h-[48px] rounded-lg border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-surface-2 ${
                 thumbsUp
                   ? "border-green-500 bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-400 ring-1 ring-green-500/40 dark:ring-green-400/40 focus-visible:ring-green-600 dark:focus-visible:ring-green-400"
                   : "border-stone-200 dark:border-slate-600 text-slate-500 dark:text-slate-200 hover:border-green-300 dark:hover:border-green-700 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50/50 dark:hover:bg-green-900/10 focus-visible:ring-green-600 dark:focus-visible:ring-green-400"
@@ -124,7 +124,7 @@ export function ArticleInfo({
               type="button"
               onClick={() => onThumbsDown?.(article.hash_id, !thumbsDown)}
               disabled={isUpdating}
-              className={`flex items-center gap-2 px-4 py-2 min-h-[44px] rounded-lg border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-surface-2 ${
+              className={`flex items-center gap-2 px-4 py-2 min-h-[48px] rounded-lg border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-surface-2 ${
                 thumbsDown
                   ? "border-red-500 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 ring-1 ring-red-500/40 dark:ring-red-400/40 focus-visible:ring-red-600 dark:focus-visible:ring-red-400"
                   : "border-stone-200 dark:border-slate-600 text-slate-500 dark:text-slate-200 hover:border-red-300 dark:hover:border-red-700 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50/50 dark:hover:bg-red-900/10 focus-visible:ring-red-600 dark:focus-visible:ring-red-400"
