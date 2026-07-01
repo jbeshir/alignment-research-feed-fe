@@ -113,7 +113,7 @@ export default function ArticleDetails() {
         <div className="max-w-4xl mx-auto px-6 pt-12 pb-8">
           <Link
             to="/"
-            className="block text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 mb-6"
+            className="block text-sm text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 mb-6"
           >
             ← Back to feed
           </Link>
@@ -139,16 +139,16 @@ export default function ArticleDetails() {
                 )}
               </div>
 
-              <p className="text-slate-700 dark:text-slate-300 mb-4 max-w-prose">
+              <p className="text-slate-700 dark:text-slate-200 mb-4 max-w-[680px]">
                 {article.summary}
               </p>
 
               {article.key_points && article.key_points.length > 0 && (
                 <div className="mb-4">
-                  <h3 className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
+                  <h3 className="text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">
                     Key Points
                   </h3>
-                  <ul className="list-disc list-inside space-y-1 text-slate-700 dark:text-slate-300 max-w-prose">
+                  <ul className="list-disc list-inside space-y-1 text-slate-700 dark:text-slate-200 max-w-[680px]">
                     {article.key_points.map((point, i) => (
                       <li key={i}>{point}</li>
                     ))}
@@ -158,10 +158,10 @@ export default function ArticleDetails() {
 
               {article.implication && (
                 <div>
-                  <h3 className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
+                  <h3 className="text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">
                     Implications for AI Alignment
                   </h3>
-                  <p className="text-slate-700 dark:text-slate-300 max-w-prose">
+                  <p className="text-slate-700 dark:text-slate-200 max-w-[680px]">
                     {article.implication}
                   </p>
                 </div>
@@ -207,7 +207,7 @@ export function ErrorBoundary() {
                   ? "Article Not Found"
                   : `Error ${error.status}`}
               </h2>
-              <p className="text-slate-600 dark:text-slate-400 text-center max-w-md">
+              <p className="text-slate-600 dark:text-slate-300 text-center max-w-md">
                 {error.status === 404
                   ? "The article you’re looking for doesn’t exist or may have been removed."
                   : error.data ||
@@ -219,7 +219,7 @@ export function ErrorBoundary() {
               <h2 className="text-3xl font-bold text-slate-900 dark:text-slate-200 mb-4">
                 Something went wrong
               </h2>
-              <p className="text-slate-600 dark:text-slate-400 text-center max-w-md">
+              <p className="text-slate-600 dark:text-slate-300 text-center max-w-md">
                 We encountered an unexpected error. Please try again later.
               </p>
             </>

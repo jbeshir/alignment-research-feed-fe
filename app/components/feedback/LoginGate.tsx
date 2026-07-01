@@ -26,7 +26,7 @@ export function LoginGate({
       <h2 className="text-lg font-semibold text-brand-dark dark:text-brand-light">
         {title}
       </h2>
-      <p className="mt-2 max-w-sm text-sm text-slate-600 dark:text-slate-400">
+      <p className="mt-2 max-w-sm text-sm text-slate-600 dark:text-slate-300">
         {description}
       </p>
       <div className="mt-6">

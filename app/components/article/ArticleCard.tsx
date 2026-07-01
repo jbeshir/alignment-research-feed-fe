@@ -75,7 +75,7 @@ export function ArticleCard({
         <span className="font-medium text-sm truncate min-w-0 flex-1">
           {getSourceDisplayName(article.source, article.authors)}
         </span>
-        <div className="flex items-center gap-2 flex-shrink-0 max-w-[45%]">
+        <div className="flex items-center gap-2 flex-shrink-0 max-w-[55%]">
           {article.category && (
             <span className="text-xs px-1.5 py-0.5 rounded bg-black/10 dark:bg-black/20 min-w-0 truncate">
               {article.category}
@@ -125,7 +125,7 @@ export function ArticleCard({
         </p>
 
         {/* Title */}
-        <h3 className="font-medium text-slate-900 dark:text-slate-100 line-clamp-2 mb-3 group-hover:text-brand-dark dark:group-hover:text-brand-light transition-colors">
+        <h3 className="font-medium text-slate-900 dark:text-slate-100 text-pretty line-clamp-2 mb-3 group-hover:text-brand-dark dark:group-hover:text-brand-light transition-colors">
           {article.title}
         </h3>
 
@@ -140,7 +140,7 @@ export function ArticleCard({
             disabled={isUpdating}
             className={`inline-flex items-center justify-center min-w-[44px] min-h-[44px] rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-slate-800 ${
               thumbsUp
-                ? "text-green-600 dark:text-green-400 bg-green-600/15 dark:bg-green-500/20 ring-1 ring-green-600/60 dark:ring-green-400/60 focus-visible:ring-green-600 dark:focus-visible:ring-green-400"
+                ? "text-green-800 dark:text-green-400 bg-green-600/15 dark:bg-green-500/20 ring-1 ring-green-600/60 dark:ring-green-400/60 focus-visible:ring-green-600 dark:focus-visible:ring-green-400"
                 : "text-slate-500 dark:text-slate-400 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-600/10 dark:hover:bg-green-500/10 focus-visible:ring-green-600 dark:focus-visible:ring-green-400"
             }`}
             aria-label={thumbsUp ? "Remove thumbs up" : "Thumbs up"}

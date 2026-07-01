@@ -155,18 +155,20 @@ export function ArticleRow({
                 onClick={handleMarkAsRead}
                 className="group block"
               >
-                <h3 className="font-medium text-slate-900 dark:text-slate-100 group-hover:text-brand-dark dark:group-hover:text-brand-light transition-colors line-clamp-3">
+                <h3 className="font-medium text-slate-900 dark:text-slate-100 text-pretty group-hover:text-brand-dark dark:group-hover:text-brand-light transition-colors line-clamp-3">
                   {article.title}
                 </h3>
               </a>
               <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">
-                {article.authors}
+                <span className="whitespace-nowrap">{article.authors}</span>
                 {article.published_at && (
                   <>
                     <span className="mx-1.5 text-stone-300 dark:text-slate-600">
                       &middot;
                     </span>
-                    {formatPublishedDate(article.published_at)}
+                    <span className="whitespace-nowrap">
+                      {formatPublishedDate(article.published_at)}
+                    </span>
                   </>
                 )}
               </p>
@@ -179,7 +181,7 @@ export function ArticleRow({
           <div className="min-w-0 md:col-span-3">
             <p
               ref={summaryRef}
-              className="text-sm text-slate-600 dark:text-slate-400 line-clamp-4 max-w-prose"
+              className="text-sm text-slate-600 dark:text-slate-300 line-clamp-4 max-w-prose"
             >
               {article.summary}
             </p>
@@ -196,7 +198,7 @@ export function ArticleRow({
           disabled={isUpdating}
           className={`inline-flex items-center justify-center min-w-[44px] min-h-[44px] rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-slate-800 ${
             thumbsUp
-              ? "text-green-600 dark:text-green-400 bg-green-600/15 dark:bg-green-500/20 ring-1 ring-green-600/60 dark:ring-green-400/60 focus-visible:ring-green-600 dark:focus-visible:ring-green-400"
+              ? "text-green-800 dark:text-green-400 bg-green-600/15 dark:bg-green-500/20 ring-1 ring-green-600/60 dark:ring-green-400/60 focus-visible:ring-green-600 dark:focus-visible:ring-green-400"
               : "text-slate-500 dark:text-slate-400 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-600/10 dark:hover:bg-green-500/10 focus-visible:ring-green-600 dark:focus-visible:ring-green-400"
           }`}
           aria-label={thumbsUp ? "Remove thumbs up" : "Thumbs up"}
@@ -236,7 +238,7 @@ export function ArticleRow({
             className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
               expandedSection === "summary"
                 ? "bg-accent text-white dark:bg-accent-dark"
-                : "text-slate-600 dark:text-slate-400 hover:bg-stone-100 dark:hover:bg-slate-700"
+                : "text-slate-600 dark:text-slate-300 hover:bg-stone-100 dark:hover:bg-slate-700"
             }`}
           >
             Summary
@@ -249,7 +251,7 @@ export function ArticleRow({
             className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
               expandedSection === "key_points"
                 ? "bg-accent text-white dark:bg-accent-dark"
-                : "text-slate-600 dark:text-slate-400 hover:bg-stone-100 dark:hover:bg-slate-700"
+                : "text-slate-600 dark:text-slate-300 hover:bg-stone-100 dark:hover:bg-slate-700"
             }`}
           >
             Key Points
@@ -262,7 +264,7 @@ export function ArticleRow({
             className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
               expandedSection === "implication"
                 ? "bg-accent text-white dark:bg-accent-dark"
-                : "text-slate-600 dark:text-slate-400 hover:bg-stone-100 dark:hover:bg-slate-700"
+                : "text-slate-600 dark:text-slate-300 hover:bg-stone-100 dark:hover:bg-slate-700"
             }`}
           >
             Implication
@@ -274,7 +276,7 @@ export function ArticleRow({
           className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
             expandedSection === "similar"
               ? "bg-accent text-white dark:bg-accent-dark"
-              : "text-slate-600 dark:text-slate-400 hover:bg-stone-100 dark:hover:bg-slate-700"
+              : "text-slate-600 dark:text-slate-300 hover:bg-stone-100 dark:hover:bg-slate-700"
           }`}
         >
           Similar
@@ -286,7 +288,7 @@ export function ArticleRow({
           target="_blank"
           rel="noopener noreferrer"
           onClick={handleMarkAsRead}
-          className="ml-auto flex items-center gap-1 px-2.5 py-1 rounded text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-stone-100 dark:hover:bg-slate-700 transition-colors"
+          className="ml-auto flex items-center gap-1 px-2.5 py-1 rounded text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-stone-100 dark:hover:bg-slate-700 transition-colors"
         >
           Read
           <ExternalLinkIcon className="w-3.5 h-3.5" />
@@ -298,7 +300,7 @@ export function ArticleRow({
         <div className="px-4 py-3 border-t border-stone-100 dark:border-slate-700 bg-stone-100 dark:bg-slate-800/50">
           {expandedSection === "summary" && article.summary && (
             <div>
-              <h4 className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2">
+              <h4 className="text-xs font-medium text-slate-600 dark:text-slate-300 uppercase tracking-wide mb-2">
                 Summary
               </h4>
               <p className="text-sm text-slate-700 dark:text-slate-300">
@@ -311,7 +313,7 @@ export function ArticleRow({
             article.key_points &&
             article.key_points.length > 0 && (
               <div>
-                <h4 className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2">
+                <h4 className="text-xs font-medium text-slate-600 dark:text-slate-300 uppercase tracking-wide mb-2">
                   Key Points
                 </h4>
                 <ul className="list-disc list-inside space-y-1 text-sm text-slate-700 dark:text-slate-300">
@@ -324,7 +326,7 @@ export function ArticleRow({
 
           {expandedSection === "implication" && article.implication && (
             <div>
-              <h4 className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2">
+              <h4 className="text-xs font-medium text-slate-600 dark:text-slate-300 uppercase tracking-wide mb-2">
                 Implications for AI Alignment
               </h4>
               <p className="text-sm text-slate-700 dark:text-slate-300">
@@ -335,11 +337,11 @@ export function ArticleRow({
 
           {expandedSection === "similar" && (
             <div>
-              <h4 className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2">
+              <h4 className="text-xs font-medium text-slate-600 dark:text-slate-300 uppercase tracking-wide mb-2">
                 Similar Articles
               </h4>
               {isFetchingSimilar ? (
-                <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 py-2">
+                <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300 py-2">
                   <div className="w-4 h-4 border-2 border-stone-300 dark:border-slate-600 border-t-stone-600 dark:border-t-slate-300 rounded-full animate-spin" />
                   Loading similar articles...
                 </div>
@@ -352,17 +354,17 @@ export function ArticleRow({
                       onClick={() => navigate(`/articles/${similar.hash_id}`)}
                       className="flex-shrink-0 w-64 rounded-md border border-stone-200 dark:border-slate-600 bg-stone-50 dark:bg-slate-700 p-3 text-left hover:border-stone-300 dark:hover:border-slate-500 transition-colors"
                     >
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mb-1 truncate">
+                      <p className="text-xs text-slate-600 dark:text-slate-300 mb-1 truncate">
                         {getSourceDisplayName(similar.source, similar.authors)}
                       </p>
-                      <p className="text-sm font-medium text-slate-900 dark:text-slate-100 line-clamp-2">
+                      <p className="text-sm font-medium text-slate-900 dark:text-slate-100 text-pretty line-clamp-2">
                         {similar.title}
                       </p>
                     </button>
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-slate-500 dark:text-slate-400 py-1">
+                <p className="text-sm text-slate-600 dark:text-slate-300 py-1">
                   No similar articles found.
                 </p>
               )}
