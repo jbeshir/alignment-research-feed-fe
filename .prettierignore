@@ -21,4 +21,7 @@ build/
 package-lock.json
 
 # Generated files (static assets)
-public/ 
+public/
+
+# Imported review doc — kept byte-for-byte verbatim from the source artifact
+docs/appearance-review-2026-06-30.md

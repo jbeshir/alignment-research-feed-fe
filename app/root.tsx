@@ -177,7 +177,7 @@ export function ErrorBoundary() {
         <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-200 mb-4">
           {title}
         </h1>
-        <p className="text-slate-600 dark:text-slate-400 mb-8">{message}</p>
+        <p className="text-slate-600 dark:text-slate-300 mb-8">{message}</p>
         <Link
           to="/"
           className="inline-block px-6 py-3 bg-accent dark:bg-accent-dark text-white rounded-lg font-medium hover:opacity-90 transition-opacity"

@@ -77,10 +77,10 @@ function TokenCard({
           <h3 className="text-sm font-medium text-brand-dark dark:text-brand-light truncate">
             {displayName}
           </h3>
-          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+          <p className="mt-1 text-xs text-slate-500 dark:text-slate-300">
             Created: {formatPublishedDate(token.created_at)}
           </p>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
+          <p className="text-xs text-slate-500 dark:text-slate-300">
             Last used:{" "}
             {token.last_used_at
               ? formatPublishedDate(token.last_used_at)
@@ -368,7 +368,7 @@ export default function Settings() {
               <h2 className="text-lg font-medium text-brand-dark dark:text-brand-light mb-4">
                 API Tokens
               </h2>
-              <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
+              <p className="text-sm text-slate-600 dark:text-slate-300 mb-4">
                 API tokens allow you to access the Alignment Feed API
                 programmatically.
               </p>
@@ -384,7 +384,7 @@ export default function Settings() {
               <CreateTokenForm onTokenCreated={handleTokenCreated} />
 
               {isLoading ? (
-                <div className="text-center py-8 text-slate-500 dark:text-slate-400">
+                <div className="text-center py-8 text-slate-500 dark:text-slate-300">
                   Loading tokens...
                 </div>
               ) : error ? (
@@ -392,7 +392,7 @@ export default function Settings() {
                   {error}
                 </div>
               ) : tokens.length === 0 ? (
-                <div className="text-center py-8 text-slate-500 dark:text-slate-400">
+                <div className="text-center py-8 text-slate-500 dark:text-slate-300">
                   No API tokens yet. Create one to get started.
                 </div>
               ) : (
@@ -415,7 +415,7 @@ export default function Settings() {
             <h2 className="text-lg font-medium text-brand-dark dark:text-brand-light mb-4">
               MCP Server
             </h2>
-            <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
+            <p className="text-sm text-slate-600 dark:text-slate-300 mb-4">
               Use the Alignment Feed MCP server to integrate with AI coding
               assistants like Claude Code, Cursor, and Windsurf.
             </p>
@@ -443,7 +443,7 @@ export default function Settings() {
                 Usage with Claude Code
               </h3>
               <CodeBlock code={MCP_USAGE_CODE} />
-              <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
+              <p className="mt-2 text-xs text-slate-500 dark:text-slate-300">
                 Replace <code className="font-mono">&lt;your-token&gt;</code>{" "}
                 with an API token from above and{" "}
                 <code className="font-mono">/path/to/alignment-feed-mcp</code>{" "}
@@ -457,7 +457,7 @@ export default function Settings() {
             <h2 className="text-lg font-medium text-brand-dark dark:text-brand-light mb-4">
               API Documentation
             </h2>
-            <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
+            <p className="text-sm text-slate-600 dark:text-slate-300 mb-4">
               View the full API documentation for programmatic access to
               Alignment Feed.
             </p>

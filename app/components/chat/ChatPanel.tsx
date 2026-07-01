@@ -195,7 +195,7 @@ export function ChatPanel({ initialConversations }: ChatPanelProps) {
         <div className="md:hidden border-b border-stone-200 dark:border-slate-700 px-4 py-2">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100"
+            className="text-sm text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
           >
             ☰ Conversations
           </button>
@@ -212,7 +212,7 @@ export function ChatPanel({ initialConversations }: ChatPanelProps) {
                 <h3 className="text-lg font-medium text-slate-700 dark:text-slate-300">
                   Alignment Feed AI Assistant
                 </h3>
-                <p className="mt-2 text-sm text-stone-600 dark:text-slate-400 max-w-md">
+                <p className="mt-2 text-sm text-stone-600 dark:text-slate-300 max-w-md">
                   Ask me about AI alignment research. I can search articles,
                   find related papers, check your recommendations, and more.
                 </p>

@@ -172,7 +172,7 @@ function ExpandableSection({
       className="my-3 rounded border border-stone-200 dark:border-slate-600 overflow-hidden"
       open={defaultOpen}
     >
-      <summary className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-stone-600 dark:text-slate-400 bg-stone-50 dark:bg-slate-800 cursor-pointer select-none hover:bg-stone-100 dark:hover:bg-slate-700">
+      <summary className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-stone-600 dark:text-slate-300 bg-stone-50 dark:bg-slate-800 cursor-pointer select-none hover:bg-stone-100 dark:hover:bg-slate-700">
         <span>{icon}</span>
         {label}
       </summary>
@@ -202,7 +202,7 @@ function renderToolPart(
   if (isLoading) {
     return (
       <ExpandableSection key={key} label={label} icon="🔧" defaultOpen>
-        <div className="flex items-center gap-2 text-xs text-stone-600 dark:text-slate-400">
+        <div className="flex items-center gap-2 text-xs text-stone-600 dark:text-slate-300">
           <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-current border-t-transparent" />
           Searching...
         </div>
@@ -299,7 +299,7 @@ function renderParts(
       if (reasoningPart.text) {
         elements.push(
           <ExpandableSection key={i} label="Thinking" icon="💭">
-            <p className="whitespace-pre-wrap text-xs text-stone-600 dark:text-slate-400">
+            <p className="whitespace-pre-wrap text-xs text-stone-600 dark:text-slate-300">
               {reasoningPart.text}
             </p>
             {reasoningPart.state === "streaming" && (
