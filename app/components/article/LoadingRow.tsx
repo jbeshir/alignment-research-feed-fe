@@ -1,6 +1,6 @@
 export function LoadingRow() {
   return (
-    <div className="bg-stone-50 dark:bg-slate-800 rounded-lg shadow-sm overflow-hidden animate-pulse">
+    <div className="bg-stone-50 dark:bg-surface-1 rounded-lg shadow-card overflow-hidden animate-pulse">
       {/* Header strip placeholder - mirrors the coloured category band */}
       <div className="h-10 bg-stone-300 dark:bg-slate-700 border-l-4 border-stone-400 dark:border-slate-600" />
 

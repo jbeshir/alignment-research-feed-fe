@@ -69,7 +69,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body className="bg-stone-100 dark:bg-slate-800">
+      <body className="bg-stone-100 dark:bg-brand-bg-dark">
         <NavigationProgressBar />
         {children}
         <ScrollRestoration />

@@ -102,7 +102,7 @@ export function ArticleRow({
   }, []);
 
   return (
-    <div className="bg-stone-50 dark:bg-slate-800 rounded-lg shadow shadow-stone-300/50 overflow-hidden dark:border dark:border-slate-700/70 dark:shadow-lg dark:shadow-black/30">
+    <div className="bg-stone-50 dark:bg-surface-1 rounded-lg shadow-card overflow-hidden">
       {/* Source header strip */}
       <div
         className={`h-10 px-4 flex items-center justify-between ${getCategoryHeaderColor(article.category)}`}
@@ -196,7 +196,7 @@ export function ArticleRow({
           type="button"
           onClick={handleThumbsUp}
           disabled={isUpdating}
-          className={`inline-flex items-center justify-center min-w-[44px] min-h-[44px] rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-slate-800 ${
+          className={`inline-flex items-center justify-center min-w-[44px] min-h-[44px] rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-surface-1 ${
             thumbsUp
               ? "text-green-800 dark:text-green-400 bg-green-600/15 dark:bg-green-500/20 ring-1 ring-green-600/60 dark:ring-green-400/60 focus-visible:ring-green-600 dark:focus-visible:ring-green-400"
               : "text-slate-500 dark:text-slate-400 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-600/10 dark:hover:bg-green-500/10 focus-visible:ring-green-600 dark:focus-visible:ring-green-400"
@@ -213,7 +213,7 @@ export function ArticleRow({
           type="button"
           onClick={handleThumbsDown}
           disabled={isUpdating}
-          className={`inline-flex items-center justify-center min-w-[44px] min-h-[44px] rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-slate-800 ${
+          className={`inline-flex items-center justify-center min-w-[44px] min-h-[44px] rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-surface-1 ${
             thumbsDown
               ? "text-red-600 dark:text-red-400 bg-red-600/15 dark:bg-red-500/20 ring-1 ring-red-600/60 dark:ring-red-400/60 focus-visible:ring-red-600 dark:focus-visible:ring-red-400"
               : "text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-600/10 dark:hover:bg-red-500/10 focus-visible:ring-red-600 dark:focus-visible:ring-red-400"
@@ -352,9 +352,9 @@ export function ArticleRow({
                       key={similar.hash_id}
                       type="button"
                       onClick={() => navigate(`/articles/${similar.hash_id}`)}
-                      className="flex-shrink-0 w-64 rounded-md border border-stone-200 dark:border-slate-600 bg-stone-50 dark:bg-slate-700 p-3 text-left hover:border-stone-300 dark:hover:border-slate-500 transition-colors"
+                      className="flex-shrink-0 w-64 rounded-md border border-stone-200 dark:border-slate-600 bg-stone-50 dark:bg-surface-2 p-3 text-left hover:border-stone-300 dark:hover:border-slate-500 transition-colors"
                     >
-                      <p className="text-xs text-slate-600 dark:text-slate-300 mb-1 truncate">
+                      <p className="text-xs text-slate-600 dark:text-slate-200 mb-1 truncate">
                         {getSourceDisplayName(similar.source, similar.authors)}
                       </p>
                       <p className="text-sm font-medium text-slate-900 dark:text-slate-100 text-pretty line-clamp-2">
