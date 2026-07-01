@@ -1,6 +1,6 @@
 export function LoadingCard() {
   return (
-    <div className="bg-stone-50 dark:bg-slate-800 rounded-lg shadow-sm overflow-hidden animate-pulse h-full flex flex-col">
+    <div className="bg-stone-50 dark:bg-surface-1 rounded-xl shadow-card overflow-hidden animate-pulse h-full flex flex-col">
       {/* Header strip placeholder - mirrors the coloured category band */}
       <div className="h-12 bg-stone-300 dark:bg-slate-700 border-l-4 border-stone-400 dark:border-slate-600 flex-shrink-0" />
 

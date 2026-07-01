@@ -66,7 +66,7 @@ export function ArticleCard({
       target="_blank"
       rel="noopener noreferrer"
       onClick={handleMarkAsRead}
-      className="flex flex-col bg-stone-50 dark:bg-slate-800 rounded-lg shadow shadow-stone-300/50 hover:shadow-md transition-shadow overflow-hidden group h-full dark:border dark:border-slate-700/70 dark:shadow-lg dark:shadow-black/30"
+      className="flex flex-col bg-stone-50 dark:bg-surface-1 rounded-xl shadow-card hover:shadow-card-hover dark:hover:bg-surface-2 transition-[box-shadow,background-color] overflow-hidden group h-full"
     >
       {/* Source header strip */}
       <div
@@ -114,13 +114,13 @@ export function ArticleCard({
       <div className="p-4 flex flex-col flex-grow">
         {/* Date */}
         {article.published_at && (
-          <div className="text-[13px] text-slate-600 dark:text-slate-300 mb-2">
+          <div className="text-[13px] text-slate-600 dark:text-slate-200 mb-2">
             {formatPublishedDate(article.published_at)}
           </div>
         )}
 
         {/* Author */}
-        <p className="text-sm text-slate-600 dark:text-slate-300 mb-1 truncate">
+        <p className="text-sm text-slate-600 dark:text-slate-200 mb-1 truncate">
           {formatAuthorsByline(article.authors)}
         </p>
 
@@ -138,7 +138,7 @@ export function ArticleCard({
             type="button"
             onClick={handleThumbsUp}
             disabled={isUpdating}
-            className={`inline-flex items-center justify-center min-w-[44px] min-h-[44px] rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-slate-800 ${
+            className={`inline-flex items-center justify-center min-w-[44px] min-h-[44px] rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-surface-1 ${
               thumbsUp
                 ? "text-green-800 dark:text-green-400 bg-green-600/15 dark:bg-green-500/20 ring-1 ring-green-600/60 dark:ring-green-400/60 focus-visible:ring-green-600 dark:focus-visible:ring-green-400"
                 : "text-slate-500 dark:text-slate-400 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-600/10 dark:hover:bg-green-500/10 focus-visible:ring-green-600 dark:focus-visible:ring-green-400"
@@ -155,7 +155,7 @@ export function ArticleCard({
             type="button"
             onClick={handleThumbsDown}
             disabled={isUpdating}
-            className={`inline-flex items-center justify-center min-w-[44px] min-h-[44px] rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-slate-800 ${
+            className={`inline-flex items-center justify-center min-w-[44px] min-h-[44px] rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-surface-1 ${
               thumbsDown
                 ? "text-red-600 dark:text-red-400 bg-red-600/15 dark:bg-red-500/20 ring-1 ring-red-600/60 dark:ring-red-400/60 focus-visible:ring-red-600 dark:focus-visible:ring-red-400"
                 : "text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-600/10 dark:hover:bg-red-500/10 focus-visible:ring-red-600 dark:focus-visible:ring-red-400"
@@ -180,7 +180,7 @@ export function ArticleCard({
               e.stopPropagation();
               navigate(`/articles/${article.hash_id}`);
             }}
-            className="ml-auto inline-flex items-center gap-1.5 rounded-md border border-stone-200 dark:border-slate-600 px-3 min-h-[44px] text-xs font-medium text-slate-600 dark:text-slate-300 hover:border-accent hover:text-accent hover:bg-accent/5 dark:hover:text-accent-dark-fg dark:hover:border-accent-dark-fg dark:hover:bg-accent-dark-fg/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent dark:focus-visible:ring-accent-dark-fg focus-visible:ring-offset-1 dark:focus-visible:ring-offset-slate-800 transition-colors"
+            className="ml-auto inline-flex items-center gap-1.5 rounded-md border border-stone-200 dark:border-slate-600 px-3 min-h-[44px] text-xs font-medium text-slate-600 dark:text-slate-200 hover:border-accent hover:text-accent hover:bg-accent/5 dark:hover:text-accent-dark-fg dark:hover:border-accent-dark-fg dark:hover:bg-accent-dark-fg/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent dark:focus-visible:ring-accent-dark-fg focus-visible:ring-offset-1 dark:focus-visible:ring-offset-surface-1 transition-colors"
             aria-label="View article details"
           >
             View details
